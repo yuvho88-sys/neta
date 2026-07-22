@@ -238,6 +238,28 @@
   footer .fbrand{font-family:var(--serif);letter-spacing:.4em;padding-inline-start:.4em;
     color:var(--accent-deep);font-size:14px;margin-bottom:6px}
   footer a{color:var(--accent-deep);font-weight:600}
+  .ftag{font-family:var(--serif);font-size:15px;color:var(--body);margin:2px 0 4px}
+  .social{display:flex;justify-content:center;gap:14px;margin:14px 0 20px}
+  .social a{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--paper);
+    display:flex;align-items:center;justify-content:center;color:var(--accent-deep);
+    transition:.2s var(--ease);box-shadow:var(--shadow-sm)}
+  .social a:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-2px)}
+  .social svg{width:20px;height:20px}
+
+  /* qualify — two-column intro + questionnaire */
+  .qualify-section{max-width:980px;margin:44px auto 0;padding:0 22px}
+  .qualify{display:grid;gap:20px}
+  .qualify-intro h2{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+  .qualify-intro > p{color:var(--body);font-size:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);
+    color:var(--ink);font-weight:600;font-size:13.5px;padding:8px 14px;border-radius:30px;box-shadow:var(--shadow-sm)}
+  .chip::before{content:"✓";color:var(--brass);font-weight:800}
+  @media(min-width:900px){
+    .qualify{grid-template-columns:1fr 1.1fr;gap:36px;align-items:start}
+    .qualify-intro{position:sticky;top:26px}
+    #book{margin:0}
+  }
 
   @media (min-width:760px){
     :root{--maxw:680px}
@@ -402,8 +424,22 @@
         <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>[[מה הליד מקבל — המלצה ראשונית והצעת המשך]]</span></div></li>
       </ul>
     </section>
+  </div>
 
-    <section class="card book rev" id="book" aria-label="קביעת שיחה">
+  <section class="qualify-section rev" aria-label="קביעת שיחה">
+    <div class="qualify">
+      <div class="qualify-intro">
+        <div class="eyebrow"><span class="lab">קביעת שיחה</span><span class="rule"></span></div>
+        <h2>בואו נבדוק שמתאים</h2>
+        <p>שלוש שאלות קצרות — ואם יש התאמה, נבחר יחד זמן לשיחת היכרות של 20 דקות, ללא עלות וללא התחייבות.</p>
+        <div class="chips">
+          <span class="chip">ייעוץ ראשוני חינם</span>
+          <span class="chip">ליווי אישי מהרגע הראשון</span>
+          <span class="chip">בוגרת אדריכלות B.ARC</span>
+          <span class="chip">ללא התחייבות</span>
+        </div>
+      </div>
+      <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
       <div id="q-screen">
         <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
         <div class="qcount" id="qCount" dir="rtl">שלב 1 מתוך 3</div>
@@ -516,12 +552,22 @@
       <div id="nofit-screen">
         <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
       </div>
-    </section>
-  </div>
+      </section>
+    </div>
+  </section>
 </main>
 
 <footer class="wrap rev">
   <div class="fbrand">INNHOME</div>
+  <div class="ftag">כאן הופכים חלומות למציאות</div>
+  <div class="social">
+    <a href="https://www.instagram.com/netta_gutman_architects/" target="_blank" rel="noopener" aria-label="אינסטגרם של נטע">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
+    </a>
+    <a href="https://www.facebook.com/נטע-גוטמן-InnHome-design-אדריכלות-ועיצוב-פנים-382264359096791/" target="_blank" rel="noopener" aria-label="פייסבוק של נטע">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.4l.4-2.6h-2.8V8.7c0-.75.25-1.26 1.33-1.26h1.42V5.11C15.99 5.08 15.15 5 14.17 5c-2.04 0-3.44 1.25-3.44 3.53v1.87H8.3V13h2.43v8z"/></svg>
+    </a>
+  </div>
   נטע גוטמן · אדריכלית ומעצבת פנים<br>
   <a href="tel:0504322412">050-4322412</a> · <a href="mailto:innhome.g@gmail.com">innhome.g@gmail.com</a><br>
   קיבוץ חורש
