@@ -127,12 +127,12 @@
   .folio .fhead .lab{font-size:12.5px;letter-spacing:3px;text-transform:uppercase;
     color:var(--brass);font-weight:600;margin-bottom:8px}
   .folio .fhead h2{color:#fbf7f1;margin:0}
-  .cf{--cw:min(720px,88vw);position:relative;height:calc(var(--cw) / 1.5 + 60px);perspective:1600px;touch-action:pan-y;outline:none}
+  .cf{--cw:min(720px,88vw);--card-ratio:3/2;position:relative;height:calc(var(--cw) / 1.5 + 60px);perspective:1600px;touch-action:pan-y;outline:none}
   .cf::before,.cf::after{content:"";position:absolute;top:0;bottom:0;width:20%;z-index:20;pointer-events:none}
   .cf::before{left:0;background:linear-gradient(90deg,var(--dark),transparent)}
   .cf::after{right:0;background:linear-gradient(270deg,var(--dark),transparent)}
   .cf-stage{position:absolute;inset:0;transform-style:preserve-3d}
-  .cf-slide{position:absolute;top:50%;left:50%;width:var(--cw);aspect-ratio:3/2;
+  .cf-slide{position:absolute;top:50%;left:50%;width:var(--cw);aspect-ratio:var(--card-ratio);
     margin-left:calc(var(--cw) / -2);
     border-radius:14px;overflow:hidden;background:#241d1b;
     box-shadow:0 30px 60px rgba(0,0,0,.5);will-change:transform,opacity,filter;
@@ -142,7 +142,7 @@
   .cf-slide .ph-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:repeating-linear-gradient(45deg,#463a36,#463a36 16px,#4d403b 16px,#4d403b 32px)}
   .cf-slide picture{position:absolute;inset:0;display:block}
-  .cf-slide img{width:100%;height:100%;object-fit:contain;display:block}
+  .cf-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
   .cf-cap{text-align:center;margin-top:16px;color:#efe6dc;min-height:22px;
     font-size:14px;letter-spacing:.5px;transition:opacity .4s var(--ease)}
   .cf-nav{display:flex;gap:14px;justify-content:center;margin-top:16px}
@@ -427,13 +427,19 @@
     <div class="fhead"><div class="lab">Portfolio</div><h2>מתוך הפרויקטים שלי</h2></div>
     <div class="cf" id="cf" role="group" aria-roledescription="קרוסלת פרויקטים" tabindex="0" aria-label="פרויקטים — החליקו או השתמשו בחיצים">
       <div class="cf-stage" id="cfStage">
-        <!-- TODO: real project names in data-cap -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-1.webp" type="image/webp"><img src="project-1.jpg" alt="פרויקט עיצוב פנים 1 — INNHOME" width="1118" height="581" loading="lazy" decoding="async"></picture></div>
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-2.webp" type="image/webp"><img src="project-2.jpg" alt="פרויקט עיצוב פנים 2 — INNHOME" width="1116" height="647" loading="lazy" decoding="async"></picture></div>
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-3.webp" type="image/webp"><img src="project-3.jpg" alt="פרויקט עיצוב פנים 3 — INNHOME" width="1002" height="670" loading="lazy" decoding="async"></picture></div>
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-4.webp" type="image/webp"><img src="project-4.jpg" alt="פרויקט עיצוב פנים 4 — INNHOME" width="1055" height="664" loading="eager" fetchpriority="high" decoding="async"></picture></div>
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-5.webp" type="image/webp"><img src="project-5.jpg" alt="פרויקט עיצוב פנים 5 — INNHOME" width="1033" height="682" loading="lazy" decoding="async"></picture></div>
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-6.webp" type="image/webp"><img src="project-6.jpg" alt="פרויקט עיצוב פנים 6 — INNHOME" width="1200" height="513" loading="lazy" decoding="async"></picture></div>
+        <!-- TODO: real project names in data-cap · object-position per slide = focal point, tweak freely -->
+        <!-- focal: center (סלון + מטבח) -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-1.webp" type="image/webp"><img src="project-1.jpg" alt="פרויקט עיצוב פנים 1 — INNHOME" width="1118" height="581" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <!-- focal: center (מטבח כפרי) -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-2.webp" type="image/webp"><img src="project-2.jpg" alt="פרויקט עיצוב פנים 2 — INNHOME" width="1116" height="647" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <!-- focal: center (אי מטבח עץ) -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-3.webp" type="image/webp"><img src="project-3.jpg" alt="פרויקט עיצוב פנים 3 — INNHOME" width="1002" height="670" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <!-- focal: center (אי מטבח ירוק) · slide מרכזי -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-4.webp" type="image/webp"><img src="project-4.jpg" alt="פרויקט עיצוב פנים 4 — INNHOME" width="1055" height="664" style="object-position:center" loading="eager" fetchpriority="high" decoding="async"></picture></div>
+        <!-- focal: center (אי + חלון) -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-5.webp" type="image/webp"><img src="project-5.jpg" alt="פרויקט עיצוב פנים 5 — INNHOME" width="1033" height="682" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <!-- focal: center (קיר טלוויזיה) -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-6.webp" type="image/webp"><img src="project-6.jpg" alt="פרויקט עיצוב פנים 6 — INNHOME" width="1200" height="513" style="object-position:center" loading="lazy" decoding="async"></picture></div>
       </div>
     </div>
     <div class="cf-cap" id="cfCap" aria-live="polite"></div>
