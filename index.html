@@ -409,6 +409,20 @@
 </style>
 </head>
 <body>
+<script>
+  /* Always open at the top (hero) on first load — never jump to a #hash anchor
+     from a shared link, and never restore a previous scroll position on refresh.
+     Runs before #book is parsed, so the browser never performs the anchor jump.
+     In-page CTA clicks (href="#book") still smooth-scroll normally afterwards. */
+  (function(){
+    try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+    if(location.hash){
+      try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+    }
+    window.scrollTo(0,0);
+    addEventListener('load',function(){window.scrollTo(0,0);});
+  })();
+</script>
 
 <header class="hero wrap rev">
   <div class="halo" aria-hidden="true"></div>
