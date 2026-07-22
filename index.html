@@ -125,12 +125,24 @@
   /* portfolio coverflow — the signature: work emerging from darkness */
   .folio{position:relative;left:50%;right:50%;margin-inline:-50vw;width:100vw;
     background:radial-gradient(120% 90% at 50% 12%,var(--dark-2),var(--dark) 72%);
-    padding:clamp(42px,9vw,78px) 0 clamp(30px,7vw,54px);margin-top:0;overflow:hidden}
-  .folio .fhead{text-align:center;margin-bottom:clamp(18px,5vw,30px);padding:0 22px}
+    padding:clamp(36px,7vw,60px) 0 clamp(28px,4vw,40px);margin-top:0;overflow:hidden}
+  .folio .fhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    max-width:760px;margin:0 auto clamp(16px,4vw,26px);padding:0 22px;text-align:right}
   .folio .fhead .lab{font-size:12.5px;letter-spacing:3px;text-transform:uppercase;
     color:var(--brass);font-weight:600;margin-bottom:8px}
   .folio .fhead h2{color:#fbf7f1;margin:0}
-  .cf{--cw:min(720px,88vw);--card-ratio:3/2;position:relative;height:calc(var(--cw) / 1.5 + 60px);perspective:1600px;touch-action:pan-y;outline:none}
+  .cf-nav{display:flex;gap:8px;flex:0 0 auto;padding-bottom:6px}
+  .cf-arrow{background:none;border:0;padding:12px;cursor:pointer;color:#efe6dc;opacity:.45;line-height:0;
+    transition:opacity .2s var(--ease),transform .2s var(--ease)}
+  .cf-arrow svg{width:20px;height:20px;display:block}
+  .cf-arrow svg path{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .cf-arrow:hover{opacity:.9}
+  #cfNext:hover{transform:translateX(-3px)}
+  #cfPrev:hover{transform:translateX(3px)}
+  .cf-arrow:active{transform:scale(.94)}
+  .cf-arrow:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:6px;opacity:.9}
+  @media (max-width:767px){.cf-nav{display:none}.folio .fhead{justify-content:center;text-align:center}}
+  .cf{--cw:min(720px,88vw);--card-ratio:3/2;position:relative;height:calc(var(--cw) / 1.5 + 44px);perspective:1600px;touch-action:pan-y;outline:none}
   .cf::before,.cf::after{content:"";position:absolute;top:0;bottom:0;width:20%;z-index:20;pointer-events:none}
   .cf::before{left:0;background:linear-gradient(90deg,var(--dark),transparent)}
   .cf::after{right:0;background:linear-gradient(270deg,var(--dark),transparent)}
@@ -146,13 +158,7 @@
     background:repeating-linear-gradient(45deg,#463a36,#463a36 16px,#4d403b 16px,#4d403b 32px)}
   .cf-slide picture{position:absolute;inset:0;display:block}
   .cf-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-  .cf-cap{text-align:center;margin-top:16px;color:#efe6dc;min-height:22px;
-    font-size:14px;letter-spacing:.5px;transition:opacity .4s var(--ease)}
-  .cf-nav{display:flex;gap:14px;justify-content:center;margin-top:16px}
-  .cf-nav button{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.22);
-    background:rgba(255,255,255,.06);color:#efe6dc;font-size:17px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;transition:.2s}
-  .cf-nav button:hover{background:rgba(255,255,255,.14);border-color:var(--brass)}
+  /* carousel nav moved above the cards — see .cf-nav / .cf-arrow */
   .folio-cta{margin-top:28px;text-align:center;transition-delay:.15s}
   .ghost-cta{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:13px 32px;
     border:1.5px solid rgba(240,232,220,.5);border-radius:40px;color:#f3ece0;background:transparent;
@@ -424,7 +430,13 @@
   </section>
 
   <section class="folio rev" aria-label="פרויקטים נבחרים">
-    <div class="fhead"><div class="lab">Portfolio</div><h2>מתוך הפרויקטים שלי</h2></div>
+    <div class="fhead">
+      <div class="fhead-text"><div class="lab">Portfolio</div><h2>מתוך הפרויקטים שלי</h2></div>
+      <div class="cf-nav">
+        <button id="cfPrev" class="cf-arrow" type="button" aria-label="הפרויקט הקודם"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l6 7-6 7"/></svg></button>
+        <button id="cfNext" class="cf-arrow" type="button" aria-label="הפרויקט הבא"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-6 7 6 7"/></svg></button>
+      </div>
+    </div>
     <div class="cf" id="cf" role="group" aria-roledescription="קרוסלת פרויקטים" tabindex="0" aria-label="פרויקטים — החליקו או השתמשו בחיצים">
       <div class="cf-stage" id="cfStage">
         <!-- TODO: real project names in data-cap · object-position per slide = focal point, tweak freely -->
@@ -441,11 +453,6 @@
         <!-- focal: center (קיר טלוויזיה) -->
         <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-6.webp" type="image/webp"><img src="project-6.jpg" alt="פרויקט עיצוב פנים 6 — INNHOME" width="1200" height="513" style="object-position:center" loading="lazy" decoding="async"></picture></div>
       </div>
-    </div>
-    <div class="cf-cap" id="cfCap" aria-live="polite"></div>
-    <div class="cf-nav">
-      <button id="cfPrev" type="button" aria-label="הפרויקט הקודם">›</button>
-      <button id="cfNext" type="button" aria-label="הפרויקט הבא">‹</button>
     </div>
     <div class="folio-cta rev">
       <a href="https://www.innh0me.com/%D7%A2%D7%99%D7%A6%D7%95%D7%91%D7%97%D7%9C%D7%9C%D7%99%D7%9D%D7%A4%D7%A8%D7%98%D7%99%D7%99%D7%9D" target="_blank" rel="noopener" class="ghost-cta">לצפייה בכל הפרויקטים <span aria-hidden="true">‹</span></a>
@@ -675,7 +682,7 @@
   (function(){
     var stage=document.getElementById('cfStage'); if(!stage) return;
     var slides=[].slice.call(stage.children);
-    var cap=document.getElementById('cfCap'), cf=document.getElementById('cf');
+    var cf=document.getElementById('cf');
     var n=slides.length, active=Math.floor(n/2), pos=active, dragging=false, startX=0, w=0;
 
     function tf(o){
@@ -697,8 +704,6 @@
     }
     function go(i){
       active=Math.max(0,Math.min(n-1,i)); pos=active; render(pos,true);
-      var c=slides[active].getAttribute('data-cap');
-      cap.style.opacity=0; setTimeout(function(){cap.textContent=c;cap.style.opacity=1;}, reduce?0:180);
     }
     cf.addEventListener('pointerdown',function(e){dragging=true;startX=e.clientX;w=cf.getBoundingClientRect().width;cf.setPointerCapture(e.pointerId);});
     cf.addEventListener('pointermove',function(e){ if(!dragging)return; pos=active+(startX-e.clientX)/(w*.6); render(pos,false); });
