@@ -150,6 +150,8 @@
   .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
 
   #book{scroll-margin-top:14px}
+  #book-screen,#nofit-screen{display:none}
+  #book-screen.show,#nofit-screen.show{display:block;animation:slideDown .4s var(--ease)}
   .qbar{height:4px;background:var(--soft);border-radius:4px;overflow:hidden;margin-bottom:8px}
   .qbar i{display:block;height:100%;width:0;border-radius:4px;
     background:linear-gradient(90deg,var(--accent),var(--brass));transition:width .5s var(--ease)}
@@ -464,13 +466,9 @@
           </div>
         </div>
 
-        <div class="qw-cta"><div>
-          <button id="qBtn" class="qcta" disabled>המשך לקביעת שיחה</button>
-          <div id="qErr" class="qerr" role="alert">אנא ענו על שלוש השאלות 🤍</div>
-        </div></div>
       </div>
 
-      <div id="book-screen" style="display:none">
+      <div id="book-screen">
         <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, יש התאמה!</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
         <div class="booking" id="booking">
           <span class="bk-badge">מצב הדגמה</span>
@@ -508,7 +506,7 @@
         </div>
       </div>
 
-      <div id="nofit-screen" style="display:none">
+      <div id="nofit-screen">
         <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
       </div>
     </section>
@@ -632,9 +630,9 @@
     var order=['area','budget','service'];
     var ans={area:'',budget:'',service:''};
     var qws=[].slice.call(document.querySelectorAll('#q-screen .qw'));
-    var ctaWrap=document.querySelector('.qw-cta');
-    var btn=document.getElementById('qBtn'), fill=document.getElementById('qFill'),
-        count=document.getElementById('qCount'), err=document.getElementById('qErr');
+    var bookScreen=document.getElementById('book-screen'), nofitScreen=document.getElementById('nofit-screen');
+    var fill=document.getElementById('qFill'), count=document.getElementById('qCount');
+    function hideBooking(){bookScreen.classList.remove('show');nofitScreen.classList.remove('show');}
 
     function answered(){return order.reduce(function(a,k){return a+(ans[k]?1:0);},0);}
     function progress(){
@@ -658,7 +656,7 @@
         var ch=qws[j].querySelector('input:checked'); if(ch) ch.checked=false;
         qws[j].classList.remove('open');
       }
-      ctaWrap.classList.remove('open'); btn.disabled=true;
+      hideBooking();
     }
     function choose(i,input){
       var key=order[i], changed = ans[key] && ans[key]!==input.value;
@@ -667,13 +665,13 @@
       qws[i].querySelector('.q').classList.add('answered');
       if(changed) resetAfter(i);
       progress();
-      if(answered()===3){ ctaWrap.classList.add('open'); btn.disabled=false; }
+      if(answered()===3) finish();
       else reveal(i+1);
     }
 
     qws.forEach(function(qw,i){
       var opts=qw.querySelector('.opts'), q=qw.querySelector('.q'), head=qw.querySelector('.q-head');
-      opts.addEventListener('change',function(e){ err.style.display='none'; choose(i,e.target); });
+      opts.addEventListener('change',function(e){ choose(i,e.target); });
       opts.addEventListener('click',function(e){          /* re-select same value while editing */
         var lab=e.target.closest('.opt'); if(!lab) return;
         var inp=lab.querySelector('input');
@@ -695,13 +693,12 @@
           area:ans.area,budget:ans.budget,service:ans.service,qualified:q,
           source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
     }
-    btn.addEventListener('click',function(){
-      if(answered()<3){err.style.display='block';return;}
+    function finish(){
       var ok=pass(); send(ok);
-      document.getElementById('q-screen').style.display='none';
-      document.getElementById(ok?'book-screen':'nofit-screen').style.display='block';
-      document.getElementById('book').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
-    });
+      hideBooking();
+      (ok?bookScreen:nofitScreen).classList.add('show');
+      setTimeout(function(){(ok?bookScreen:nofitScreen).scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});},reduce?0:80);
+    }
   })();
 
   /* 7) booking date-picker — Google Calendar sync via Make */
