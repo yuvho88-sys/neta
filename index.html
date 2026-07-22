@@ -20,7 +20,7 @@
     --line:#e7dfd4; --soft:#efe7dc;
     --accent:#a67f79; --accent-deep:#8a625c; --brass:#c2a16a;
     --btn:#2b2825; --btn-hover:#1d1b19; --btn-ink:#faf8f5;
-    --dark:#211a18; --dark-2:#3a2c29;
+    --dark:#211a18; --dark-2:#3a2c29; --dark-section:#241d1b;
     --serif:"Frank Ruhl Libre",Georgia,"Times New Roman",serif;
     --sans:"Assistant","Segoe UI",Arial,sans-serif;
     --shadow:0 18px 50px rgba(60,42,40,.14);
@@ -99,9 +99,15 @@
 
   /* before / after (original drag logic preserved) */
   .ba-hint{text-align:center;color:var(--muted);font-size:14px;margin:-6px 0 6px}
-  .ba{position:relative;width:100vw;margin-inline:calc(50% - 50vw);margin-top:16px;
+  .ba-block{position:relative;left:50%;right:50%;margin-inline:-50vw;width:100vw;
+    background:var(--dark-section);margin-top:64px;padding-top:clamp(48px,8vw,56px);overflow:hidden}
+  .ba-head{max-width:680px;margin:0 auto;padding:0 22px}
+  .ba-block .eyebrow{color:#efe6dc;margin-top:0}
+  .ba-block .eyebrow .rule{background:linear-gradient(90deg,rgba(239,230,220,.35),transparent)}
+  .ba-block .ba-hint{color:rgba(239,230,220,.66)}
+  .ba{position:relative;width:100%;margin-top:18px;
     aspect-ratio:21/9;max-height:70vh;overflow:hidden;
-    box-shadow:0 18px 44px rgba(60,42,40,.18);user-select:none;touch-action:pan-y;background:#241d1b;cursor:ew-resize}
+    user-select:none;touch-action:pan-y;background:var(--dark-section);cursor:ew-resize}
   .ba picture.after{position:absolute;inset:0;display:block}
   .ba .after img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
   .ba .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);
@@ -124,7 +130,7 @@
 
   /* portfolio coverflow — the signature: work emerging from darkness */
   .folio{position:relative;left:50%;right:50%;margin-inline:-50vw;width:100vw;
-    background:radial-gradient(120% 90% at 50% 12%,var(--dark-2),var(--dark) 72%);
+    background:var(--dark-section);
     padding:clamp(36px,7vw,60px) 0 clamp(28px,4vw,40px);margin-top:0;overflow:hidden}
   .folio .fhead{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
     max-width:760px;margin:0 auto clamp(16px,4vw,26px);padding:0 22px;text-align:right}
@@ -413,11 +419,14 @@
       <p>בוגרת תואר באדריכלות (B.ARC), מלווה אתכם מהרגע הראשון ועד הבית שתמיד רציתם. הגישה שלי אישית: הקשבה אמיתית להרגלים, לאורח החיים ולחלומות שלכם — ומתוכם נולד חלל שמשקף בדיוק אתכם, לא נוסחה מוכנה.</p>
     </section>
 
-    <div class="eyebrow rev"><span class="lab">לפני ואחרי</span><span class="rule"></span></div>
-    <p class="ba-hint rev">גררו את הידית וגלו את השינוי</p>
   </div>
 
-  <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
+  <section class="ba-block" aria-label="לפני ואחרי">
+    <div class="ba-head">
+      <div class="eyebrow rev"><span class="lab">לפני ואחרי</span><span class="rule"></span></div>
+      <p class="ba-hint rev">גררו את הידית וגלו את השינוי</p>
+    </div>
+    <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
     <picture class="pane after">
       <source srcset="after.webp" type="image/webp">
       <img src="after.jpg" alt="עיצוב פנים אחרי — INNHOME" width="1264" height="540" loading="eager" fetchpriority="high" decoding="async">
@@ -427,6 +436,7 @@
     <span class="lab b">לפני</span><span class="lab a">אחרי</span>
     <div class="divider"></div>
     <div class="handle" id="baHandle" aria-hidden="true">⇄</div>
+    </section>
   </section>
 
   <section class="folio rev" aria-label="פרויקטים נבחרים">
