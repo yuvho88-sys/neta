@@ -243,105 +243,90 @@
     .opts{grid-template-columns:repeat(3,1fr)}
   }
 
-  /* ===== booking diary — luxury appointment book ===== */
-  .diary{position:relative;perspective:2000px;margin-top:10px}
-  .diary-badge{position:absolute;top:-6px;left:0;z-index:7;background:var(--soft);color:var(--accent-deep);
-    font-size:11px;font-weight:700;letter-spacing:.4px;padding:4px 10px;border-radius:20px;border:1px solid #e4d5c8;display:none}
-  .diary.demo .diary-badge{display:inline-block}
-  .diary-cover{position:absolute;inset:0;z-index:6;border-radius:14px;
-    background:radial-gradient(120% 100% at 30% 20%,#3a302c,#211a18 72%),repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 4px);
-    box-shadow:var(--shadow),inset 0 0 0 1px rgba(194,161,106,.22),inset 0 0 46px rgba(0,0,0,.5);
-    display:flex;align-items:center;justify-content:center;transform-origin:right center;backface-visibility:hidden;
-    transition:transform .72s cubic-bezier(.52,.16,.24,1),opacity .28s ease .44s}
-  .diary-cover .mono{font-family:var(--serif);letter-spacing:.42em;padding-inline-start:.42em;font-size:clamp(14px,4.4vw,19px);
-    color:transparent;background:linear-gradient(180deg,#dcbd7d,#a17c40);-webkit-background-clip:text;background-clip:text;
-    border:1px solid rgba(194,161,106,.4);padding:13px 20px;border-radius:6px}
-  .diary.open .diary-cover{transform:rotateY(158deg);opacity:0;pointer-events:none}
-  .spread{position:relative;display:grid;grid-template-columns:1fr;border-radius:14px;overflow:hidden;min-height:clamp(320px,86vw,400px);
-    background:linear-gradient(135deg,#f5eee1,#efe6d6);box-shadow:var(--shadow);
-    opacity:0;transform:rotateY(-8deg) scale(.97);transform-origin:right center;
-    transition:opacity .55s ease .12s,transform .7s cubic-bezier(.52,.16,.24,1) .12s}
-  .diary.open .spread{opacity:1;transform:none}
-  .spread::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
-    background:radial-gradient(100% 55% at 50% 0,rgba(255,255,255,.5),transparent),repeating-linear-gradient(0deg,transparent 0 27px,rgba(120,90,60,.06) 27px 28px)}
-  .page{position:relative;padding:20px 18px 24px;z-index:1}
-  .page h4{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--ink)}
-  .wknav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-  .wkbtn{width:34px;height:34px;border-radius:50%;border:1px solid #ddccb2;background:rgba(255,255,255,.45);
-    color:var(--accent-deep);font-size:16px;cursor:pointer;transition:.2s}
-  .wkbtn:hover:not(:disabled){background:#fff;border-color:var(--brass)}
-  .wkbtn:disabled{opacity:.35;cursor:not-allowed}
-  .wklabel{font-family:var(--serif);font-size:14.5px;color:var(--ink);font-weight:500}
-  .days,.times{display:flex;flex-direction:column}
-  .page-dates.flip .days{animation:wkFlip .42s cubic-bezier(.52,.16,.24,1)}
-  @keyframes wkFlip{from{transform:perspective(1000px) rotateY(-40deg);transform-origin:right center;opacity:.25}to{transform:none;opacity:1}}
-  .dline,.tline{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;cursor:pointer;
-    padding:11px 6px;border-bottom:1px solid rgba(120,90,60,.14);text-align:right;font:inherit;color:var(--ink);position:relative;transition:color .15s}
-  .dline .dnum{font-family:var(--serif);font-size:19px;font-weight:700;min-width:26px;color:var(--accent-deep);position:relative}
-  .dline .dname{flex:1}.dline .dtag{font-size:11.5px;color:#a2957e}
-  .dline.today .dnum::before{content:"";position:absolute;right:-3px;top:-11px;width:7px;height:16px;
-    background:var(--brass);border-radius:0 0 3px 3px;box-shadow:0 2px 3px rgba(163,124,64,.4)}
-  .dline.closed{color:#b3a894;cursor:not-allowed}
-  .dline.closed .dnum{color:#c3b7a1}
-  .dline.closed .dname{text-decoration:line-through;text-decoration-color:#cabda3}
-  .dline:not(.closed):hover .dname{box-shadow:inset 0 -2px 0 var(--accent);padding-bottom:2px}
-  .dline.sel,.tline.sel{color:var(--accent-deep)}
-  .dline.sel .dname,.tline.sel .thour{box-shadow:inset 0 -2px 0 var(--accent);padding-bottom:2px}
-  .dline:focus-visible,.tline:focus-visible{outline:0;box-shadow:inset 0 0 0 2px rgba(166,127,121,.5);border-radius:8px}
-  .to-dates{display:none;background:none;border:0;color:var(--accent-deep);cursor:pointer;font:inherit;margin-bottom:8px;padding:0}
-  .tline .thour{font-family:var(--serif);font-size:16px;font-weight:600;min-width:52px;color:var(--accent-deep)}
-  .tline .trule{flex:1;height:0;border-bottom:1px dotted #cbb99e;margin-inline:2px}
-  .tline .tick{opacity:0;color:var(--accent);font-size:15px;transition:opacity .15s}
-  .tline:not(.booked):hover .thour{box-shadow:inset 0 -2px 0 var(--accent)}
-  .tline.sel .tick{opacity:1}
-  .tline.booked{cursor:not-allowed;color:#bcb1a0}
-  .tline.booked .thour{color:#c6bba8;text-decoration:line-through}
-  .tline.booked::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:1px;
-    background:repeating-linear-gradient(90deg,#cdbfa6 0 5px,transparent 5px 9px);transform:rotate(-1deg)}
-  .skl{height:14px;border-radius:4px;margin:15px 6px;background:linear-gradient(90deg,#e7dcc9,#f1e8d7,#e7dcc9);
-    background-size:200% 100%;animation:shim 1.2s infinite}
+  /* ===== booking date-picker ===== */
+  .booking{position:relative;margin-top:10px}
+  .bk-badge{display:none;position:absolute;top:-9px;left:0;background:var(--soft);color:var(--accent-deep);
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid #e4d5c8;z-index:3}
+  .booking.demo .bk-badge{display:inline-block}
+  .bk-field{width:100%;display:flex;align-items:center;gap:11px;min-height:56px;padding:0 18px;cursor:pointer;
+    background:var(--soft);border:1.5px solid #e6d8ca;border-radius:16px;color:var(--ink);font:inherit;text-align:right;
+    transition:border-color .18s var(--ease),background .18s var(--ease)}
+  .bk-field:hover{border-color:var(--accent)}
+  .bk-field.open{border-color:var(--accent);background:#fff}
+  .bk-cal-ico{flex:0 0 21px;width:21px;height:21px;color:var(--accent-deep)}
+  .bk-field-text{flex:1;font-size:16px;font-weight:500}
+  .bk-field-text.placeholder{color:var(--muted);font-weight:400}
+  .bk-chev{color:var(--muted);transition:transform .2s}
+  .bk-field.open .bk-chev{transform:rotate(180deg)}
+  .bk-backdrop{position:fixed;inset:0;z-index:50;background:transparent;display:none}
+  .bk-backdrop.on{display:block}
+  .bk-pop{position:absolute;z-index:51;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid var(--line);
+    border-radius:16px;box-shadow:0 20px 50px rgba(60,42,40,.2);padding:16px 16px 14px;transform-origin:top center;animation:popIn .2s var(--ease)}
+  .bk-pop[hidden]{display:none}
+  @keyframes popIn{from{opacity:0;transform:scale(.96) translateY(-6px)}to{opacity:1;transform:none}}
+  .bk-pop-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .bk-month{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink)}
+  .bk-nav{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--accent-deep);
+    font-size:17px;cursor:pointer;transition:.15s}
+  .bk-nav:hover:not(:disabled){background:var(--soft);border-color:var(--accent)}
+  .bk-nav:disabled{opacity:.3;cursor:not-allowed}
+  .bk-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+  .bk-dow span{text-align:center;font-size:12px;font-weight:600;color:var(--muted);padding:4px 0}
+  .bk-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .bk-cell{aspect-ratio:1;border:0;background:none;border-radius:11px;cursor:pointer;font:inherit;font-size:14.5px;
+    color:var(--ink);display:flex;align-items:center;justify-content:center;transition:.13s;position:relative}
+  .bk-cell.empty{visibility:hidden;cursor:default}
+  .bk-cell.muted{color:#cabfae;cursor:not-allowed}
+  .bk-cell.avail{background:#e9efe6;color:#5b7a60;font-weight:700}
+  .bk-cell.avail:hover{background:#dde7d9}
+  .bk-cell.today{box-shadow:inset 0 0 0 1.5px var(--accent)}
+  .bk-cell.sel{background:var(--accent)!important;color:#fff!important;font-weight:700;box-shadow:0 4px 12px rgba(166,127,121,.4)}
+  .bk-cell:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .bk-legend{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .bk-legend .dot{width:11px;height:11px;border-radius:4px;background:#e9efe6;border:1px solid #cadbc9}
+  .bk-grid.bk-skl .bk-cell{background:linear-gradient(90deg,#efe7dc,#f6f0e7,#efe7dc);background-size:200% 100%;
+    animation:shim 1.2s infinite;color:transparent;border-radius:11px;cursor:default}
   @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
-  .seam{display:none}
-  @media (min-width:720px){
-    .spread{grid-template-columns:1fr 1fr}
-    .seam{display:block;position:absolute;top:7%;bottom:7%;left:50%;width:2px;transform:translateX(-50%);z-index:2;
-      background:linear-gradient(#d8c7ad,#c7b291);box-shadow:0 0 10px rgba(120,90,60,.25),-1px 0 0 rgba(255,255,255,.4),1px 0 0 rgba(0,0,0,.06)}
-    .seam::before,.seam::after{content:"";position:absolute;left:-1px;width:4px;height:8px;background:var(--accent-deep);opacity:.45;border-radius:2px}
-    .seam::before{top:22%}.seam::after{bottom:22%}
+  .bk-times-wrap{margin-top:16px;animation:slideDown .28s var(--ease)}
+  .bk-times-wrap[hidden]{display:none}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  .bk-times-label{font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:10px;color:var(--ink)}
+  .bk-times{display:flex;flex-wrap:wrap;gap:9px}
+  .bk-chip{min-height:44px;padding:10px 18px;border:1.5px solid var(--line);border-radius:30px;background:var(--ivory);
+    cursor:pointer;font:inherit;font-size:15px;font-weight:600;color:var(--ink);transition:.14s}
+  .bk-chip:hover{border-color:var(--accent)}
+  .bk-chip.sel{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(166,127,121,.32)}
+  .bk-confirm{margin-top:16px;animation:slideDown .28s var(--ease)}
+  .bk-confirm[hidden]{display:none}
+  .bk-summary{font-family:var(--serif);font-size:clamp(1.05rem,4.2vw,1.2rem);color:var(--ink);
+    padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--line)}
+  .bk-go{width:100%;min-height:54px;border:0;border-radius:40px;background:var(--ink);color:#fff;font:inherit;
+    font-size:16.5px;font-weight:600;cursor:pointer;box-shadow:0 8px 22px rgba(35,31,28,.22);transition:.2s var(--ease)}
+  .bk-go:hover:not(:disabled){background:var(--accent-deep)}
+  .bk-go:disabled{opacity:.7;cursor:default}
+  .bk-go.loading{animation:bkPulse 1s infinite}
+  @keyframes bkPulse{50%{box-shadow:0 8px 30px rgba(35,31,28,.4)}}
+  .bk-err{color:#b0524b;font-size:14px;margin-top:10px;text-align:center;min-height:16px}
+  .bk-done{text-align:center;padding:14px 10px;animation:fade .4s var(--ease)}
+  .bk-done[hidden]{display:none}
+  .bk-check{width:64px;height:64px;border-radius:50%;background:#e9efe6;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .bk-check svg{width:30px;height:30px}
+  .bk-check svg path{stroke:#5b7a60;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:40;stroke-dashoffset:40;animation:draw .6s var(--ease) .1s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .bk-done h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:8px;color:var(--ink)}
+  .bk-done-line{color:var(--accent-deep);font-weight:600;margin-bottom:6px}
+  .bk-done-note{color:var(--muted);font-size:14.5px}
+  @media (max-width:600px){
+    .bk-backdrop.on{background:rgba(35,31,28,.4)}
+    .bk-pop{position:fixed;top:auto;bottom:0;left:0;right:0;border-radius:20px 20px 0 0;
+      padding:20px 18px calc(20px + env(safe-area-inset-bottom));animation:sheetUp .3s var(--ease)}
+    @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+    .bk-cell{font-size:16px}
   }
-  @media (max-width:719px){
-    .page-times{display:none}
-    .diary.show-times .page-dates{display:none}
-    .diary.show-times .page-times{display:block;animation:pageTurn .44s cubic-bezier(.52,.16,.24,1)}
-    .to-dates{display:inline-block}
-  }
-  @keyframes pageTurn{from{transform:perspective(1200px) rotateY(-82deg);transform-origin:right center;opacity:.2}to{transform:none;opacity:1}}
-  .paper-overlay{position:absolute;inset:0;z-index:5;border-radius:14px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#f5eee1,#efe6d6);box-shadow:var(--shadow);animation:fade .4s var(--ease)}
-  .paper-overlay[hidden]{display:none}
-  .po-in{text-align:center;padding:26px 22px;max-width:350px}
-  .po-line{font-family:var(--serif);font-size:clamp(1.05rem,4.4vw,1.28rem);color:var(--ink);
-    border-bottom:1px solid rgba(120,90,60,.22);padding-bottom:10px;margin-bottom:14px;line-height:1.5}
-  .po-ask{color:#8a7d68;margin-bottom:22px}
-  .seal{width:98px;height:98px;border-radius:50%;border:0;cursor:pointer;margin:0 auto;
-    background:radial-gradient(120% 120% at 30% 25%,var(--accent),var(--accent-deep));color:#fff;
-    font-family:var(--serif);font-size:14px;line-height:1.25;font-weight:700;
-    box-shadow:0 8px 22px rgba(138,98,92,.4),inset 0 0 0 3px rgba(255,255,255,.25),inset 0 0 0 6px rgba(255,255,255,.1);
-    display:flex;align-items:center;justify-content:center;transition:transform .15s var(--ease)}
-  .seal:hover:not(:disabled){transform:scale(1.04)} .seal:active:not(:disabled){transform:scale(.95)}
-  .seal:disabled{cursor:default}
-  .seal.loading{animation:sealPulse 1s infinite}
-  @keyframes sealPulse{50%{box-shadow:0 8px 32px rgba(138,98,92,.6),inset 0 0 0 3px rgba(255,255,255,.25)}}
-  .po-err{color:#b0524b;font-size:14px;margin-top:12px;min-height:18px}
-  .po-back{margin-top:16px;background:none;border:0;color:var(--accent-deep);cursor:pointer;font:inherit;text-decoration:underline}
-  .stamp{display:inline-block;font-family:var(--serif);font-size:clamp(1.2rem,5vw,1.5rem);font-weight:700;color:var(--accent-deep);
-    border:2.5px solid var(--accent-deep);border-radius:10px;padding:8px 18px;transform:rotate(-6deg);opacity:0;
-    animation:stampIn .55s var(--ease) forwards;margin-bottom:16px}
-  @keyframes stampIn{0%{opacity:0;transform:rotate(-6deg) scale(1.6)}70%{opacity:1;transform:rotate(-6deg) scale(.93)}100%{opacity:1;transform:rotate(-6deg) scale(1)}}
-  .po-note{color:#8a7d68;font-size:14.5px;margin-top:6px}
   @media (prefers-reduced-motion:reduce){
-    .diary-cover,.spread,.paper-overlay,.stamp,.seal,.days,.page-times{transition:none!important;animation:none!important}
-    .diary.open .diary-cover{display:none}.diary.open .spread{opacity:1;transform:none}
+    .bk-pop,.bk-times-wrap,.bk-confirm,.bk-done,.bk-check svg path,.bk-go,.bk-cell{animation:none!important;transition:none!important}
+    .bk-check svg path{stroke-dashoffset:0}
   }
 </style>
 </head>
@@ -487,42 +472,38 @@
 
       <div id="book-screen" style="display:none">
         <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, יש התאמה!</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
-        <div class="diary" id="diary" aria-label="יומן קביעת פגישות">
-          <span class="diary-badge">מצב הדגמה</span>
-          <div class="diary-cover" id="diaryCover" aria-hidden="true"><span class="mono">INNHOME</span></div>
-          <div class="spread" id="spread">
-            <div class="seam" aria-hidden="true"></div>
-            <div class="page page-dates" id="pageDates">
-              <div class="wknav">
-                <button class="wkbtn" id="wkPrev" type="button" aria-label="שבוע קודם">›</button>
-                <div class="wklabel" id="wkLabel"></div>
-                <button class="wkbtn" id="wkNext" type="button" aria-label="שבוע הבא">‹</button>
-              </div>
-              <h4>בחרו יום</h4>
-              <div class="days" id="daysList" role="listbox" aria-label="בחירת יום"></div>
+        <div class="booking" id="booking">
+          <span class="bk-badge">מצב הדגמה</span>
+          <button class="bk-field" id="bkField" type="button" aria-haspopup="dialog" aria-expanded="false">
+            <svg class="bk-cal-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span class="bk-field-text placeholder" id="bkFieldText">בחר תאריך לשיחה</span>
+            <span class="bk-chev" aria-hidden="true">⌄</span>
+          </button>
+          <div class="bk-backdrop" id="bkBackdrop"></div>
+          <div class="bk-pop" id="bkPop" role="dialog" aria-label="בחירת תאריך" hidden>
+            <div class="bk-pop-head">
+              <button class="bk-nav" id="bkPrev" type="button" aria-label="חודש קודם">›</button>
+              <div class="bk-month" id="bkMonth"></div>
+              <button class="bk-nav" id="bkNext" type="button" aria-label="חודש הבא">‹</button>
             </div>
-            <div class="page page-times" id="pageTimes">
-              <button class="to-dates" id="toDates" type="button">‹ תאריך אחר</button>
-              <h4 id="timesTitle">בחרו שעה</h4>
-              <div class="sub" id="timesSub" style="color:#8a7d68;font-size:12.5px;margin:2px 0 12px"></div>
-              <div class="times" id="timesList" role="listbox" aria-label="בחירת שעה"></div>
-            </div>
+            <div class="bk-dow" aria-hidden="true"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
+            <div class="bk-grid" id="bkGrid" role="grid" aria-label="בחירת יום"></div>
+            <div class="bk-legend"><span class="dot"></span> ימים פנויים לשיחה</div>
           </div>
-          <div class="paper-overlay" id="diaryConfirm" hidden>
-            <div class="po-in">
-              <div class="po-line" id="confirmLine"></div>
-              <p class="po-ask">לאשר את הפגישה?</p>
-              <button class="seal" id="sealBtn" type="button"><span>לאישור<br>הפגישה</span></button>
-              <div class="po-err" id="confirmErr"></div>
-              <button class="po-back" id="confirmBack" type="button">בחירת מועד אחר</button>
-            </div>
+          <div class="bk-times-wrap" id="bkTimesWrap" hidden>
+            <div class="bk-times-label" id="bkTimesLabel"></div>
+            <div class="bk-times" id="bkTimes" role="listbox" aria-label="בחירת שעה"></div>
           </div>
-          <div class="paper-overlay" id="diaryDone" hidden>
-            <div class="po-in">
-              <div class="stamp">הפגישה נקבעה ✓</div>
-              <div class="po-line" id="doneLine"></div>
-              <p class="po-note">אישור עם כל הפרטים יישלח אליכם בוואטסאפ 🤍</p>
-            </div>
+          <div class="bk-confirm" id="bkConfirm" hidden>
+            <div class="bk-summary" id="bkSummary"></div>
+            <button class="bk-go" id="bkGo" type="button">אישור וקביעת שיחה</button>
+            <div class="bk-err" id="bkErr"></div>
+          </div>
+          <div class="bk-done" id="bkDone" hidden>
+            <div class="bk-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12"/></svg></div>
+            <h3>הפגישה נקבעה!</h3>
+            <p class="bk-done-line" id="bkDoneLine"></p>
+            <p class="bk-done-note">נשלח לך אישור בוואטסאפ 🤍</p>
           </div>
         </div>
       </div>
@@ -723,142 +704,132 @@
     });
   })();
 
-  /* 7) booking diary — luxury appointment book synced to Google Calendar via Make */
+  /* 7) booking date-picker — Google Calendar sync via Make */
   (function(){
     var AVAILABILITY_WEBHOOK_URL = 'PASTE_AVAILABILITY_WEBHOOK_HERE';
     var BOOKING_WEBHOOK_URL = 'PASTE_BOOKING_WEBHOOK_HERE';
 
-    var diary=document.getElementById('diary'); if(!diary) return;
-    var DAYS_FULL=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+    var root=document.getElementById('booking'); if(!root) return;
+    var DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
     var MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
     var LADDER=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
 
     function pad(n){return String(n).padStart(2,'0');}
     function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
     function addDays(d,n){var x=new Date(d);x.setDate(x.getDate()+n);x.setHours(0,0,0,0);return x;}
-    function sundayOf(d){var x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-x.getDay());return x;}
     function parse(s){return new Date(s+'T00:00:00');}
-    function human(dateStr,time){var d=parse(dateStr);return 'יום '+DAYS_FULL[d.getDay()]+', '+d.getDate()+' ב'+MONTHS[d.getMonth()]+(time?(' · '+time):'');}
+    function human(y,t){var d=parse(y);return 'יום '+DAYS[d.getDay()]+', '+d.getDate()+' ב'+MONTHS[d.getMonth()]+(t?(' · '+t):'');}
 
-    var today=new Date();today.setHours(0,0,0,0);
-    var todayY=ymd(today), minWeek=sundayOf(today), maxWeek=sundayOf(addDays(today,14));
-    var S={week:new Date(minWeek),slots:{},demo:false,selDate:null,selTime:null,sending:false,opened:false};
+    var today=new Date();today.setHours(0,0,0,0);var todayY=ymd(today);
+    var minMonth=new Date(today.getFullYear(),today.getMonth(),1);
+    var maxMonth=new Date(today.getFullYear(),today.getMonth()+2,1);
+    var S={view:new Date(minMonth),slots:{},demo:false,selDate:null,selTime:null,sending:false,open:false};
 
     var $=function(id){return document.getElementById(id);};
-    var elDays=$('daysList'), elTimes=$('timesList'), elWkLabel=$('wkLabel'),
-        elWkPrev=$('wkPrev'), elWkNext=$('wkNext'), elTitle=$('timesTitle'), elSub=$('timesSub'),
-        elConfirm=$('diaryConfirm'), elConfirmLine=$('confirmLine'), elConfirmErr=$('confirmErr'),
-        elSeal=$('sealBtn'), elBack=$('confirmBack'), elDone=$('diaryDone'), elDoneLine=$('doneLine');
+    var field=$('bkField'),fieldText=$('bkFieldText'),pop=$('bkPop'),monthLbl=$('bkMonth'),grid=$('bkGrid'),
+        prev=$('bkPrev'),next=$('bkNext'),backdrop=$('bkBackdrop'),timesWrap=$('bkTimesWrap'),timesLbl=$('bkTimesLabel'),
+        times=$('bkTimes'),confirm=$('bkConfirm'),summary=$('bkSummary'),go=$('bkGo'),err=$('bkErr'),done=$('bkDone'),doneLine=$('bkDoneLine');
 
-    function weekLabel(){var a=S.week,b=addDays(a,6);return a.getDate()+'–'+b.getDate()+' ב'+MONTHS[b.getMonth()];}
+    function post(url,body,ms){var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||10000);
+      return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal})
+        .then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json();},function(e){clearTimeout(t);throw e;});}
 
-    function post(url,body,ms){
-      var ctl=new AbortController(), t=setTimeout(function(){ctl.abort();},ms||10000);
-      return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal})
-        .then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json();},function(e){clearTimeout(t);throw e;});
-    }
-    function demoSlots(){
-      var out={};
-      for(var i=0;i<7;i++){var d=addDays(S.week,i);if(d<today)continue;var dow=d.getDay();
-        if(dow===5||dow===6)continue;
-        var arr=LADDER.filter(function(){return Math.random()>.45;});
-        if(arr.length) out[ymd(d)]=arr;}
-      return out;
-    }
-    function skeleton(){elDays.innerHTML='';for(var i=0;i<5;i++){var s=document.createElement('div');s.className='skl';s.style.width=(60+i*6)+'%';elDays.appendChild(s);}}
+    function demo(){var out={};for(var i=0;i<14;i++){var d=addDays(today,i),dw=d.getDay();
+      if(dw===5||dw===6)continue;if(d.getMonth()!==S.view.getMonth())continue;
+      var arr=LADDER.filter(function(){return Math.random()>.5;});if(arr.length)out[ymd(d)]=arr;}return out;}
 
-    function loadWeek(){
-      skeleton();
-      elWkLabel.textContent=weekLabel();
-      elWkPrev.disabled=S.week<=minWeek; elWkNext.disabled=S.week>=maxWeek;
-      var done=function(slots,demo){S.slots=slots;S.demo=demo;diary.classList.toggle('demo',demo);renderDays();};
-      if(AVAILABILITY_WEBHOOK_URL.indexOf('PASTE')===0){ setTimeout(function(){done(demoSlots(),true);},450); return; }
-      post(AVAILABILITY_WEBHOOK_URL,{weekStart:ymd(S.week)}).then(function(res){
-        var map={};(res&&res.slots||[]).forEach(function(s){map[s.date]=s.times||[];});done(map,false);
-      },function(){ done(demoSlots(),true); });
+    function loadMonth(){
+      renderSkeleton();
+      monthLbl.textContent=MONTHS[S.view.getMonth()]+' '+S.view.getFullYear();
+      prev.disabled=S.view<=minMonth; next.disabled=S.view>=maxMonth;
+      var apply=function(map,dm){for(var k in map)S.slots[k]=map[k];S.demo=dm;root.classList.toggle('demo',dm);renderGrid();};
+      if(AVAILABILITY_WEBHOOK_URL.indexOf('PASTE')===0){setTimeout(function(){apply(demo(),true);},400);return;}
+      post(AVAILABILITY_WEBHOOK_URL,{monthStart:ymd(S.view).slice(0,8)+'01'}).then(function(res){
+        var m={};(res&&res.slots||[]).forEach(function(s){m[s.date]=s.times||[];});apply(m,false);
+      },function(){apply(demo(),true);});
     }
-    function renderDays(){
-      elDays.innerHTML=''; var firstAvail=null;
-      for(var i=0;i<7;i++){
-        var d=addDays(S.week,i), y=ymd(d), dow=d.getDay();
+    function renderSkeleton(){grid.classList.add('bk-skl');grid.innerHTML='';
+      for(var i=0;i<35;i++){var b=document.createElement('div');b.className='bk-cell';b.textContent='0';grid.appendChild(b);}}
+    function renderGrid(){
+      grid.classList.remove('bk-skl');grid.innerHTML='';
+      var lead=new Date(S.view.getFullYear(),S.view.getMonth(),1).getDay();
+      var dim=new Date(S.view.getFullYear(),S.view.getMonth()+1,0).getDate();
+      for(var i=0;i<lead;i++){var e=document.createElement('div');e.className='bk-cell empty';grid.appendChild(e);}
+      for(var day=1;day<=dim;day++){
+        var d=new Date(S.view.getFullYear(),S.view.getMonth(),day);d.setHours(0,0,0,0);var y=ymd(d);
         var avail=!!(S.slots[y]&&S.slots[y].length&&d>=today);
-        var b=document.createElement('button');
-        b.type='button'; b.className='dline'+(avail?'':' closed')+(y===todayY?' today':'')+(y===S.selDate?' sel':'');
-        b.setAttribute('role','option'); b.setAttribute('aria-label',human(y,'')+(avail?'':' — לא זמין'));
-        if(avail){b.setAttribute('data-date',y); if(!firstAvail)firstAvail=y;} else b.disabled=true;
-        var tag=avail?(S.slots[y].length+' זמנים'):((dow===5||dow===6)?'סגור':(d<today?'':'מלא'));
-        b.innerHTML='<span class="dnum">'+d.getDate()+'</span><span class="dname">יום '+DAYS_FULL[dow]+'</span><span class="dtag">'+tag+'</span>';
-        if(avail) b.addEventListener('click',(function(yy){return function(){selectDay(yy);};})(y));
-        elDays.appendChild(b);
+        var b=document.createElement('button');b.type='button';b.className='bk-cell';b.textContent=day;
+        b.setAttribute('role','gridcell');b.setAttribute('aria-label',human(y,'')+(avail?' — פנוי':' — לא זמין'));
+        if(y===todayY)b.classList.add('today');
+        if(y===S.selDate)b.classList.add('sel');
+        if(avail){b.classList.add('avail');b.setAttribute('data-date',y);
+          b.addEventListener('click',(function(yy){return function(){pickDate(yy);};})(y));}
+        else{b.classList.add('muted');b.disabled=true;}
+        grid.appendChild(b);
       }
-      if(S.selDate&&S.slots[S.selDate]&&S.slots[S.selDate].length){renderTimes();}
-      else if(firstAvail){selectDay(firstAvail,true);}
-      else{elTitle.textContent='בחרו שעה';elSub.textContent='';elTimes.innerHTML='<p style="color:#8a7d68;font-size:14px;padding:8px 6px">אין זמנים פנויים בשבוע זה — נסו שבוע אחר ›</p>';}
     }
-    function selectDay(y,silent){
-      S.selDate=y; S.selTime=null;
-      [].forEach.call(elDays.children,function(c){if(c.classList)c.classList.toggle('sel',c.getAttribute&&c.getAttribute('data-date')===y);});
-      renderTimes();
-      if(!silent && matchMedia('(max-width:719px)').matches) diary.classList.add('show-times');
+    function pickDate(y){
+      S.selDate=y;S.selTime=null;
+      fieldText.textContent=human(y,'');fieldText.classList.remove('placeholder');
+      closePop();renderTimes();confirm.hidden=true;
+      if(!reduce) timesWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
     function renderTimes(){
-      var y=S.selDate; if(!y)return;
-      elTitle.textContent=human(y,''); elSub.textContent='בחרו שעה שנוחה לכם';
-      var avail=S.slots[y]||[]; elTimes.innerHTML='';
-      LADDER.forEach(function(t){
-        var ok=avail.indexOf(t)>-1;
-        var b=document.createElement('button');
-        b.type='button'; b.className='tline'+(ok?'':' booked')+(t===S.selTime?' sel':'');
-        b.setAttribute('role','option'); b.setAttribute('aria-label',t+(ok?'':' — תפוס'));
-        if(!ok)b.disabled=true;
-        b.innerHTML='<span class="thour">'+t+'</span><span class="trule"></span><span class="tick" aria-hidden="true">✓</span>';
-        if(ok)b.addEventListener('click',function(){S.selTime=t;renderTimes();openConfirm();});
-        elTimes.appendChild(b);
+      timesLbl.textContent='בחרו שעה · '+human(S.selDate,'');
+      var av=S.slots[S.selDate]||[];times.innerHTML='';
+      LADDER.forEach(function(t){ if(av.indexOf(t)<0)return;
+        var b=document.createElement('button');b.type='button';b.className='bk-chip'+(t===S.selTime?' sel':'');
+        b.textContent=t;b.setAttribute('role','option');b.setAttribute('aria-label','שעה '+t);
+        b.addEventListener('click',function(){pickTime(t);});times.appendChild(b);
       });
+      timesWrap.hidden=false;
     }
-    function openConfirm(){elConfirmErr.textContent='';elConfirmLine.textContent=human(S.selDate,S.selTime);elSeal.disabled=false;elSeal.classList.remove('loading');elConfirm.hidden=false;}
+    function pickTime(t){
+      S.selTime=t;
+      [].forEach.call(times.children,function(c){c.classList.toggle('sel',c.textContent===t);});
+      summary.textContent=human(S.selDate,S.selTime);
+      err.textContent='';go.disabled=false;go.classList.remove('loading');confirm.hidden=false;
+      if(!reduce) confirm.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
     function ansVal(k){var el=document.querySelector('#book .opts[data-q="'+k+'"] input:checked');return el?el.value:'';}
-    function book(){
-      if(S.sending)return; S.sending=true; elSeal.disabled=true; elSeal.classList.add('loading'); elConfirmErr.textContent='';
+    function submit(){
+      if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
       var pf=window.__prefill||{};
       var body={name:pf.name||'',phone:pf.phone||'',date:S.selDate,time:S.selTime,
         area:ansVal('area'),budget:ansVal('budget'),service:ansVal('service'),source:pf.source||'',campaign:pf.campaign||''};
-      var fin=function(){S.sending=false;elSeal.classList.remove('loading');};
-      var ok=function(){fin();elDoneLine.textContent=human(S.selDate,S.selTime);elConfirm.hidden=true;elDone.hidden=false;};
-      var err=function(){fin();elSeal.disabled=false;elConfirmErr.textContent='משהו השתבש. נסו שוב, או פנו לנטע ישירות בוואטסאפ.';};
-      if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0){ setTimeout(ok,700); return; }
-      post(BOOKING_WEBHOOK_URL,body).then(ok,err);
+      var fin=function(){S.sending=false;go.classList.remove('loading');};
+      var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);
+        field.style.display='none';timesWrap.hidden=true;confirm.hidden=true;done.hidden=false;
+        if(!reduce) done.scrollIntoView({behavior:'smooth',block:'nearest'});};
+      var bad=function(){fin();go.disabled=false;err.textContent='משהו השתבש. נסו שוב, או פנו לנטע בוואטסאפ.';};
+      if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0){setTimeout(ok,700);return;}
+      post(BOOKING_WEBHOOK_URL,body).then(ok,bad);
     }
-    function flip(){ if(reduce){return;} var pg=$('pageDates'); pg.classList.remove('flip'); void pg.offsetWidth; pg.classList.add('flip'); setTimeout(function(){pg.classList.remove('flip');},430); }
+    function openPop(){S.open=true;field.classList.add('open');field.setAttribute('aria-expanded','true');
+      pop.hidden=false;backdrop.classList.add('on');loadMonth();
+      setTimeout(function(){var f=grid.querySelector('.avail')||grid.querySelector('.today');if(f)f.focus();},reduce?0:210);}
+    function closePop(){S.open=false;field.classList.remove('open');field.setAttribute('aria-expanded','false');
+      pop.hidden=true;backdrop.classList.remove('on');}
 
-    elWkPrev.addEventListener('click',function(){if(S.week>minWeek){S.week=addDays(S.week,-7);flip();loadWeek();}});
-    elWkNext.addEventListener('click',function(){if(S.week<maxWeek){S.week=addDays(S.week,7);flip();loadWeek();}});
-    $('toDates').addEventListener('click',function(){diary.classList.remove('show-times');});
-    elSeal.addEventListener('click',book);
-    elBack.addEventListener('click',function(){elConfirm.hidden=true;S.selTime=null;renderTimes();});
-    function keys(c){c.addEventListener('keydown',function(e){
-      var items=[].filter.call(c.querySelectorAll('button'),function(b){return !b.disabled;}), i=items.indexOf(document.activeElement);
-      if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();(items[i+1]||items[0]).focus();}
-      else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();(items[i-1]||items[items.length-1]).focus();}
-    });}
-    keys(elDays); keys(elTimes);
+    field.addEventListener('click',function(){S.open?closePop():openPop();});
+    backdrop.addEventListener('click',closePop);
+    prev.addEventListener('click',function(e){e.stopPropagation();if(S.view>minMonth){S.view=new Date(S.view.getFullYear(),S.view.getMonth()-1,1);loadMonth();}});
+    next.addEventListener('click',function(e){e.stopPropagation();if(S.view<maxMonth){S.view=new Date(S.view.getFullYear(),S.view.getMonth()+1,1);loadMonth();}});
+    go.addEventListener('click',submit);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&S.open)closePop();});
+    grid.addEventListener('keydown',function(e){
+      var cells=[].slice.call(grid.querySelectorAll('.bk-cell:not(.empty)'));var i=cells.indexOf(document.activeElement);if(i<0)return;var n=i;
+      if(e.key==='ArrowLeft')n=i+1;else if(e.key==='ArrowRight')n=i-1;else if(e.key==='ArrowDown')n=i+7;else if(e.key==='ArrowUp')n=i-7;
+      else if(e.key==='Enter'){if(!cells[i].disabled)cells[i].click();return;}else return;
+      e.preventDefault();if(cells[n])cells[n].focus();
+    });
 
-    var bs=document.getElementById('book-screen');
-    function tryOpen(){
-      if(S.opened||!bs) return;
-      if(bs.style.display!=='none' && bs.offsetParent!==null){
-        S.opened=true;
-        requestAnimationFrame(function(){requestAnimationFrame(function(){diary.classList.add('open');});});
-        loadWeek();
-      }
-    }
-    if(bs) new MutationObserver(tryOpen).observe(bs,{attributes:true,attributeFilter:['style']});
-    /* preview shortcut for design: ...?diary=1 jumps straight to the open diary */
-    if(new URLSearchParams(location.search).get('diary')==='1'){
-      var qs=document.getElementById('q-screen'); if(qs) qs.style.display='none';
-      if(bs) bs.style.display='block';
-    }
-    tryOpen();
+    var bs=document.getElementById('book-screen'),shown=false;
+    function init(){if(shown||!bs)return;if(bs.style.display!=='none'&&bs.offsetParent!==null)shown=true;}
+    if(bs) new MutationObserver(init).observe(bs,{attributes:true,attributeFilter:['style']});
+    /* preview shortcut for design: ...?diary=1 jumps straight to the booking screen */
+    if(new URLSearchParams(location.search).get('diary')==='1'){var qs=document.getElementById('q-screen');if(qs)qs.style.display='none';if(bs)bs.style.display='block';}
+    init();
   })();
 })();
 </script>
