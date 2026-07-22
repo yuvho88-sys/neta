@@ -119,23 +119,22 @@
   .folio .fhead .lab{font-size:12.5px;letter-spacing:3px;text-transform:uppercase;
     color:var(--brass);font-weight:600;margin-bottom:8px}
   .folio .fhead h2{color:#fbf7f1;margin:0}
-  .cf{position:relative;height:clamp(330px,84vw,470px);perspective:1400px;touch-action:pan-y;outline:none}
-  .cf::before,.cf::after{content:"";position:absolute;top:0;bottom:0;width:15%;z-index:20;pointer-events:none}
+  .cf{--cw:min(720px,88vw);position:relative;height:calc(var(--cw) / 1.5 + 60px);perspective:1600px;touch-action:pan-y;outline:none}
+  .cf::before,.cf::after{content:"";position:absolute;top:0;bottom:0;width:20%;z-index:20;pointer-events:none}
   .cf::before{left:0;background:linear-gradient(90deg,var(--dark),transparent)}
   .cf::after{right:0;background:linear-gradient(270deg,var(--dark),transparent)}
   .cf-stage{position:absolute;inset:0;transform-style:preserve-3d}
-  .cf-slide{position:absolute;top:50%;left:50%;width:clamp(200px,58vw,316px);aspect-ratio:4/5;
-    margin-left:calc(clamp(200px,58vw,316px) / -2);
-    border-radius:16px;overflow:hidden;background:#4a3d39;
+  .cf-slide{position:absolute;top:50%;left:50%;width:var(--cw);aspect-ratio:3/2;
+    margin-left:calc(var(--cw) / -2);
+    border-radius:14px;overflow:hidden;background:#241d1b;
     box-shadow:0 30px 60px rgba(0,0,0,.5);will-change:transform,opacity,filter;
     transition:transform .6s var(--ease),opacity .6s var(--ease),filter .6s var(--ease);
-    color:#d9cabf;font-family:var(--serif);font-size:19px;cursor:pointer;
-    border:1px solid rgba(255,255,255,.06)}
+    cursor:pointer;border:1px solid rgba(255,255,255,.06)}
   .cf-slide.dragging{transition:none}
   .cf-slide .ph-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:repeating-linear-gradient(45deg,#463a36,#463a36 16px,#4d403b 16px,#4d403b 32px)}
   .cf-slide picture{position:absolute;inset:0;display:block}
-  .cf-slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .cf-slide img{width:100%;height:100%;object-fit:contain;display:block}
   .cf-cap{text-align:center;margin-top:16px;color:#efe6dc;min-height:22px;
     font-size:14px;letter-spacing:.5px;transition:opacity .4s var(--ease)}
   .cf-nav{display:flex;gap:14px;justify-content:center;margin-top:16px}
@@ -655,7 +654,7 @@
 
     function tf(o){
       var a=Math.abs(o);
-      var tx=o*58, sc=Math.max(.6,1-a*.16), ry=o*-16, tz=-a*90;
+      var tx=o*44, sc=Math.max(.64,1-a*.14), ry=o*-14, tz=-a*120;
       return 'translateY(-50%) translateX('+tx+'%) translateZ('+tz+'px) rotateY('+ry+'deg) scale('+sc+')';
     }
     function render(pp, anim){
