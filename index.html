@@ -9,6 +9,7 @@
 <meta property="og:title" content="נטע גוטמן · INNHOME">
 <meta property="og:description" content="אדריכלית ומעצבת פנים — שיחת ייעוץ ראשונית ללא עלות.">
 <meta property="og:locale" content="he_IL">
+<meta property="og:image" content="https://yuvho88-sys.github.io/neta/neta.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23231F1C'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='16' fill='%23C2A16A' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,11 +55,8 @@
     width:min(520px,90%);height:340px;pointer-events:none;z-index:0;
     background:radial-gradient(ellipse at center,rgba(166,127,121,.16),transparent 66%);filter:blur(6px)}
   .hero > *{position:relative;z-index:1}
-  .photo{width:clamp(120px,32vw,150px);aspect-ratio:1;border-radius:50%;object-fit:cover;overflow:hidden;
+  .photo{width:clamp(120px,32vw,150px);aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center top;overflow:hidden;
     margin:0 auto 24px;border:5px solid var(--paper);box-shadow:var(--shadow);background:var(--soft)}
-  .photo.ph{display:flex!important;align-items:center;justify-content:center;text-align:center;
-    color:var(--muted);font-size:12px;line-height:1.35;padding:14px}
-  .photo.ph bdi{unicode-bidi:isolate;display:block;max-width:100%}
   .brand{font-family:var(--serif);font-weight:500;font-size:clamp(13px,3.4vw,15px);
     letter-spacing:.55em;padding-inline-start:.55em;color:var(--accent-deep);margin-bottom:20px}
   .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.95rem,6.4vw,3.1rem);
@@ -369,7 +367,10 @@
 
 <header class="hero wrap rev">
   <div class="halo" aria-hidden="true"></div>
-  <div class="photo ph" role="img" aria-label="תמונה של נטע גוטמן"><bdi>[[תמונה של נטע]]</bdi></div>
+  <picture>
+    <source srcset="neta.webp" type="image/webp">
+    <img class="photo" src="neta.jpg" width="400" height="400" alt="נטע גוטמן — אדריכלית ומעצבת פנים" loading="eager" fetchpriority="high" decoding="async">
+  </picture>
   <div class="brand">INNHOME</div>
   <h1>אני כאן כדי ליצור יחד איתכם<br>את המרחב המדויק עבורכם</h1>
   <div class="role">נטע גוטמן · <b>אדריכלית ומעצבת פנים</b></div>
