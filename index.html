@@ -134,6 +134,8 @@
   .cf-slide.dragging{transition:none}
   .cf-slide .ph-in{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:repeating-linear-gradient(45deg,#463a36,#463a36 16px,#4d403b 16px,#4d403b 32px)}
+  .cf-slide picture{position:absolute;inset:0;display:block}
+  .cf-slide img{width:100%;height:100%;object-fit:cover;display:block}
   .cf-cap{text-align:center;margin-top:16px;color:#efe6dc;min-height:22px;
     font-size:14px;letter-spacing:.5px;transition:opacity .4s var(--ease)}
   .cf-nav{display:flex;gap:14px;justify-content:center;margin-top:16px}
@@ -406,11 +408,13 @@
     <div class="fhead"><div class="lab">Portfolio</div><h2>מתוך הפרויקטים שלי</h2></div>
     <div class="cf" id="cf" role="group" aria-roledescription="קרוסלת פרויקטים" tabindex="0" aria-label="פרויקטים — החליקו או השתמשו בחיצים">
       <div class="cf-stage" id="cfStage">
-        <div class="cf-slide" data-cap="פרויקט 1"><div class="ph-in">[[פרויקט 1]]</div></div>
-        <div class="cf-slide" data-cap="פרויקט 2"><div class="ph-in">[[פרויקט 2]]</div></div>
-        <div class="cf-slide" data-cap="פרויקט 3"><div class="ph-in">[[פרויקט 3]]</div></div>
-        <div class="cf-slide" data-cap="פרויקט 4"><div class="ph-in">[[פרויקט 4]]</div></div>
-        <div class="cf-slide" data-cap="פרויקט 5"><div class="ph-in">[[פרויקט 5]]</div></div>
+        <!-- TODO: real project names in data-cap -->
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-1.webp" type="image/webp"><img src="project-1.jpg" alt="פרויקט עיצוב פנים 1 — INNHOME" width="1118" height="581" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-2.webp" type="image/webp"><img src="project-2.jpg" alt="פרויקט עיצוב פנים 2 — INNHOME" width="1116" height="647" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-3.webp" type="image/webp"><img src="project-3.jpg" alt="פרויקט עיצוב פנים 3 — INNHOME" width="1002" height="670" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-4.webp" type="image/webp"><img src="project-4.jpg" alt="פרויקט עיצוב פנים 4 — INNHOME" width="1055" height="664" loading="eager" fetchpriority="high" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-5.webp" type="image/webp"><img src="project-5.jpg" alt="פרויקט עיצוב פנים 5 — INNHOME" width="1033" height="682" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-6.webp" type="image/webp"><img src="project-6.jpg" alt="פרויקט עיצוב פנים 6 — INNHOME" width="1200" height="513" loading="lazy" decoding="async"></picture></div>
       </div>
     </div>
     <div class="cf-cap" id="cfCap" aria-live="polite"></div>
