@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>נטע גוטמן · INNHOME — שיחת היכרות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== מקומות עם [[ ]] ממתינים לתוכן אמיתי (תמונות, המלצות) ===== */
+  :root{
+    --bg:#faf8f5; --card:#fff; --ink:#33302c; --muted:#8a827a;
+    --line:#ece6dd; --accent:#c99aa0; --accent-dark:#a97f85; --soft:#f4efe9;
+    --serif:"Frank Ruhl Libre",Georgia,serif;
+    --sans:"Assistant","Segoe UI",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.7;font-size:17px}
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px 90px}
+  img{max-width:100%;display:block}
+
+  /* ---- reveal on scroll ---- */
+  .rev{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .rev.in{opacity:1;transform:none}
+
+  /* ---- hero ---- */
+  .hero{text-align:center;padding:46px 0 22px}
+  .photo{width:130px;height:130px;border-radius:50%;object-fit:cover;margin:0 auto 20px;
+    border:4px solid var(--card);box-shadow:0 8px 26px rgba(120,90,90,.16);background:var(--soft)}
+  .photo.ph{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;padding:8px}
+  .brand{font-family:var(--serif);font-size:15px;letter-spacing:7px;color:var(--accent-dark);margin-bottom:16px}
+  .hero h1{font-family:var(--serif);font-weight:700;font-size:28px;line-height:1.45;margin-bottom:12px}
+  .hero .role{color:var(--muted);font-size:17px}
+  .hero .role b{color:var(--accent-dark);font-weight:600}
+  .free{display:inline-block;background:var(--soft);color:var(--accent-dark);font-weight:700;
+    font-size:14px;padding:6px 16px;border-radius:20px;margin-top:16px}
+
+  .greet{background:var(--soft);border-radius:14px;padding:13px 18px;margin:6px 0 8px;
+    font-size:16px;color:var(--accent-dark);text-align:center;display:none}
+  .greet.on{display:block}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:26px 24px;margin:18px 0;box-shadow:0 3px 14px rgba(120,90,90,.05)}
+  h2{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:14px;color:var(--accent-dark)}
+  .section-lead{text-align:center;color:var(--muted);font-size:15px;margin:34px 0 4px}
+  .about .philosophy{font-family:var(--serif);font-size:19px;line-height:1.6;text-align:center;padding:6px 4px}
+  .about p{color:#4c463f}
+
+  /* ---- before/after slider ---- */
+  .ba{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/3;
+    box-shadow:0 6px 22px rgba(120,90,90,.12);user-select:none;touch-action:none;background:var(--soft)}
+  .ba .pane{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:22px;color:#b8ada0;flex-direction:column;gap:6px}
+  .ba .pane small{font-family:var(--sans);font-size:13px;color:#c4b9ac}
+  .ba .after{background:repeating-linear-gradient(45deg,#efe9e1,#efe9e1 14px,#f4efe9 14px,#f4efe9 28px)}
+  .ba .before{background:repeating-linear-gradient(45deg,#e4ddd2,#e4ddd2 14px,#e9e2d7 14px,#e9e2d7 28px);
+    position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
+  .ba .divider{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:3px;background:#fff;
+    transform:translateX(-50%);box-shadow:0 0 0 1px rgba(169,127,133,.3);z-index:3}
+  .ba .handle{position:absolute;top:50%;left:var(--pos,50%);transform:translate(-50%,-50%);
+    width:46px;height:46px;border-radius:50%;background:var(--accent);border:3px solid #fff;
+    box-shadow:0 6px 18px rgba(169,127,133,.5);z-index:4;cursor:ew-resize;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+  .ba .lab{position:absolute;top:12px;z-index:3;background:rgba(51,48,44,.6);color:#fff;
+    font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+  .ba .lab.b{right:12px}.ba .lab.a{left:12px}
+
+  /* ---- project strip ---- */
+  .strip{display:flex;gap:12px;overflow-x:auto;padding:4px 0 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .strip::-webkit-scrollbar{height:0}
+  .strip .p{flex:0 0 76%;scroll-snap-align:center;aspect-ratio:4/3;border-radius:16px;
+    background:var(--soft);display:flex;align-items:center;justify-content:center;
+    color:#b8ada0;font-family:var(--serif);font-size:16px;border:1px solid var(--line)}
+
+  .quote{border-right:3px solid var(--accent);padding:2px 16px 2px 0;margin:16px 0;color:#4c463f;font-size:16.5px}
+  .quote .who{display:block;margin-top:7px;color:var(--muted);font-size:14px;font-weight:700}
+
+  .steps{list-style:none}
+  .steps li{display:flex;gap:14px;align-items:flex-start;margin:16px 0}
+  .dot{flex:0 0 30px;height:30px;border-radius:50%;background:var(--soft);color:var(--accent-dark);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;font-family:var(--serif)}
+  .steps b{font-size:17px;display:block}.steps span{color:var(--muted);font-size:15px}
+
+  .book{text-align:center}
+  .cal-embed{background:var(--soft);border:1px dashed #ddd3c6;border-radius:16px;padding:48px 20px;color:var(--muted);font-size:15px;margin-top:8px}
+
+  /* ---- questionnaire ---- */
+  #q-screen{text-align:right}
+  .q{margin-bottom:20px}
+  .qt{display:block;font-family:var(--serif);font-size:17px;margin-bottom:9px}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  .opt{position:relative}
+  .opt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+  .opt span{display:block;padding:12px 15px;border:1.5px solid var(--line);border-radius:12px;
+    background:var(--bg);cursor:pointer;transition:.15s;font-size:15.5px}
+  .opt input:checked+span{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 2px rgba(201,154,160,.18)}
+  .opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+  .qcta{width:100%;padding:14px;border:0;border-radius:30px;background:var(--accent-dark);color:#fff;
+    font-family:var(--sans);font-size:16px;font-weight:700;cursor:pointer;margin-top:6px;transition:.15s}
+  .qcta:hover{background:#956e74}
+  .qcta:disabled{background:#d8ccc0;cursor:not-allowed}
+  .qerr{color:var(--accent-dark);font-size:14px;margin-top:10px;display:none;text-align:center}
+  .qres{text-align:center;padding:6px 0 16px}
+  .qbadge{width:52px;height:52px;border-radius:50%;background:#eef3ef;color:#6e8b74;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px}
+  .qbadge.warm{background:var(--soft);color:var(--accent-dark)}
+
+  /* ---- sticky mobile CTA ---- */
+  .sticky{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(250,248,245,.94);
+    backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px 16px;
+    display:flex;justify-content:center}
+  .sticky a{background:var(--accent-dark);color:#fff;text-decoration:none;font-weight:700;font-size:16px;
+    padding:13px 30px;border-radius:30px;box-shadow:0 6px 18px rgba(169,127,133,.4)}
+
+  footer{text-align:center;color:var(--muted);font-size:13.5px;padding-top:26px;line-height:2}
+  footer a{color:var(--accent-dark);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero rev">
+    <div class="photo ph">[[תמונה של נטע]]</div>
+    <div class="brand">I N N H O M E</div>
+    <h1>אני כאן כדי ליצור יחד איתכם<br>את המרחב המדויק עבורכם</h1>
+    <div class="role">נטע גוטמן · <b>אדריכלית ומעצבת פנים</b></div>
+    <div><span class="free">שיחת ייעוץ ראשונית — ללא עלות</span></div>
+  </div>
+
+  <div class="greet" id="greet"></div>
+
+  <div class="card about rev">
+    <p class="philosophy">"אנחנו מוגדרים על ידי החלל שבו אנחנו חיים —<br>והוא משפיע עלינו הרבה יותר משנוטים לייחס לו."</p>
+    <p style="margin-top:16px">בוגרת תואר באדריכלות (B.ARC), מלווה אתכם מהרגע הראשון ועד הבית שתמיד רציתם. הגישה שלי אישית: הקשבה אמיתית להרגלים, לאורח החיים ולחלומות שלכם — ומתוכם נולד חלל שמשקף בדיוק אתכם, לא נוסחה מוכנה.</p>
+  </div>
+
+  <p class="section-lead rev">גררו את הכפתור וראו את השינוי</p>
+  <div class="ba rev" id="ba" style="--pos:50%">
+    <div class="pane after">אחרי<small>[[תמונת "אחרי" של פרויקט]]</small></div>
+    <div class="pane before">לפני<small>[[תמונת "לפני"]]</small></div>
+    <div class="lab b">לפני</div><div class="lab a">אחרי</div>
+    <div class="divider"></div>
+    <div class="handle" id="baHandle">⇄</div>
+  </div>
+
+  <p class="section-lead rev">מתוך הפרויקטים שלי</p>
+  <div class="strip rev">
+    <div class="p">[[פרויקט 1]]</div>
+    <div class="p">[[פרויקט 2]]</div>
+    <div class="p">[[פרויקט 3]]</div>
+  </div>
+
+  <div class="card rev">
+    <h2>מה לקוחות מספרים</h2>
+    <div class="quote">[[ציטוט המלצה 1 — משפט או שניים]]<span class="who">[[שם · מיקום]]</span></div>
+    <div class="quote">[[ציטוט המלצה 2]]<span class="who">[[שם · מיקום]]</span></div>
+  </div>
+
+  <div class="card rev">
+    <h2>מה קורה בשיחה</h2>
+    <ul class="steps">
+      <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
+      <li><span class="dot">2</span><div><b>בלי התחייבות</b><span>מכירים, מבינים מה חשוב לכם, ובודקים יחד אם מתאים</span></div></li>
+      <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>[[מה הליד מקבל — המלצה ראשונית והצעת המשך]]</span></div></li>
+    </ul>
+  </div>
+
+  <div class="card book rev" id="book">
+    <!-- מסך 1: שאלון -->
+    <div id="q-screen">
+      <h2>כמה שאלות קצרות ונקבע</h2>
+      <p style="color:var(--muted);font-size:15px;margin-bottom:18px">שלוש שאלות שיעזרו לנטע להבין מה מתאים לכם — ואז נבחר יחד זמן לשיחה.</p>
+
+      <div class="q">
+        <label class="qt">1. באיזה אזור נמצא הבית?</label>
+        <div class="opts" data-q="area">
+          <label class="opt"><input type="radio" name="area" value="צפון"><span>צפון</span></label>
+          <label class="opt"><input type="radio" name="area" value="חיפה והסביבה"><span>חיפה והסביבה</span></label>
+          <label class="opt"><input type="radio" name="area" value="שרון"><span>שרון</span></label>
+          <label class="opt"><input type="radio" name="area" value="מרכז"><span>מרכז</span></label>
+          <label class="opt"><input type="radio" name="area" value="ירושלים"><span>ירושלים והסביבה</span></label>
+          <label class="opt"><input type="radio" name="area" value="דרום"><span>דרום</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="qt">2. מה התקציב המשוער לפרויקט?</label>
+        <div class="opts" data-q="budget">
+          <label class="opt"><input type="radio" name="budget" value="עד 20K"><span>עד ₪20,000</span></label>
+          <label class="opt"><input type="radio" name="budget" value="20-50K"><span>₪20,000–50,000</span></label>
+          <label class="opt"><input type="radio" name="budget" value="50-100K"><span>₪50,000–100,000</span></label>
+          <label class="opt"><input type="radio" name="budget" value="100K+"><span>₪100,000 ומעלה</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <label class="qt">3. איזה שירות מעניין אתכם?</label>
+        <div class="opts" data-q="service">
+          <label class="opt"><input type="radio" name="service" value="עיצוב מלא"><span>עיצוב דירה / בית מלא</span></label>
+          <label class="opt"><input type="radio" name="service" value="חדר בודד"><span>עיצוב חדר בודד</span></label>
+          <label class="opt"><input type="radio" name="service" value="ייעוץ"><span>ייעוץ עיצובי</span></label>
+          <label class="opt"><input type="radio" name="service" value="הום סטיילינג"><span>הום סטיילינג</span></label>
+          <label class="opt"><input type="radio" name="service" value="ליווי שיפוץ"><span>ליווי שיפוץ</span></label>
+        </div>
+      </div>
+
+      <button id="qBtn" class="qcta" disabled>המשך לקביעת שיחה</button>
+      <div id="qErr" class="qerr">אנא ענו על שלוש השאלות 🙂</div>
+    </div>
+
+    <!-- מסך 2א: מתאים — יומן -->
+    <div id="book-screen" style="display:none">
+      <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, יש התאמה!</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
+      <!-- ↓ להחליף ב-iframe של "לוח הפגישות" מיומן גוגל של נטע ↓ -->
+      <div class="cal-embed" id="calslot">[[כאן מוטמע לוח הפגישות של יומן גוגל — הליד בוחר תאריך ושעה]]</div>
+    </div>
+
+    <!-- מסך 2ב: לא מתאים כרגע -->
+    <div id="nofit-screen" style="display:none">
+      <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
+    </div>
+  </div>
+
+  <footer class="rev">
+    INNHOME · נטע גוטמן<br>
+    <a href="tel:0504322412">050-4322412</a> · <a href="mailto:innhome.g@gmail.com">innhome.g@gmail.com</a><br>
+    קיבוץ חורש
+  </footer>
+
+</div>
+
+<div class="sticky"><a href="#book">לקביעת שיחה ›</a></div>
+
+<script>
+  // 1) name/phone מהלינק שנשלח בוואטסאפ → ברכה + prefill ל-Cal.com
+  (function(){
+    var p = new URLSearchParams(location.search);
+    var name = p.get('name'), phone = p.get('phone');
+    if(name){
+      var g = document.getElementById('greet');
+      g.textContent = 'היי ' + name + ', כיף שהגעתם 🤍 כמה שאלות קצרות ונקבע.';
+      g.classList.add('on');
+    }
+    window.__prefill = { name: name||"", phone: phone||"", source: p.get('source')||"", campaign: p.get('campaign')||"" };
+  })();
+
+  // 4) שאלון סינון → פותח את היומן רק למי שעומד בקריטריון של נטע
+  (function(){
+    /* ⚙️ קריטריון לעריכת נטע — מחקו/הוסיפו ערכים. מי שעומד בכל השלושה → נפתח היומן. */
+    var CRITERIA = {
+      areas:   ['צפון','חיפה והסביבה','שרון','מרכז','ירושלים','דרום'], // אזורים שנטע עובדת בהם
+      budgets: ['20-50K','50-100K','100K+'],                          // תקציב מ-20K ומעלה (מסיר "עד 20K")
+      services:['עיצוב מלא','חדר בודד','ייעוץ','הום סטיילינג','ליווי שיפוץ']
+    };
+    /* ה-Webhook של Make — לקבל כל ליד ל-Airtable. להדביק אחרי בניית הסנריו. */
+    var MAKE_WEBHOOK_URL = 'PASTE_MAKE_WEBHOOK_URL_HERE';
+
+    var ans={area:'',budget:'',service:''}, btn=document.getElementById('qBtn');
+    document.querySelectorAll('#book .opts').forEach(function(gr){
+      gr.addEventListener('change',function(e){
+        ans[gr.getAttribute('data-q')]=e.target.value;
+        btn.disabled=!(ans.area&&ans.budget&&ans.service);
+        document.getElementById('qErr').style.display='none';
+      });
+    });
+    function pass(){return CRITERIA.areas.indexOf(ans.area)>-1 && CRITERIA.budgets.indexOf(ans.budget)>-1 && CRITERIA.services.indexOf(ans.service)>-1;}
+    function send(q){
+      if(MAKE_WEBHOOK_URL.indexOf('PASTE')===0) return;
+      fetch(MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name:window.__prefill.name,phone:window.__prefill.phone,
+          area:ans.area,budget:ans.budget,service:ans.service,qualified:q,
+          source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
+    }
+    if(btn) btn.addEventListener('click',function(){
+      if(!(ans.area&&ans.budget&&ans.service)){document.getElementById('qErr').style.display='block';return;}
+      var ok=pass(); send(ok);
+      document.getElementById('q-screen').style.display='none';
+      document.getElementById(ok?'book-screen':'nofit-screen').style.display='block';
+      document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  })();
+
+  // 2) reveal on scroll
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.rev').forEach(function(el){ io.observe(el); });
+
+  // 3) before/after drag
+  (function(){
+    var ba=document.getElementById('ba'); if(!ba) return;
+    function set(x){
+      var r=ba.getBoundingClientRect();
+      var pos=Math.max(4,Math.min(96,((x-r.left)/r.width)*100));
+      ba.style.setProperty('--pos',pos+'%');
+    }
+    var down=false;
+    ba.addEventListener('mousedown',function(e){down=true;set(e.clientX);});
+    window.addEventListener('mousemove',function(e){if(down)set(e.clientX);});
+    window.addEventListener('mouseup',function(){down=false;});
+    ba.addEventListener('touchstart',function(e){set(e.touches[0].clientX);},{passive:true});
+    ba.addEventListener('touchmove',function(e){set(e.touches[0].clientX);},{passive:true});
+  })();
+</script>
+</body>
+</html>
