@@ -140,6 +140,17 @@
     background:rgba(255,255,255,.06);color:#efe6dc;font-size:17px;cursor:pointer;
     display:flex;align-items:center;justify-content:center;transition:.2s}
   .cf-nav button:hover{background:rgba(255,255,255,.14);border-color:var(--brass)}
+  .folio-cta{margin-top:28px;text-align:center;transition-delay:.15s}
+  .ghost-cta{display:inline-flex;align-items:center;gap:9px;min-height:48px;padding:13px 32px;
+    border:1.5px solid rgba(240,232,220,.5);border-radius:40px;color:#f3ece0;background:transparent;
+    font-weight:600;font-size:15px;letter-spacing:.5px;
+    transition:background .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease)}
+  .ghost-cta span{display:inline-block;transition:transform .2s var(--ease)}
+  .ghost-cta:hover{background:rgba(246,241,234,.1);border-color:var(--brass);transform:translateY(-2px)}
+  .ghost-cta:hover span{transform:translateX(-4px)}
+  .ghost-cta:active{transform:translateY(0) scale(.99)}
+  .ghost-cta:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){.ghost-cta,.ghost-cta span{transition:none}.ghost-cta:hover{transform:none}.ghost-cta:hover span{transform:none}}
 
   .quote{position:relative;padding:4px 22px 4px 0;margin:20px 0;color:var(--body);font-size:16.5px}
   .quote::before{content:"";position:absolute;right:0;top:4px;bottom:4px;width:2px;
@@ -400,6 +411,9 @@
     <div class="cf-nav">
       <button id="cfPrev" type="button" aria-label="הפרויקט הקודם">›</button>
       <button id="cfNext" type="button" aria-label="הפרויקט הבא">‹</button>
+    </div>
+    <div class="folio-cta rev">
+      <a href="https://www.innh0me.com/%D7%A2%D7%99%D7%A6%D7%95%D7%91%D7%97%D7%9C%D7%9C%D7%99%D7%9D%D7%A4%D7%A8%D7%98%D7%99%D7%99%D7%9D" target="_blank" rel="noopener" class="ghost-cta">לצפייה בכל הפרויקטים <span aria-hidden="true">‹</span></a>
     </div>
   </section>
 
