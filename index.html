@@ -853,6 +853,11 @@
       }
     }
     if(bs) new MutationObserver(tryOpen).observe(bs,{attributes:true,attributeFilter:['style']});
+    /* preview shortcut for design: ...?diary=1 jumps straight to the open diary */
+    if(new URLSearchParams(location.search).get('diary')==='1'){
+      var qs=document.getElementById('q-screen'); if(qs) qs.style.display='none';
+      if(bs) bs.style.display='block';
+    }
     tryOpen();
   })();
 })();
