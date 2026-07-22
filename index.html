@@ -150,32 +150,71 @@
   .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
 
   #book{scroll-margin-top:14px}
-  .qbar{height:4px;background:var(--soft);border-radius:4px;overflow:hidden;margin-bottom:6px}
+  .qbar{height:4px;background:var(--soft);border-radius:4px;overflow:hidden;margin-bottom:8px}
   .qbar i{display:block;height:100%;width:0;border-radius:4px;
-    background:linear-gradient(90deg,var(--accent),var(--brass));transition:width .45s var(--ease)}
-  .qcount{font-size:12.5px;color:var(--muted);letter-spacing:1px;margin-bottom:20px;font-weight:600}
-  .q{margin-bottom:26px}
-  .qt{display:block;font-family:var(--serif);font-size:clamp(1.05rem,4.2vw,1.22rem);font-weight:500;margin-bottom:13px}
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .opt{position:relative}
+    background:linear-gradient(90deg,var(--accent),var(--brass));transition:width .5s var(--ease)}
+  .qcount{font-size:12.5px;color:var(--muted);letter-spacing:.5px;margin-bottom:18px;font-weight:600}
+  .qlead{color:var(--muted);font-size:15px;margin:-2px 0 18px}
+
+  /* wizard reveal wrapper — CLS-free grid-rows */
+  .qw{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-8px);
+    transition:grid-template-rows .45s var(--ease),opacity .45s var(--ease),transform .45s var(--ease)}
+  .qw.open{grid-template-rows:1fr;opacity:1;transform:none}
+  .qw-in{overflow:hidden;min-height:0}
+  .q{padding:18px 0 6px;border-top:1px solid var(--line)}
+  .qw[data-step="0"] .q{border-top:0;padding-top:2px}
+
+  .q-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    background:none;border:0;padding:0;font:inherit;color:inherit;text-align:right;cursor:default}
+  .q.answered .q-head{cursor:pointer}
+  .qt{font-family:var(--serif);font-size:clamp(1.05rem,4.2vw,1.22rem);font-weight:500;
+    transition:font-size .3s var(--ease),color .3s var(--ease)}
+  .q.answered .qt{font-size:1rem;color:var(--muted)}
+  .q-chosen{display:none;align-items:center;gap:7px;background:var(--soft);border:1px solid #e4d5c8;
+    color:var(--accent-deep);font-weight:600;font-size:13.5px;padding:6px 12px;border-radius:30px;white-space:nowrap}
+  .q.answered .q-chosen{display:inline-flex;animation:fade .4s var(--ease)}
+  .q-chosen .ck{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--accent);
+    color:#fff;align-items:center;justify-content:center;font-size:10px;line-height:1}
+
+  .q-body{display:grid;grid-template-rows:1fr;opacity:1;
+    transition:grid-template-rows .42s var(--ease),opacity .35s var(--ease)}
+  .q.answered .q-body{grid-template-rows:0fr;opacity:0}
+  .q-body-in{overflow:hidden;min-height:0}
+
+  .opts{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px;padding-top:13px}
+  .opt{position:relative;display:flex}
   .opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
-  .opt span{display:flex;align-items:center;gap:9px;min-height:52px;padding:12px 15px;
-    border:1.5px solid var(--line);border-radius:14px;background:var(--ivory);cursor:pointer;
-    transition:border-color .15s var(--ease),background .15s var(--ease),box-shadow .15s var(--ease),transform .1s var(--ease);
-    font-size:15.5px;font-weight:500;line-height:1.3}
-  .opt span::before{content:"";flex:0 0 20px;height:20px;border-radius:50%;
-    border:1.5px solid #d5c8ba;background:#fff;transition:.15s var(--ease)}
+  .opt span{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:12px 15px;
+    border:1.5px solid var(--line);border-radius:14px;background:var(--ivory);cursor:pointer;text-wrap:balance;
+    transition:border-color .15s var(--ease),background .15s var(--ease),box-shadow .15s var(--ease),transform .12s var(--ease);
+    font-size:15.5px;font-weight:500;line-height:1.28}
+  .opt span::before{content:"";flex:0 0 21px;height:21px;border-radius:50%;
+    border:1.5px solid #d5c8ba;background:#fff;
+    transition:transform .18s var(--ease),border-color .15s var(--ease),background .15s var(--ease)}
+  @media (hover:hover){.opt span:hover{border-color:#d3c2b5;transform:translateY(-1px)}}
   .opt input:checked+span{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 3px rgba(166,127,121,.14)}
   .opt input:checked+span::before{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 3px #fff}
   .opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
   .opt span:active{transform:scale(.98)}
+
+  /* CTA unfold */
+  .qw-cta{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-8px);
+    transition:grid-template-rows .45s var(--ease),opacity .45s var(--ease),transform .45s var(--ease)}
+  .qw-cta.open{grid-template-rows:1fr;opacity:1;transform:none}
+  .qw-cta > div{overflow:hidden;min-height:0;padding-top:16px}
   .qcta{width:100%;min-height:54px;border:0;border-radius:40px;background:var(--ink);color:#fff;
-    font-family:var(--sans);font-size:16.5px;font-weight:600;letter-spacing:.3px;cursor:pointer;margin-top:8px;
-    transition:background .2s var(--ease),transform .1s var(--ease),box-shadow .2s var(--ease);
+    font-family:var(--sans);font-size:16.5px;font-weight:600;letter-spacing:.3px;cursor:pointer;
+    transition:background .2s var(--ease),transform .12s var(--ease),box-shadow .2s var(--ease);
     box-shadow:0 8px 22px rgba(35,31,28,.22)}
-  .qcta:not(:disabled):hover{background:var(--accent-deep);box-shadow:0 10px 26px rgba(138,98,92,.32)}
+  .qw-cta.open .qcta{animation:ctaIn .55s var(--ease)}
+  @keyframes ctaIn{0%{transform:scale(.96)}60%{transform:scale(1.015)}100%{transform:scale(1)}}
+  .qcta:not(:disabled):hover{background:var(--accent-deep);box-shadow:0 10px 28px rgba(138,98,92,.34)}
   .qcta:not(:disabled):active{transform:scale(.99)}
   .qcta:disabled{background:#d9cec2;color:#fff;cursor:not-allowed;box-shadow:none}
+  @media (prefers-reduced-motion:reduce){
+    .qw,.q-body,.qw-cta,.qcta,.q-chosen,.opt span,.opt span::before{transition:none!important;animation:none!important}
+    .qw.open,.qw-cta.open{transform:none}
+  }
   .qerr{color:var(--accent-deep);font-size:14px;margin-top:12px;display:none;text-align:center}
   .qres{text-align:center;padding:8px 0 18px;animation:fade .5s var(--ease)}
   .qbadge{width:58px;height:58px;border-radius:50%;background:#eef2ec;color:#5f7d63;
@@ -275,45 +314,74 @@
     <section class="card book rev" id="book" aria-label="קביעת שיחה">
       <div id="q-screen">
         <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
-        <div class="qcount" id="qCount">0 / 3</div>
+        <div class="qcount" id="qCount" dir="rtl">שלב 1 מתוך 3</div>
         <h2>כמה שאלות קצרות ונקבע</h2>
-        <p style="color:var(--muted);font-size:15px;margin:-6px 0 22px">שלוש שאלות שיעזרו לנטע להבין מה מתאים לכם — ואז נבחר יחד זמן לשיחה.</p>
+        <p class="qlead">שלוש שאלות שיעזרו לנטע להבין מה מתאים לכם — ואז נבחר יחד זמן לשיחה.</p>
 
-        <div class="q" role="radiogroup" aria-label="באיזה אזור נמצא הבית">
-          <label class="qt">1. באיזה אזור נמצא הבית?</label>
-          <div class="opts" data-q="area">
-            <label class="opt"><input type="radio" name="area" value="צפון"><span>צפון</span></label>
-            <label class="opt"><input type="radio" name="area" value="חיפה והסביבה"><span>חיפה והסביבה</span></label>
-            <label class="opt"><input type="radio" name="area" value="שרון"><span>שרון</span></label>
-            <label class="opt"><input type="radio" name="area" value="מרכז"><span>מרכז</span></label>
-            <label class="opt"><input type="radio" name="area" value="ירושלים"><span>ירושלים והסביבה</span></label>
-            <label class="opt"><input type="radio" name="area" value="דרום"><span>דרום</span></label>
+        <div class="qw open" data-step="0">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="באיזה אזור נמצא הבית">
+              <button type="button" class="q-head">
+                <span class="qt">1. באיזה אזור נמצא הבית?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <div class="opts" data-q="area">
+                  <label class="opt"><input type="radio" name="area" value="צפון"><span>צפון</span></label>
+                  <label class="opt"><input type="radio" name="area" value="חיפה והסביבה"><span>חיפה והסביבה</span></label>
+                  <label class="opt"><input type="radio" name="area" value="שרון"><span>שרון</span></label>
+                  <label class="opt"><input type="radio" name="area" value="מרכז"><span>מרכז</span></label>
+                  <label class="opt"><input type="radio" name="area" value="ירושלים"><span>ירושלים והסביבה</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דרום"><span>דרום</span></label>
+                </div>
+              </div></div>
+            </div>
           </div>
         </div>
 
-        <div class="q" role="radiogroup" aria-label="מה התקציב המשוער">
-          <label class="qt">2. מה התקציב המשוער לפרויקט?</label>
-          <div class="opts" data-q="budget">
-            <label class="opt"><input type="radio" name="budget" value="עד 20K"><span>עד ₪20,000</span></label>
-            <label class="opt"><input type="radio" name="budget" value="20-50K"><span>₪20,000–50,000</span></label>
-            <label class="opt"><input type="radio" name="budget" value="50-100K"><span>₪50,000–100,000</span></label>
-            <label class="opt"><input type="radio" name="budget" value="100K+"><span>₪100,000 ומעלה</span></label>
+        <div class="qw" data-step="1">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="מה התקציב המשוער">
+              <button type="button" class="q-head">
+                <span class="qt">2. מה התקציב המשוער לפרויקט?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <div class="opts" data-q="budget">
+                  <label class="opt"><input type="radio" name="budget" value="עד 20K"><span>עד ₪20,000</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="20-50K"><span>₪20,000–50,000</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="50-100K"><span>₪50,000–100,000</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="100K+"><span>₪100,000 ומעלה</span></label>
+                </div>
+              </div></div>
+            </div>
           </div>
         </div>
 
-        <div class="q" role="radiogroup" aria-label="איזה שירות מעניין אתכם">
-          <label class="qt">3. איזה שירות מעניין אתכם?</label>
-          <div class="opts" data-q="service">
-            <label class="opt"><input type="radio" name="service" value="עיצוב מלא"><span>עיצוב דירה / בית מלא</span></label>
-            <label class="opt"><input type="radio" name="service" value="חדר בודד"><span>עיצוב חדר בודד</span></label>
-            <label class="opt"><input type="radio" name="service" value="ייעוץ"><span>ייעוץ עיצובי</span></label>
-            <label class="opt"><input type="radio" name="service" value="הום סטיילינג"><span>הום סטיילינג</span></label>
-            <label class="opt"><input type="radio" name="service" value="ליווי שיפוץ"><span>ליווי שיפוץ</span></label>
+        <div class="qw" data-step="2">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="איזה שירות מעניין אתכם">
+              <button type="button" class="q-head">
+                <span class="qt">3. איזה שירות מעניין אתכם?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <div class="opts" data-q="service">
+                  <label class="opt"><input type="radio" name="service" value="עיצוב מלא"><span>עיצוב דירה / בית מלא</span></label>
+                  <label class="opt"><input type="radio" name="service" value="חדר בודד"><span>עיצוב חדר בודד</span></label>
+                  <label class="opt"><input type="radio" name="service" value="ייעוץ"><span>ייעוץ עיצובי</span></label>
+                  <label class="opt"><input type="radio" name="service" value="הום סטיילינג"><span>הום סטיילינג</span></label>
+                  <label class="opt"><input type="radio" name="service" value="ליווי שיפוץ"><span>ליווי שיפוץ</span></label>
+                </div>
+              </div></div>
+            </div>
           </div>
         </div>
 
-        <button id="qBtn" class="qcta" disabled>המשך לקביעת שיחה</button>
-        <div id="qErr" class="qerr" role="alert">אנא ענו על שלוש השאלות 🤍</div>
+        <div class="qw-cta"><div>
+          <button id="qBtn" class="qcta" disabled>המשך לקביעת שיחה</button>
+          <div id="qErr" class="qerr" role="alert">אנא ענו על שלוש השאלות 🤍</div>
+        </div></div>
       </div>
 
       <div id="book-screen" style="display:none">
@@ -433,7 +501,7 @@
     addEventListener('resize',function(){render(pos,false);});
   })();
 
-  /* 6) questionnaire — qualification gate (payload unchanged) */
+  /* 6) questionnaire — progressive wizard (CRITERIA + payload unchanged) */
   (function(){
     var CRITERIA = {
       areas:   ['צפון','חיפה והסביבה','שרון','מרכז','ירושלים','דרום'],
@@ -442,18 +510,64 @@
     };
     var MAKE_WEBHOOK_URL = 'PASTE_MAKE_WEBHOOK_URL_HERE';
 
-    var ans={area:'',budget:'',service:''}, btn=document.getElementById('qBtn');
-    var fill=document.getElementById('qFill'), count=document.getElementById('qCount');
-    function answered(){return (ans.area?1:0)+(ans.budget?1:0)+(ans.service?1:0);}
-    document.querySelectorAll('#book .opts').forEach(function(gr){
-      gr.addEventListener('change',function(e){
-        ans[gr.getAttribute('data-q')]=e.target.value;
-        var a=answered();
-        fill.style.width=(a/3*100)+'%'; count.textContent=a+' / 3';
-        btn.disabled=a<3;
-        document.getElementById('qErr').style.display='none';
+    var order=['area','budget','service'];
+    var ans={area:'',budget:'',service:''};
+    var qws=[].slice.call(document.querySelectorAll('#q-screen .qw'));
+    var ctaWrap=document.querySelector('.qw-cta');
+    var btn=document.getElementById('qBtn'), fill=document.getElementById('qFill'),
+        count=document.getElementById('qCount'), err=document.getElementById('qErr');
+
+    function answered(){return order.reduce(function(a,k){return a+(ans[k]?1:0);},0);}
+    function progress(){
+      var c=answered();
+      fill.style.width=(c/3*100)+'%';
+      count.textContent = c<3 ? ('שלב '+(c+1)+' מתוך 3') : 'כל הפרטים מולאו';
+    }
+    function reveal(i){
+      if(i>=qws.length || qws[i].classList.contains('open')) return;
+      qws[i].classList.add('open');
+      var first=qws[i].querySelector('input');
+      setTimeout(function(){
+        qws[i].scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});
+        if(first) first.focus({preventScroll:true});
+      }, reduce?0:140);
+    }
+    function resetAfter(i){
+      for(var j=i+1;j<qws.length;j++){
+        ans[order[j]]='';
+        qws[j].querySelector('.q').classList.remove('answered');
+        var ch=qws[j].querySelector('input:checked'); if(ch) ch.checked=false;
+        qws[j].classList.remove('open');
+      }
+      ctaWrap.classList.remove('open'); btn.disabled=true;
+    }
+    function choose(i,input){
+      var key=order[i], changed = ans[key] && ans[key]!==input.value;
+      ans[key]=input.value;
+      qws[i].querySelector('.q-chosen .v').textContent=input.nextElementSibling.textContent.trim();
+      qws[i].querySelector('.q').classList.add('answered');
+      if(changed) resetAfter(i);
+      progress();
+      if(answered()===3){ ctaWrap.classList.add('open'); btn.disabled=false; }
+      else reveal(i+1);
+    }
+
+    qws.forEach(function(qw,i){
+      var opts=qw.querySelector('.opts'), q=qw.querySelector('.q'), head=qw.querySelector('.q-head');
+      opts.addEventListener('change',function(e){ err.style.display='none'; choose(i,e.target); });
+      opts.addEventListener('click',function(e){          /* re-select same value while editing */
+        var lab=e.target.closest('.opt'); if(!lab) return;
+        var inp=lab.querySelector('input');
+        setTimeout(function(){ if(inp.checked && !q.classList.contains('answered')) choose(i,inp); },0);
+      });
+      head.addEventListener('click',function(){
+        if(!q.classList.contains('answered')) return;
+        q.classList.remove('answered');
+        var ch=qw.querySelector('input:checked'); if(ch) ch.focus({preventScroll:true});
       });
     });
+    progress();
+
     function pass(){return CRITERIA.areas.indexOf(ans.area)>-1 && CRITERIA.budgets.indexOf(ans.budget)>-1 && CRITERIA.services.indexOf(ans.service)>-1;}
     function send(q){
       if(MAKE_WEBHOOK_URL.indexOf('PASTE')===0) return;
@@ -462,8 +576,8 @@
           area:ans.area,budget:ans.budget,service:ans.service,qualified:q,
           source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
     }
-    if(btn) btn.addEventListener('click',function(){
-      if(answered()<3){document.getElementById('qErr').style.display='block';return;}
+    btn.addEventListener('click',function(){
+      if(answered()<3){err.style.display='block';return;}
       var ok=pass(); send(ok);
       document.getElementById('q-screen').style.display='none';
       document.getElementById(ok?'book-screen':'nofit-screen').style.display='block';
