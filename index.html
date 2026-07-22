@@ -95,23 +95,29 @@
   .about p{color:var(--body)}
 
   /* before / after (original drag logic preserved) */
-  .ba{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/3;
-    box-shadow:var(--shadow);user-select:none;touch-action:none;background:var(--soft);cursor:ew-resize}
-  .ba .pane{position:absolute;inset:0;display:flex;flex-direction:column;gap:6px;
-    align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;color:#b8ada0}
-  .ba .pane small{font-family:var(--sans);font-size:13px;color:#c4b9ac}
-  .ba .after{background:repeating-linear-gradient(45deg,#efe9e1,#efe9e1 14px,#f4efe9 14px,#f4efe9 28px)}
-  .ba .before{background:repeating-linear-gradient(45deg,#e4ddd2,#e4ddd2 14px,#e9e2d7 14px,#e9e2d7 28px);
-    position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
+  .ba-hint{text-align:center;color:var(--muted);font-size:14px;margin:-6px 0 6px}
+  .ba{position:relative;width:100vw;margin-inline:calc(50% - 50vw);margin-top:16px;
+    aspect-ratio:21/9;max-height:70vh;overflow:hidden;
+    box-shadow:0 18px 44px rgba(60,42,40,.18);user-select:none;touch-action:pan-y;background:#241d1b;cursor:ew-resize}
+  .ba picture.after{position:absolute;inset:0;display:block}
+  .ba .after img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+  .ba .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);
+    display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:clamp(15px,2.6vw,22px);color:#9a8d7f;
+    background:repeating-linear-gradient(45deg,#2c2521,#2c2521 16px,#322a25 16px,#322a25 32px)}
+  .ba .before small{font-family:var(--sans);font-size:12.5px;color:#6f645a}
+  .ba .before::before{content:"";position:absolute;inset:0;background:rgba(18,14,12,.32)}
+  .ba .before > *{position:relative;z-index:1}
   .ba .divider{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;background:#fff;
-    transform:translateX(-50%);box-shadow:0 0 0 1px rgba(138,98,92,.25);z-index:3}
+    transform:translateX(-50%);box-shadow:0 0 0 1px rgba(0,0,0,.2);z-index:3}
   .ba .handle{position:absolute;top:50%;left:var(--pos,50%);transform:translate(-50%,-50%);
-    width:48px;height:48px;border-radius:50%;background:#fff;border:1px solid var(--line);
+    width:50px;height:50px;border-radius:50%;background:#fff;border:1px solid var(--line);
     box-shadow:var(--shadow);z-index:4;cursor:ew-resize;display:flex;align-items:center;
-    justify-content:center;color:var(--accent-deep);font-size:17px}
-  .ba .lab{position:absolute;top:14px;z-index:3;background:rgba(35,31,28,.55);color:#fff;
-    font-size:11px;font-weight:600;letter-spacing:1px;padding:5px 13px;border-radius:20px;backdrop-filter:blur(4px)}
-  .ba .lab.b{right:14px}.ba .lab.a{left:14px}
+    justify-content:center;color:var(--btn);font-size:18px}
+  .ba .lab{position:absolute;top:16px;z-index:3;background:rgba(35,31,28,.5);color:#fff;
+    font-size:11px;font-weight:600;letter-spacing:1px;padding:6px 14px;border-radius:20px;backdrop-filter:blur(6px)}
+  .ba .lab.b{left:16px}.ba .lab.a{right:16px}
+  @media (max-width:640px){.ba{aspect-ratio:16/10}}
 
   /* portfolio coverflow — the signature: work emerging from darkness */
   .folio{position:relative;left:50%;right:50%;margin-inline:-50vw;width:100vw;
@@ -399,13 +405,22 @@
     </section>
 
     <div class="eyebrow rev"><span class="lab">לפני ואחרי</span><span class="rule"></span></div>
-    <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
-      <div class="pane after">אחרי<small>[[תמונת "אחרי" של פרויקט]]</small></div>
-      <div class="pane before">לפני<small>[[תמונת "לפני"]]</small></div>
-      <span class="lab b">לפני</span><span class="lab a">אחרי</span>
-      <div class="divider"></div>
-      <div class="handle" id="baHandle" aria-hidden="true">⇄</div>
-    </section>
+    <p class="ba-hint rev">גררו את הידית וגלו את השינוי</p>
+  </div>
+
+  <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
+    <picture class="pane after">
+      <source srcset="after.webp" type="image/webp">
+      <img src="after.jpg" alt="עיצוב פנים אחרי — INNHOME" width="1264" height="540" loading="eager" fetchpriority="high" decoding="async">
+    </picture>
+    <!-- TODO: replace with real BEFORE photo of the same room -->
+    <div class="pane before">לפני<small>[[תמונת לפני]]</small></div>
+    <span class="lab b">לפני</span><span class="lab a">אחרי</span>
+    <div class="divider"></div>
+    <div class="handle" id="baHandle" aria-hidden="true">⇄</div>
+  </section>
+
+  <div class="wrap">
   </div>
 
   <section class="folio rev" aria-label="פרויקטים נבחרים">
