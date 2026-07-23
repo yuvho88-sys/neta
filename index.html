@@ -1032,7 +1032,10 @@
       var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
       var bad=function(){fin();go.disabled=false;err.textContent='משהו השתבש. נסו שוב, או פנו לנטע בוואטסאפ.';};
       if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0){setTimeout(ok,700);return;}
-      post(BOOKING_WEBHOOK_URL,body).then(ok,bad);
+      /* fire-and-forget: Make's webhook response has no CORS header, so we can't read it from
+         github.io — the POST is still delivered. Show success optimistically (like the questionnaire). */
+      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(function(){}); }catch(e){}
+      setTimeout(ok,700);
     }
     function openPop(){S.open=true;field.classList.add('open','touched');field.setAttribute('aria-expanded','true');
       pop.hidden=false;backdrop.classList.add('on');loadMonth();
