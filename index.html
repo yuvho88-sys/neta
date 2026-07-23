@@ -718,7 +718,9 @@
     g.textContent = 'היי ' + name + ', כיף שהגעתם 🤍 כמה שאלות קצרות ונקבע.';
     g.classList.add('on');
   }
-  window.__prefill = { name:name||"", phone:phone||"", source:p.get('source')||"", campaign:p.get('campaign')||"" };
+  window.__prefill = { name:name||"", phone:phone||"", email:p.get('email')||"", source:p.get('source')||"", campaign:p.get('campaign')||"" };
+  /* one lead id per page session — links the questionnaire record to the booking update (scenario A ↔ B) */
+  window.__leadId = 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
 
   /* 2) reveal on scroll */
   if(reduce){ document.querySelectorAll('.rev').forEach(function(el){el.classList.add('in');}); }
@@ -872,7 +874,7 @@
     function send(q){
       if(MAKE_WEBHOOK_URL.indexOf('PASTE')===0) return;
       fetch(MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:window.__prefill.name,phone:window.__prefill.phone,
+        body:JSON.stringify({leadId:window.__leadId,name:window.__prefill.name,phone:window.__prefill.phone,
           area:ans.area,budget:ans.budget,service:ans.service,qualified:q,
           filter:q?'רלוונטי':'לא רלוונטי',
           source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
@@ -888,7 +890,7 @@
   /* 7) booking date-picker — Google Calendar sync via Make */
   (function(){
     var AVAILABILITY_WEBHOOK_URL = 'PASTE_AVAILABILITY_WEBHOOK_HERE';
-    var BOOKING_WEBHOOK_URL = 'PASTE_BOOKING_WEBHOOK_HERE';
+    var BOOKING_WEBHOOK_URL = 'https://hook.eu1.make.com/bkgyxq1ha58non6lf9wb5t5d5bu7rzth';
 
     var root=document.getElementById('booking'); if(!root) return;
     var DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
@@ -901,6 +903,20 @@
     function parse(s){return new Date(s+'T00:00:00');}
     function human(y,t){var d=parse(y);return 'יום '+DAYS[d.getDay()]+', '+d.getDate()+' ב'+MONTHS[d.getMonth()]+(t?(' · '+t):'');}
     function compact(y,t){var d=parse(y);return 'יום '+DAYS[d.getDay()]+', '+d.getDate()+'.'+(d.getMonth()+1)+(t?(' · '+t):'');}
+    /* build a correct UTC ISO from an Israel wall-clock date+time (DST-aware, independent of visitor tz) */
+    function ilOffMin(dateStr){
+      try{
+        var p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Jerusalem',timeZoneName:'shortOffset',hour:'numeric'}).formatToParts(new Date(dateStr+'T12:00:00Z'));
+        var tz=(p.filter(function(x){return x.type==='timeZoneName';})[0]||{}).value||'GMT+3';
+        var m=tz.match(/GMT([+-]?\d{1,2})(?::?(\d{2}))?/); if(!m) return 180;
+        var sign=m[1][0]==='-'?-1:1, hh=Math.abs(parseInt(m[1],10)), mm=m[2]?parseInt(m[2],10):0;
+        return sign*(hh*60+mm);
+      }catch(e){ return 180; }
+    }
+    function ilISO(dateStr,timeStr){
+      var off=ilOffMin(dateStr), pr=timeStr.split(':'), total=(+pr[0])*60+(+pr[1])-off;
+      return new Date(new Date(dateStr+'T00:00:00Z').getTime()+total*60000).toISOString();
+    }
 
     var today=new Date();today.setHours(0,0,0,0);var todayY=ymd(today);
     var minMonth=new Date(today.getFullYear(),today.getMonth(),1);
@@ -1020,7 +1036,8 @@
         updateGo(); return;
       }
       if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
-      var body={name:name,phone:phone,email:email,date:S.selDate,time:S.selTime,
+      var body={leadId:window.__leadId,name:name,phone:phone,email:email,date:S.selDate,time:S.selTime,
+        datetime:ilISO(S.selDate,S.selTime),
         area:ansVal('area'),budget:ansVal('budget'),service:ansVal('service'),source:pf.source||'',campaign:pf.campaign||''};
       var fin=function(){S.sending=false;go.classList.remove('loading');};
       var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
