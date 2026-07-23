@@ -903,20 +903,9 @@
     function parse(s){return new Date(s+'T00:00:00');}
     function human(y,t){var d=parse(y);return 'יום '+DAYS[d.getDay()]+', '+d.getDate()+' ב'+MONTHS[d.getMonth()]+(t?(' · '+t):'');}
     function compact(y,t){var d=parse(y);return 'יום '+DAYS[d.getDay()]+', '+d.getDate()+'.'+(d.getMonth()+1)+(t?(' · '+t):'');}
-    /* build a correct UTC ISO from an Israel wall-clock date+time (DST-aware, independent of visitor tz) */
-    function ilOffMin(dateStr){
-      try{
-        var p=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Jerusalem',timeZoneName:'shortOffset',hour:'numeric'}).formatToParts(new Date(dateStr+'T12:00:00Z'));
-        var tz=(p.filter(function(x){return x.type==='timeZoneName';})[0]||{}).value||'GMT+3';
-        var m=tz.match(/GMT([+-]?\d{1,2})(?::?(\d{2}))?/); if(!m) return 180;
-        var sign=m[1][0]==='-'?-1:1, hh=Math.abs(parseInt(m[1],10)), mm=m[2]?parseInt(m[2],10):0;
-        return sign*(hh*60+mm);
-      }catch(e){ return 180; }
-    }
-    function ilISO(dateStr,timeStr){
-      var off=ilOffMin(dateStr), pr=timeStr.split(':'), total=(+pr[0])*60+(+pr[1])-off;
-      return new Date(new Date(dateStr+'T00:00:00Z').getTime()+total*60000).toISOString();
-    }
+    /* Neta's Airtable dateTime column displays in UTC (can't be changed via API), so we send the
+       Israel wall-clock time labelled as UTC — she sees exactly the hour that was picked (11:00 → 11:00). */
+    function ilISO(dateStr,timeStr){ return dateStr+'T'+timeStr+':00.000Z'; }
 
     var today=new Date();today.setHours(0,0,0,0);var todayY=ymd(today);
     var minMonth=new Date(today.getFullYear(),today.getMonth(),1);
