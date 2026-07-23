@@ -224,27 +224,6 @@
   .q.answered .q-body{grid-template-rows:0fr;opacity:0}
   .q-body-in{overflow:hidden;min-height:0}
 
-  /* contact-details step (name / phone / email) — shown before results unless prefilled via link */
-  .contact-card{padding-top:13px}
-  .contact-lead{font-family:var(--serif);font-size:clamp(1.05rem,4.2vw,1.22rem);font-weight:500;color:var(--ink);margin:0 0 4px}
-  .contact-sub{font-size:14px;color:var(--muted);margin:0 0 18px}
-  .contact-fields{margin:0 0 18px}
-  .cf{display:block;margin:0 0 13px}
-  .cf span{display:block;font-size:14px;font-weight:600;color:var(--body);margin:0 0 6px}
-  .cf span em{font-weight:400;font-style:normal;color:var(--muted)}
-  .cf input{display:block;box-sizing:border-box;width:100%;height:54px;margin:0;padding:0 16px;
-    background:var(--soft);border:1.5px solid var(--line);border-radius:14px;-webkit-appearance:none;appearance:none;
-    font:inherit;font-size:16px;color:var(--ink);text-align:right;transition:border-color .18s var(--ease),background .18s var(--ease)}
-  .cf input:focus{outline:none;border-color:var(--accent);background:var(--pearl)}
-  .cf input::placeholder{color:var(--muted)}
-  .cf input.bad{border-color:#c0736c;background:#fbf1ef}
-  .contact-go{display:block;box-sizing:border-box;width:100%;height:56px;margin:0;
-    background:var(--btn);color:var(--btn-ink);border:none;border-radius:14px;-webkit-appearance:none;appearance:none;
-    font:inherit;font-size:16px;font-weight:600;cursor:pointer;transition:background .18s var(--ease),transform .18s var(--ease)}
-  .contact-go:hover{background:var(--btn-hover);transform:translateY(-1px)}
-  .contact-go:active{transform:translateY(0)}
-  .contact-err{color:#b3524a;font-size:14px;margin-top:10px;min-height:1em;text-align:center}
-
   .opts{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px;padding-top:13px}
   .opt{position:relative;display:flex}
   .opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
@@ -617,22 +596,6 @@
           </div>
         </div>
 
-        <div class="qw qw-contact" id="qwContact">
-          <div class="qw-in">
-            <div class="contact-card">
-              <div class="contact-lead">כמעט שם — לאן נחזור אליכם?</div>
-              <div class="contact-sub">הפרטים נשמרים אצל נטע בלבד, לתיאום שיחת ההיכרות.</div>
-              <div class="contact-fields">
-                <label class="cf"><span>שם מלא</span><input type="text" id="cName" name="cName" autocomplete="name" placeholder="השם שלכם"></label>
-                <label class="cf"><span>טלפון</span><input type="tel" id="cPhone" name="cPhone" autocomplete="tel" inputmode="tel" placeholder="050-0000000"></label>
-                <label class="cf"><span>אימייל <em>(לא חובה)</em></span><input type="email" id="cEmail" name="cEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
-              </div>
-              <button type="button" class="contact-go" id="contactGo">להצגת המועדים הפנויים</button>
-              <div class="contact-err" id="contactErr" role="alert"></div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <div id="book-screen">
@@ -716,7 +679,7 @@
     g.textContent = 'היי ' + name + ', כיף שהגעתם 🤍 כמה שאלות קצרות ונקבע.';
     g.classList.add('on');
   }
-  window.__prefill = { name:name||"", phone:phone||"", email:p.get('email')||"", source:p.get('source')||"", campaign:p.get('campaign')||"" };
+  window.__prefill = { name:name||"", phone:phone||"", source:p.get('source')||"", campaign:p.get('campaign')||"" };
 
   /* 2) reveal on scroll */
   if(reduce){ document.querySelectorAll('.rev').forEach(function(el){el.classList.add('in');}); }
@@ -810,7 +773,7 @@
 
     var order=['area','budget','service'];
     var ans={area:'',budget:'',service:''};
-    var qws=[].slice.call(document.querySelectorAll('#q-screen .qw:not(.qw-contact)'));
+    var qws=[].slice.call(document.querySelectorAll('#q-screen .qw'));
     var bookScreen=document.getElementById('book-screen'), nofitScreen=document.getElementById('nofit-screen');
     var fill=document.getElementById('qFill'), count=document.getElementById('qCount');
     function hideBooking(){bookScreen.classList.remove('show');nofitScreen.classList.remove('show');}
@@ -846,38 +809,9 @@
       qws[i].querySelector('.q').classList.add('answered');
       if(changed) resetAfter(i);
       progress();
-      if(answered()===3) revealContact();
+      if(answered()===3) finish();
       else reveal(i+1);
     }
-
-    var qwContact=document.getElementById('qwContact');
-    var cName=document.getElementById('cName'), cPhone=document.getElementById('cPhone'), cEmail=document.getElementById('cEmail');
-    var contactErr=document.getElementById('contactErr');
-    function revealContact(){
-      var pf=window.__prefill||{};
-      if(pf.name && pf.phone){ finish(); return; }   /* WhatsApp flow — details already arrived via link */
-      if(pf.name && !cName.value) cName.value=pf.name;
-      if(pf.phone && !cPhone.value) cPhone.value=pf.phone;
-      if(qwContact.classList.contains('open')) return;
-      qwContact.classList.add('open');
-      setTimeout(function(){
-        if(!reduce) qwContact.scrollIntoView({behavior:'smooth',block:'nearest'});
-        cName.focus({preventScroll:true});
-      }, reduce?0:140);
-    }
-    function submitContact(){
-      var nm=cName.value.trim(), ph=cPhone.value.trim(), em=cEmail.value.trim();
-      cName.classList.remove('bad'); cPhone.classList.remove('bad');
-      if(nm.length<2){ contactErr.textContent='נא למלא שם מלא'; cName.classList.add('bad'); cName.focus(); return; }
-      if((ph.replace(/[^0-9]/g,'')).length<9){ contactErr.textContent='נא למלא מספר טלפון תקין'; cPhone.classList.add('bad'); cPhone.focus(); return; }
-      contactErr.textContent='';
-      window.__prefill.name=nm; window.__prefill.phone=ph; window.__prefill.email=em;
-      finish();
-    }
-    document.getElementById('contactGo').addEventListener('click',submitContact);
-    cEmail.addEventListener('keydown',function(e){ if(e.key==='Enter') submitContact(); });
-    cPhone.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); cEmail.focus(); } });
-    cName.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); cPhone.focus(); } });
 
     qws.forEach(function(qw,i){
       var opts=qw.querySelector('.opts'), q=qw.querySelector('.q'), head=qw.querySelector('.q-head');
@@ -899,7 +833,7 @@
     function send(q){
       if(MAKE_WEBHOOK_URL.indexOf('PASTE')===0) return;
       fetch(MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:window.__prefill.name,phone:window.__prefill.phone,email:window.__prefill.email||'',
+        body:JSON.stringify({name:window.__prefill.name,phone:window.__prefill.phone,
           area:ans.area,budget:ans.budget,service:ans.service,qualified:q,
           filter:q?'רלוונטי':'לא רלוונטי',
           source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
@@ -1005,7 +939,7 @@
     function submit(){
       if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
       var pf=window.__prefill||{};
-      var body={name:pf.name||'',phone:pf.phone||'',email:pf.email||'',date:S.selDate,time:S.selTime,
+      var body={name:pf.name||'',phone:pf.phone||'',date:S.selDate,time:S.selTime,
         area:ansVal('area'),budget:ansVal('budget'),service:ansVal('service'),source:pf.source||'',campaign:pf.campaign||''};
       var fin=function(){S.sending=false;go.classList.remove('loading');};
       var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
