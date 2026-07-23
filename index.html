@@ -380,6 +380,31 @@
   .bk-go.loading{animation:bkPulse 1s infinite}
   @keyframes bkPulse{50%{box-shadow:0 8px 30px rgba(35,31,28,.4)}}
   .bk-err{color:#b0524b;font-size:14px;margin-top:10px;text-align:center;min-height:16px}
+
+  /* booking contact-details — links every booked slot to a person */
+  .bk-details{margin-bottom:16px}
+  .bk-identity{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;
+    padding:13px 16px;background:var(--soft);border:1px solid var(--line);border-radius:14px}
+  .bk-identity[hidden]{display:none}
+  .bk-id-text{font-size:15px;color:var(--body)}
+  .bk-id-text b{color:var(--ink);font-weight:700}
+  .bk-id-edit{background:none;border:0;padding:0;color:var(--accent-deep);font:inherit;font-size:13px;font-weight:600;
+    cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+  .bk-form-sleeve{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s var(--ease)}
+  .bk-form-sleeve.open{grid-template-rows:1fr}
+  .bk-form-in{overflow:hidden;min-height:0}
+  .bk-form-title{font-family:var(--serif);font-size:1.06rem;font-weight:500;color:var(--ink);margin:2px 0 14px}
+  .bkf{display:block;margin:0 0 12px}
+  .bkf span{display:block;font-size:14px;font-weight:600;color:var(--body);margin:0 0 6px}
+  .bkf span em{font-weight:400;font-style:normal;color:var(--muted)}
+  .bkf input{display:block;box-sizing:border-box;width:100%;height:50px;margin:0;padding:0 15px;
+    background:var(--soft);border:1.5px solid var(--line);border-radius:12px;-webkit-appearance:none;appearance:none;
+    font:inherit;font-size:16px;color:var(--ink);text-align:right;transition:border-color .18s var(--ease),background .18s var(--ease)}
+  .bkf input[type="tel"],.bkf input[type="email"]{text-align:left;direction:ltr}
+  .bkf input:focus{outline:none;border-color:var(--accent);background:var(--pearl)}
+  .bkf input::placeholder{color:var(--muted)}
+  .bkf input.bad{border-color:#c0736c;background:#fbf1ef}
+  .bkf-err{display:block;color:#b0524b;font-size:13px;margin-top:6px;min-height:1em}
   .bk-done{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:22px;
     background:rgba(35,31,28,.5);backdrop-filter:blur(3px);animation:fade .3s var(--ease)}
   .bk-done[hidden]{display:none}
@@ -403,7 +428,7 @@
     .bk-cell{font-size:16px}
   }
   @media (prefers-reduced-motion:reduce){
-    .bk-pop,.bk-times-wrap,.bk-confirm,.bk-done,.bk-check svg path,.bk-go,.bk-cell{animation:none!important;transition:none!important}
+    .bk-pop,.bk-times-wrap,.bk-confirm,.bk-done,.bk-check svg path,.bk-go,.bk-cell,.bk-form-sleeve{animation:none!important;transition:none!important}
     .bk-check svg path{stroke-dashoffset:0}
   }
 </style>
@@ -626,7 +651,21 @@
           </div>
           <div class="bk-confirm" id="bkConfirm" hidden>
             <div class="bk-summary" id="bkSummary"></div>
-            <button class="bk-go" id="bkGo" type="button">אישור וקביעת שיחה</button>
+            <div class="bk-details">
+              <div class="bk-identity" id="bkIdentity" hidden>
+                <span class="bk-id-text">הפגישה תירשם על שם <b id="bkIdName"></b> · <span id="bkIdPhone" dir="ltr"></span></span>
+                <button type="button" class="bk-id-edit" id="bkIdEdit">לא אתם? עריכה</button>
+              </div>
+              <div class="bk-form-sleeve" id="bkFormSleeve">
+                <div class="bk-form-in">
+                  <div class="bk-form-title">עוד רגע — למי לרשום את הפגישה?</div>
+                  <label class="bkf"><span>שם מלא</span><input type="text" id="bkName" autocomplete="name" placeholder="השם שלכם"></label>
+                  <label class="bkf"><span>טלפון נייד</span><input type="tel" id="bkPhone" autocomplete="tel" inputmode="tel" placeholder="050-0000000"><span class="bkf-err" id="bkPhoneErr" role="alert"></span></label>
+                  <label class="bkf"><span>אימייל <em>(לא חובה)</em></span><input type="email" id="bkEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
+                </div>
+              </div>
+            </div>
+            <button class="bk-go" id="bkGo" type="button" disabled>אישור וקביעת שיחה</button>
             <div class="bk-err" id="bkErr"></div>
           </div>
           <div class="bk-done" id="bkDone" role="dialog" aria-modal="true" hidden>
@@ -872,6 +911,39 @@
     var field=$('bkField'),fieldText=$('bkFieldText'),pop=$('bkPop'),monthLbl=$('bkMonth'),grid=$('bkGrid'),
         prev=$('bkPrev'),next=$('bkNext'),backdrop=$('bkBackdrop'),timesWrap=$('bkTimesWrap'),timesLbl=$('bkTimesLabel'),
         times=$('bkTimes'),confirm=$('bkConfirm'),summary=$('bkSummary'),go=$('bkGo'),err=$('bkErr'),done=$('bkDone'),doneLine=$('bkDoneLine');
+    var idnBox=$('bkIdentity'),idName=$('bkIdName'),idPhone=$('bkIdPhone'),idEdit=$('bkIdEdit'),
+        sleeve=$('bkFormSleeve'),fName=$('bkName'),fPhone=$('bkPhone'),fPhoneErr=$('bkPhoneErr'),fEmail=$('bkEmail');
+    var formMode=false;                         /* details state persists across slot changes (no localStorage) */
+
+    var IL_MOBILE=/^05\d{8}$/;
+    function normPhone(raw){
+      var s=(''+(raw||'')).replace(/[\s\-().]/g,'');
+      if(s.indexOf('+972')===0) s='0'+s.slice(4);
+      else if(s.indexOf('972')===0 && s.length>=12) s='0'+s.slice(3);
+      return s.replace(/[^\d]/g,'');
+    }
+    function validPhone(raw){return IL_MOBILE.test(normPhone(raw));}
+    function hasPrefillIdentity(){var pf=window.__prefill||{};return !!(pf.name && pf.name.trim() && validPhone(pf.phone));}
+    function updateGo(){
+      var okDetails = formMode ? (fName.value.trim().length>=2 && validPhone(fPhone.value)) : hasPrefillIdentity();
+      go.disabled = !(S.selTime && okDetails);
+    }
+    function showForm(prefill){
+      formMode=true; idnBox.hidden=true;
+      if(prefill){ if(!fName.value && prefill.name) fName.value=prefill.name; if(!fPhone.value && prefill.phone) fPhone.value=prefill.phone; }
+      sleeve.classList.add('open'); updateGo();
+    }
+    function showIdentity(){
+      formMode=false; var pf=window.__prefill||{};
+      idName.textContent=pf.name; idPhone.textContent=normPhone(pf.phone);
+      idnBox.hidden=false; sleeve.classList.remove('open'); updateGo();
+    }
+    function showDetails(){ if(hasPrefillIdentity() && !formMode) showIdentity(); else showForm(window.__prefill||{}); }
+    function clearPhoneErr(){ fPhoneErr.textContent=''; fPhone.classList.remove('bad'); }
+    fName.addEventListener('input',updateGo);
+    fPhone.addEventListener('input',function(){clearPhoneErr();updateGo();});
+    fPhone.addEventListener('blur',function(){ if(fPhone.value.trim() && !validPhone(fPhone.value)){fPhoneErr.textContent='מספר לא תקין — בדקו שהקלדתם נייד ישראלי';fPhone.classList.add('bad');} else clearPhoneErr(); });
+    idEdit.addEventListener('click',function(){showForm(window.__prefill||{});setTimeout(function(){fName.focus();},reduce?0:120);});
 
     function post(url,body,ms){var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||10000);
       return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal})
@@ -932,14 +1004,23 @@
       [].forEach.call(times.children,function(c){c.classList.toggle('sel',c.textContent===t);});
       fieldText.textContent=compact(S.selDate,t);field.classList.add('chosen','touched');
       summary.textContent=human(S.selDate,S.selTime);
-      err.textContent='';go.disabled=false;go.classList.remove('loading');confirm.hidden=false;
+      err.textContent='';go.classList.remove('loading');confirm.hidden=false;
+      showDetails();
       if(!reduce) confirm.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
     function ansVal(k){var el=document.querySelector('#book .opts[data-q="'+k+'"] input:checked');return el?el.value:'';}
     function submit(){
-      if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
       var pf=window.__prefill||{};
-      var body={name:pf.name||'',phone:pf.phone||'',date:S.selDate,time:S.selTime,
+      var name,phone,email;
+      if(formMode){ name=fName.value.trim(); phone=normPhone(fPhone.value); email=fEmail.value.trim(); }
+      else { name=(pf.name||'').trim(); phone=normPhone(pf.phone); email=(pf.email||'').trim(); }
+      if(name.length<2 || !IL_MOBILE.test(phone)){          /* safety gate — should already be blocked by disabled button */
+        if(!formMode) showForm(pf);
+        if(!IL_MOBILE.test(phone)){ fPhoneErr.textContent='מספר לא תקין — בדקו שהקלדתם נייד ישראלי'; fPhone.classList.add('bad'); }
+        updateGo(); return;
+      }
+      if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
+      var body={name:name,phone:phone,email:email,date:S.selDate,time:S.selTime,
         area:ansVal('area'),budget:ansVal('budget'),service:ansVal('service'),source:pf.source||'',campaign:pf.campaign||''};
       var fin=function(){S.sending=false;go.classList.remove('loading');};
       var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
