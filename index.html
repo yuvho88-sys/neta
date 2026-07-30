@@ -109,9 +109,27 @@
   /* קרוסלה: כל הפרויקטים באותה רצועה, מתחלפים בהצלבה */
   .ba-stack{display:grid;margin-top:18px}
   .ba-stack > .ba{grid-area:1/1;margin-top:0;opacity:0;pointer-events:none;z-index:0;
-    transition:opacity .85s var(--ease)}
+    transition:opacity .5s var(--ease)}
   .ba-stack > .ba.is-active{opacity:1;pointer-events:auto;z-index:1}
   @media (prefers-reduced-motion:reduce){.ba-stack > .ba{transition:none}}
+
+  /* מעבר ידני בין הפרויקטים */
+  .ba-nav{display:flex;align-items:center;justify-content:center;gap:10px;padding:18px 22px 2px}
+  .ba-arrow{background:none;border:0;padding:12px;cursor:pointer;color:#efe6dc;opacity:.5;
+    line-height:0;transition:opacity .2s var(--ease),transform .2s var(--ease)}
+  .ba-arrow svg{width:20px;height:20px;display:block}
+  .ba-arrow svg path{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .ba-arrow:hover{opacity:.95}
+  .ba-arrow:active{transform:scale(.92)}
+  .ba-arrow:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:6px;opacity:.95}
+  .ba-dots{display:flex;align-items:center;gap:10px}
+  .ba-dots button{position:relative;width:8px;height:8px;padding:0;border:0;cursor:pointer;
+    border-radius:50%;background:rgba(239,230,220,.32);
+    transition:background .3s var(--ease),width .3s var(--ease),border-radius .3s var(--ease)}
+  .ba-dots button::after{content:"";position:absolute;inset:-10px}  /* שטח נגיעה במובייל */
+  .ba-dots button.on{background:var(--brass);width:24px;border-radius:5px}
+  .ba-dots button:focus-visible{outline:2px solid var(--brass);outline-offset:4px}
+  @media (prefers-reduced-motion:reduce){.ba-dots button,.ba-arrow{transition:none}}
   .ba{position:relative;width:100%;margin-top:18px;
     aspect-ratio:21/9;max-height:70vh;overflow:hidden;
     user-select:none;touch-action:pan-y;background:var(--dark-section);cursor:ew-resize}
@@ -529,6 +547,12 @@
       </section>
 
     </div>
+
+    <div class="ba-nav rev">
+      <button class="ba-arrow" id="baPrev" type="button" aria-label="הפרויקט הקודם"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l6 7-6 7"/></svg></button>
+      <div class="ba-dots" id="baDots"></div>
+      <button class="ba-arrow" id="baNext" type="button" aria-label="הפרויקט הבא"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-6 7 6 7"/></svg></button>
+    </div>
   </section>
 
   <section class="folio rev" aria-label="פרויקטים נבחרים">
@@ -788,18 +812,37 @@
     if(!slides.length) return;
 
     var i=0, timer=null, resume=null;
-    var DELAY=6500;     /* זמן שהייה על כל פרויקט */
-    var PAUSE=15000;    /* השהייה אחרי שהמבקר נגע בידית */
+    var DELAY=4500;     /* זמן שהייה על כל פרויקט */
+    var PAUSE=9000;     /* השהייה אחרי מגע יזום של המבקר */
+
+    /* נקודות ניווט */
+    var dotsWrap=document.getElementById('baDots'), dots=[];
+    if(dotsWrap && slides.length>1){
+      slides.forEach(function(s,n){
+        var b=document.createElement('button');
+        b.type='button';
+        b.setAttribute('aria-label','מעבר לפרויקט '+(n+1));
+        if(n===0) b.className='on';
+        b.addEventListener('click',function(){ show(n); hold(); });
+        dotsWrap.appendChild(b); dots.push(b);
+      });
+    }
 
     function stop(){ if(timer){clearInterval(timer);timer=null;} }
-    function play(){ if(reduce||slides.length<2) return; stop();
+    function play(){ if(slides.length<2) return; stop();
       timer=setInterval(function(){show(i+1);},DELAY); }
     function show(n){
       slides[i].classList.remove('is-active');
+      if(dots[i]) dots[i].classList.remove('on');
       i=(n+slides.length)%slides.length;
       slides[i].classList.add('is-active');
+      if(dots[i]) dots[i].classList.add('on');
     }
     function hold(){ stop(); clearTimeout(resume); resume=setTimeout(play,PAUSE); }
+
+    var prev=document.getElementById('baPrev'), next=document.getElementById('baNext');
+    if(prev) prev.addEventListener('click',function(){ show(i-1); hold(); });
+    if(next) next.addEventListener('click',function(){ show(i+1); hold(); });
 
     slides.forEach(function(ba){
       function set(x){var r=ba.getBoundingClientRect();
@@ -809,8 +852,27 @@
       ba.addEventListener('mousedown',function(e){down=true;set(e.clientX);hold();});
       window.addEventListener('mousemove',function(e){if(down)set(e.clientX);});
       window.addEventListener('mouseup',function(){down=false;});
-      ba.addEventListener('touchstart',function(e){set(e.touches[0].clientX);hold();},{passive:true});
-      ba.addEventListener('touchmove',function(e){set(e.touches[0].clientX);},{passive:true});
+
+      /* במובייל: לא נוגעים בידית לפני שברור שזו גרירה אופקית ולא גלילה של הדף,
+         אחרת כל גלילה שמתחילה על הרצועה קופצת את המחיצה ועוצרת את הסיבוב */
+      var sx=0, sy=0, drag=false;
+      ba.addEventListener('touchstart',function(e){
+        sx=e.touches[0].clientX; sy=e.touches[0].clientY; drag=false;
+      },{passive:true});
+      ba.addEventListener('touchmove',function(e){
+        var t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+        if(!drag){
+          if(Math.abs(dx)<6 && Math.abs(dy)<6) return;   /* עוד לא ברור */
+          if(Math.abs(dy)>Math.abs(dx)) return;          /* גלילה אנכית — לא נוגעים */
+          drag=true; hold();
+        }
+        set(t.clientX);
+      },{passive:true});
+      ba.addEventListener('touchend',function(e){
+        if(drag) return;
+        var t=e.changedTouches[0];
+        if(Math.abs(t.clientX-sx)<6 && Math.abs(t.clientY-sy)<6){ set(t.clientX); hold(); }
+      },{passive:true});
     });
 
     /* ברגע שהרצועה מגיעה למסך — מכריחים את השקופיות הבאות להיטען,
