@@ -106,6 +106,12 @@
   .ba-block .eyebrow{color:#efe6dc;margin-top:0}
   .ba-block .eyebrow .rule{background:linear-gradient(90deg,rgba(239,230,220,.35),transparent)}
   .ba-block .ba-hint{color:rgba(239,230,220,.66)}
+  /* קרוסלה: כל הפרויקטים באותה רצועה, מתחלפים בהצלבה */
+  .ba-stack{display:grid;margin-top:18px}
+  .ba-stack > .ba{grid-area:1/1;margin-top:0;opacity:0;pointer-events:none;z-index:0;
+    transition:opacity .85s var(--ease)}
+  .ba-stack > .ba.is-active{opacity:1;pointer-events:auto;z-index:1}
+  @media (prefers-reduced-motion:reduce){.ba-stack > .ba{transition:none}}
   .ba{position:relative;width:100%;margin-top:18px;
     aspect-ratio:21/9;max-height:70vh;overflow:hidden;
     user-select:none;touch-action:pan-y;background:var(--dark-section);cursor:ew-resize}
@@ -484,17 +490,45 @@
       <div class="eyebrow rev"><span class="lab">לפני ואחרי</span><span class="rule"></span></div>
       <p class="ba-hint rev">גררו את הידית וגלו את השינוי</p>
     </div>
-    <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
-    <picture class="pane after">
-      <img src="after.jpg?v=2" alt="הבית אחרי התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
-    </picture>
-    <picture class="pane before">
-      <img src="before.jpg?v=2" alt="הבית לפני התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="eager" decoding="async">
-    </picture>
-    <span class="lab b">לפני</span><span class="lab a">אחרי</span>
-    <div class="divider"></div>
-    <div class="handle" id="baHandle" aria-hidden="true">⇄</div>
-    </section>
+    <div class="ba-stack rev" id="baStack">
+
+      <section class="ba is-active" style="--pos:50%" aria-label="השוואת לפני ואחרי, פרויקט ראשון — גררו להשוואה">
+        <picture class="pane after">
+          <img src="ba1-after.jpg" alt="סלון ומטבח אחרי התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
+        </picture>
+        <picture class="pane before">
+          <img src="ba1-before.jpg" alt="אותו סלון ומטבח לפני התכנון" width="1800" height="1013" loading="eager" decoding="async">
+        </picture>
+        <span class="lab b">לפני</span><span class="lab a">אחרי</span>
+        <div class="divider"></div>
+        <div class="handle" aria-hidden="true">⇄</div>
+      </section>
+
+      <section class="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי, פרויקט שני — גררו להשוואה">
+        <picture class="pane after">
+          <img src="ba2-after.jpg" alt="מטבח אחרי התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="lazy" decoding="async">
+        </picture>
+        <picture class="pane before">
+          <img src="ba2-before.jpg" alt="אותו מטבח לפני התכנון" width="1800" height="1013" loading="lazy" decoding="async">
+        </picture>
+        <span class="lab b">לפני</span><span class="lab a">אחרי</span>
+        <div class="divider"></div>
+        <div class="handle" aria-hidden="true">⇄</div>
+      </section>
+
+      <section class="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי, פרויקט שלישי — גררו להשוואה">
+        <picture class="pane after">
+          <img src="ba3-after.jpg" alt="מטבח אחרי התכנון, עצמון 33 — נטע גוטמן אדריכלים" width="1800" height="1013" loading="lazy" decoding="async">
+        </picture>
+        <picture class="pane before">
+          <img src="ba3-before.jpg" alt="אותו מטבח לפני התכנון, עצמון 33" width="1800" height="1013" loading="lazy" decoding="async">
+        </picture>
+        <span class="lab b">לפני</span><span class="lab a">אחרי</span>
+        <div class="divider"></div>
+        <div class="handle" aria-hidden="true">⇄</div>
+      </section>
+
+    </div>
   </section>
 
   <section class="folio rev" aria-label="פרויקטים נבחרים">
@@ -747,18 +781,56 @@
     }, {passive:true});
   }
 
-  /* 4) before / after drag — original logic preserved */
+  /* 4) before / after — drag logic preserved, now across an auto-rotating stack */
   (function(){
-    var ba=document.getElementById('ba'); if(!ba) return;
-    function set(x){var r=ba.getBoundingClientRect();
-      var pos=Math.max(4,Math.min(96,((x-r.left)/r.width)*100));
-      ba.style.setProperty('--pos',pos+'%');}
-    var down=false;
-    ba.addEventListener('mousedown',function(e){down=true;set(e.clientX);});
-    window.addEventListener('mousemove',function(e){if(down)set(e.clientX);});
-    window.addEventListener('mouseup',function(){down=false;});
-    ba.addEventListener('touchstart',function(e){set(e.touches[0].clientX);},{passive:true});
-    ba.addEventListener('touchmove',function(e){set(e.touches[0].clientX);},{passive:true});
+    var stack=document.getElementById('baStack'); if(!stack) return;
+    var slides=[].slice.call(stack.querySelectorAll('.ba'));
+    if(!slides.length) return;
+
+    var i=0, timer=null, resume=null;
+    var DELAY=6500;     /* זמן שהייה על כל פרויקט */
+    var PAUSE=15000;    /* השהייה אחרי שהמבקר נגע בידית */
+
+    function stop(){ if(timer){clearInterval(timer);timer=null;} }
+    function play(){ if(reduce||slides.length<2) return; stop();
+      timer=setInterval(function(){show(i+1);},DELAY); }
+    function show(n){
+      slides[i].classList.remove('is-active');
+      i=(n+slides.length)%slides.length;
+      slides[i].classList.add('is-active');
+    }
+    function hold(){ stop(); clearTimeout(resume); resume=setTimeout(play,PAUSE); }
+
+    slides.forEach(function(ba){
+      function set(x){var r=ba.getBoundingClientRect();
+        var pos=Math.max(4,Math.min(96,((x-r.left)/r.width)*100));
+        ba.style.setProperty('--pos',pos+'%');}
+      var down=false;
+      ba.addEventListener('mousedown',function(e){down=true;set(e.clientX);hold();});
+      window.addEventListener('mousemove',function(e){if(down)set(e.clientX);});
+      window.addEventListener('mouseup',function(){down=false;});
+      ba.addEventListener('touchstart',function(e){set(e.touches[0].clientX);hold();},{passive:true});
+      ba.addEventListener('touchmove',function(e){set(e.touches[0].clientX);},{passive:true});
+    });
+
+    /* ברגע שהרצועה מגיעה למסך — מכריחים את השקופיות הבאות להיטען,
+       אחרת ההחלפה מגיעה לפני התמונה והרצועה יוצאת ריקה */
+    var primed=false;
+    function prime(){
+      if(primed) return; primed=true;
+      [].forEach.call(stack.querySelectorAll('img[loading="lazy"]'),function(img){
+        img.loading='eager';
+        if(!img.complete){ var s=img.currentSrc||img.src; img.src=s; }
+      });
+    }
+
+    /* מסתובב רק כשהרצועה על המסך והלשונית פעילה */
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){prime();play();} else {stop();} });
+      },{threshold:.25}).observe(stack);
+    } else { prime(); play(); }
+    document.addEventListener('visibilitychange',function(){ if(document.hidden){stop();}else{play();} });
   })();
 
   /* 5) portfolio coverflow */
