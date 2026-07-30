@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>נטע גוטמן · INNHOME — שיחת היכרות</title>
+<title>נטע גוטמן אדריכלים — שיחת היכרות</title>
 <meta name="description" content="נטע גוטמן, אדריכלית ומעצבת פנים. שיחת ייעוץ ראשונית ללא עלות — נכיר, נבין מה חשוב לכם, ונצא עם כיוון ברור.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="נטע גוטמן · INNHOME">
+<meta property="og:title" content="נטע גוטמן אדריכלים">
 <meta property="og:description" content="אדריכלית ומעצבת פנים — שיחת ייעוץ ראשונית ללא עלות.">
 <meta property="og:locale" content="he_IL">
 <meta property="og:image" content="https://yuvho88-sys.github.io/neta/neta.jpg">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23231F1C'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='16' fill='%23C2A16A' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23231F1C'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='17' fill='%23C2A16A' text-anchor='middle'%3E%D7%A0%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --ivory:#f6f1ea; --paper:#fff; --card-bg:#faf8f5; --pearl:#fefdfb; --ink:#231f1c; --body:#4b443d; --muted:#6e6459;
@@ -21,7 +21,8 @@
     --accent:#a67f79; --accent-deep:#8a625c; --brass:#c2a16a;
     --btn:#2b2825; --btn-hover:#1d1b19; --btn-ink:#faf8f5;
     --dark:#211a18; --dark-2:#3a2c29; --dark-section:#241d1b;
-    --serif:"Frank Ruhl Libre",Georgia,"Times New Roman",serif;
+    /* פונט אחיד לכל הדף — לפי שורת החתימה בפוטר "נטע גוטמן · אדריכלית ומעצבת פנים" */
+    --serif:"Assistant","Segoe UI",Arial,sans-serif;
     --sans:"Assistant","Segoe UI",Arial,sans-serif;
     --shadow:0 18px 50px rgba(60,42,40,.14);
     --shadow-sm:0 6px 22px rgba(60,42,40,.07);
@@ -62,10 +63,10 @@
   .photo{width:130px;height:130px;border-radius:50%;overflow:hidden;display:block;
     margin:0 auto 24px;border:5px solid var(--paper);box-shadow:var(--shadow);background:var(--soft)}
   .photo img{width:100%;height:100%;object-fit:cover;object-position:center 20%;border-radius:50%;display:block}
-  .brand{font-family:var(--serif);font-weight:500;font-size:clamp(13px,3.4vw,15px);
-    letter-spacing:.55em;padding-left:.55em;color:var(--accent-deep);margin-bottom:20px}
-  .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.95rem,6.4vw,3.1rem);
-    line-height:1.32;letter-spacing:-.01em;margin-bottom:16px}
+  .brand{font-family:var(--serif);font-weight:600;font-size:clamp(13px,3.4vw,15px);
+    letter-spacing:.24em;padding-left:.24em;color:var(--accent-deep);margin-bottom:20px}
+  .hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(1.8rem,5.7vw,2.65rem);
+    line-height:1.34;letter-spacing:-.015em;margin-bottom:16px}
   .hero .role{color:var(--muted);font-size:clamp(15px,4vw,18px)}
   .hero .role b{color:var(--accent-deep);font-weight:600}
   .hero-cta{display:inline-flex;flex-direction:column;align-items:center;gap:3px;background:var(--btn);color:var(--btn-ink);
@@ -110,13 +111,9 @@
     user-select:none;touch-action:pan-y;background:var(--dark-section);cursor:ew-resize}
   .ba picture.after{position:absolute;inset:0;display:block}
   .ba .after img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-  .ba .before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);
-    display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
-    font-family:var(--serif);font-size:clamp(15px,2.6vw,22px);color:#9a8d7f;
-    background:repeating-linear-gradient(45deg,#2c2521,#2c2521 16px,#322a25 16px,#322a25 32px)}
-  .ba .before small{font-family:var(--sans);font-size:12.5px;color:#6f645a}
-  .ba .before::before{content:"";position:absolute;inset:0;background:rgba(18,14,12,.32)}
-  .ba .before > *{position:relative;z-index:1}
+  .ba picture.before{position:absolute;inset:0;display:block;
+    clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);background:var(--dark-section)}
+  .ba .before img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
   .ba .divider{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;background:#fff;
     transform:translateX(-50%);box-shadow:0 0 0 1px rgba(0,0,0,.2);z-index:3}
   .ba .handle{position:absolute;top:50%;left:var(--pos,50%);transform:translate(-50%,-50%);
@@ -267,7 +264,7 @@
     padding:52px 20px;color:var(--muted);font-size:15px;margin-top:10px;text-align:center}
 
   footer{text-align:center;color:var(--muted);font-size:13.5px;padding:40px 0 56px;line-height:2.1}
-  footer .fbrand{font-family:var(--serif);letter-spacing:.4em;padding-left:.4em;
+  footer .fbrand{font-family:var(--serif);font-weight:600;letter-spacing:.2em;padding-left:.2em;
     color:var(--accent-deep);font-size:14px;margin-bottom:6px}
   footer a{color:var(--accent-deep);font-weight:600}
   .ftag{font-family:var(--serif);font-size:15px;color:var(--body);margin:2px 0 4px}
@@ -295,7 +292,7 @@
 
   @media (min-width:760px){
     :root{--maxw:680px}
-    .hero h1{max-width:16ch;margin-inline:auto}
+    .hero h1{max-width:24ch;margin-inline:auto}
     .opts{grid-template-columns:repeat(3,1fr)}
   }
 
@@ -420,6 +417,13 @@
   .bk-done h3{font-family:var(--serif);font-size:1.35rem;margin-bottom:8px;color:var(--ink)}
   .bk-done-line{color:var(--accent-deep);font-weight:600;margin-bottom:6px}
   .bk-done-note{color:var(--muted);font-size:14.5px}
+
+  /* פסקה אישית של נטע — מתחת לבחירת התאריך ביומן */
+  .bk-note{margin:24px auto 0;max-width:560px;padding:22px 24px;border-radius:18px;
+    background:var(--card-bg);border:1px solid var(--line);text-align:center}
+  .bk-note::before{content:"◆";display:block;color:var(--brass);font-size:10px;margin-bottom:12px}
+  .bk-note p{margin:0;font-size:clamp(15px,3.6vw,16.5px);line-height:1.9;
+    color:var(--body);font-weight:400}
   @media (max-width:600px){
     .bk-backdrop.on{background:rgba(35,31,28,.4)}
     .bk-pop{position:fixed;top:auto;bottom:0;left:0;right:0;border-radius:20px 20px 0 0;
@@ -452,10 +456,9 @@
 <header class="hero wrap rev">
   <div class="halo" aria-hidden="true"></div>
   <picture class="photo">
-    <source srcset="neta.webp" type="image/webp">
-    <img src="neta.jpg" alt="נטע גוטמן — אדריכלית ומעצבת פנים" width="400" height="400" loading="eager" fetchpriority="high" decoding="async">
+    <img src="neta.jpg?v=2" alt="נטע גוטמן — אדריכלית ומעצבת פנים" width="440" height="440" loading="eager" fetchpriority="high" decoding="async">
   </picture>
-  <div class="brand">INNHOME</div>
+  <div class="brand">נטע גוטמן אדריכלים</div>
   <h1>אני כאן כדי ליצור יחד איתכם<br>את המרחב המדויק עבורכם</h1>
   <div class="role">נטע גוטמן · <b>אדריכלית ומעצבת פנים</b></div>
   <div><a href="#book" class="hero-cta">
@@ -483,11 +486,11 @@
     </div>
     <section class="ba rev" id="ba" style="--pos:50%" aria-label="השוואת לפני ואחרי — גררו להשוואה">
     <picture class="pane after">
-      <source srcset="after.webp" type="image/webp">
-      <img src="after.jpg" alt="עיצוב פנים אחרי — INNHOME" width="1264" height="540" loading="eager" fetchpriority="high" decoding="async">
+      <img src="after.jpg?v=2" alt="הבית אחרי התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="eager" fetchpriority="high" decoding="async">
     </picture>
-    <!-- TODO: replace with real BEFORE photo of the same room -->
-    <div class="pane before">לפני<small>[[תמונת לפני]]</small></div>
+    <picture class="pane before">
+      <img src="before.jpg?v=2" alt="הבית לפני התכנון — נטע גוטמן אדריכלים" width="1800" height="1013" loading="eager" decoding="async">
+    </picture>
     <span class="lab b">לפני</span><span class="lab a">אחרי</span>
     <div class="divider"></div>
     <div class="handle" id="baHandle" aria-hidden="true">⇄</div>
@@ -504,19 +507,14 @@
     </div>
     <div class="cf" id="cf" role="group" aria-roledescription="קרוסלת פרויקטים" tabindex="0" aria-label="פרויקטים — החליקו או השתמשו בחיצים">
       <div class="cf-stage" id="cfStage">
-        <!-- TODO: real project names in data-cap · object-position per slide = focal point, tweak freely -->
-        <!-- focal: center (סלון + מטבח) -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-1.webp" type="image/webp"><img src="project-1.jpg" alt="פרויקט עיצוב פנים 1 — INNHOME" width="1118" height="581" style="object-position:center" loading="lazy" decoding="async"></picture></div>
-        <!-- focal: center (מטבח כפרי) -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-2.webp" type="image/webp"><img src="project-2.jpg" alt="פרויקט עיצוב פנים 2 — INNHOME" width="1116" height="647" style="object-position:center" loading="lazy" decoding="async"></picture></div>
-        <!-- focal: center (אי מטבח עץ) -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-3.webp" type="image/webp"><img src="project-3.jpg" alt="פרויקט עיצוב פנים 3 — INNHOME" width="1002" height="670" style="object-position:center" loading="lazy" decoding="async"></picture></div>
-        <!-- focal: center (אי מטבח ירוק) · slide מרכזי -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-4.webp" type="image/webp"><img src="project-4.jpg" alt="פרויקט עיצוב פנים 4 — INNHOME" width="1055" height="664" style="object-position:center" loading="eager" fetchpriority="high" decoding="async"></picture></div>
-        <!-- focal: center (אי + חלון) -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-5.webp" type="image/webp"><img src="project-5.jpg" alt="פרויקט עיצוב פנים 5 — INNHOME" width="1033" height="682" style="object-position:center" loading="lazy" decoding="async"></picture></div>
-        <!-- focal: center (קיר טלוויזיה) -->
-        <div class="cf-slide" data-cap="פרויקט מגורים"><picture><source srcset="project-6.webp" type="image/webp"><img src="project-6.jpg" alt="פרויקט עיצוב פנים 6 — INNHOME" width="1200" height="513" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="סלון ופינת אוכל"><picture><img src="project-1.jpg?v=2" alt="סלון ופינת אוכל — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="כרמל 26 · צור יגאל"><picture><img src="project-2.jpg?v=2" alt="מטבח עם אי ומדרגות מתכת, כרמל 26 — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="עצמון 33 · צור יגאל"><picture><img src="project-3.jpg?v=2" alt="סלון מואר, עצמון 33 — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="מטבח לבן"><picture><img src="project-4.jpg?v=2" alt="מטבח לבן עם כיסאות בר — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="מטבח ופינת אוכל"><picture><img src="project-5.jpg?v=2" alt="מטבח ופינת אוכל — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="eager" fetchpriority="high" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="כרמל 26 · צור יגאל"><picture><img src="project-6.jpg?v=2" alt="סלון ופינת עבודה, כרמל 26 — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="סלון עם אח"><picture><img src="project-7.jpg?v=2" alt="סלון עם אח וספה בגוון טרקוטה — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
+        <div class="cf-slide" data-cap="חדר רחצה"><picture><img src="project-8.jpg?v=2" alt="חדר רחצה — נטע גוטמן אדריכלים" width="1350" height="900" style="object-position:center" loading="lazy" decoding="async"></picture></div>
       </div>
     </div>
     <div class="folio-cta rev">
@@ -678,6 +676,10 @@
             </div>
           </div>
         </div>
+
+        <aside class="bk-note">
+          <p>בכל בית אותו אני מתכננת אני קודם כל רואה אתכם, את האנשים שיחיו בו, את מי שאתם, את מה שחשוב לכם, ואת מה שעושה לכם הכי טוב. יחד נבנה חלום שמותאם בדיוק אליכם. אני כאן כדי לוודא שהבית יהפוך למקום שמרחיב לכם את הלב כל יום מחדש</p>
+        </aside>
       </div>
 
       <div id="nofit-screen">
@@ -689,7 +691,7 @@
 </main>
 
 <footer class="wrap rev">
-  <div class="fbrand">INNHOME</div>
+  <div class="fbrand">נטע גוטמן אדריכלים</div>
   <div class="ftag">כאן הופכים חלומות למציאות</div>
   <div class="social">
     <a href="https://www.instagram.com/netta_gutman_architects/" target="_blank" rel="noopener" aria-label="אינסטגרם של נטע">
@@ -701,7 +703,7 @@
   </div>
   נטע גוטמן · אדריכלית ומעצבת פנים<br>
   <a href="tel:0504322412">050-4322412</a> · <a href="mailto:innhome.g@gmail.com">innhome.g@gmail.com</a><br>
-  קיבוץ חורש
+  קיבוץ חורשים
 </footer>
 
 
