@@ -308,8 +308,11 @@
     display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
     font-family:var(--serif);border:1px solid #e6d8ca}
   .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
-  /* "מה קורה בשיחה" סוגר את זרימת ההזמנה — צריך אוויר מסקשן קביעת השיחה שמעליו */
-  .steps-outro{margin-top:clamp(36px,7vw,56px)}
+  /* "מה קורה בשיחה" — הבלוק הסוגר בתוך כרטיס השאלון. בלי מסגרת משלו,
+     מופרד בקו באותו גוון של המחיצות בין השלבים */
+  .call-steps{margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
+  .call-steps h3{font-family:var(--serif);font-size:clamp(1.02rem,3.9vw,1.16rem);
+    font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
 
   /* כרטיס הציטוט של נטע — אותו מראה של הפסקה שהייתה מתחת ליומן, ברוחב כרטיס מלא */
   .quote-card{text-align:center}
@@ -922,22 +925,20 @@
       <div id="nofit-screen">
         <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
       </div>
+
+      <!-- הבלוק הסוגר של הכרטיס. מחוץ ל-#book-screen ול-#nofit-screen בכוונה —
+           גלוי תמיד, גם למי שעוד לא ענה על השאלות. בלי rev כדי שלא ייעלם בשום מצב -->
+      <div class="call-steps">
+        <h3>מה קורה בשיחה</h3>
+        <ul class="steps">
+          <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
+          <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
+          <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
+        </ul>
+      </div>
       </section>
     </div>
   </section>
-
-  <!-- "מה קורה בשיחה" סוגר את זרימת ההזמנה. מחוץ ל-#book-screen בכוונה — גלוי לכל מבקר,
-       לא רק למי שסיים את השאלון -->
-  <div class="wrap">
-    <section class="card steps-outro rev" aria-label="מה קורה בשיחה">
-      <h2>מה קורה בשיחה</h2>
-      <ul class="steps">
-        <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-        <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
-        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
-      </ul>
-    </section>
-  </div>
 </main>
 
 <footer class="wrap rev">
