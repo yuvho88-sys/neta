@@ -308,6 +308,13 @@
     display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
     font-family:var(--serif);border:1px solid #e6d8ca}
   .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
+  /* "מה קורה בשיחה" סוגר את זרימת ההזמנה — צריך אוויר מסקשן קביעת השיחה שמעליו */
+  .steps-outro{margin-top:clamp(36px,7vw,56px)}
+
+  /* כרטיס הציטוט של נטע — אותו מראה של הפסקה שהייתה מתחת ליומן, ברוחב כרטיס מלא */
+  .quote-card{text-align:center}
+  .quote-card::before{content:"◆";display:block;color:var(--brass);font-size:10px;margin-bottom:14px}
+  .quote-card p{margin:0;font-size:clamp(15px,3.6vw,16.5px);line-height:1.9;color:var(--body);font-weight:400}
 
   #book{scroll-margin-top:14px}
   #book-screen,#nofit-screen{display:none}
@@ -546,11 +553,6 @@
   .bk-done-note{color:var(--muted);font-size:14.5px}
 
   /* פסקה אישית של נטע — מתחת לבחירת התאריך ביומן */
-  .bk-note{margin:24px auto 0;max-width:560px;padding:22px 24px;border-radius:18px;
-    background:var(--card-bg);border:1px solid var(--line);text-align:center}
-  .bk-note::before{content:"◆";display:block;color:var(--brass);font-size:10px;margin-bottom:12px}
-  .bk-note p{margin:0;font-size:clamp(15px,3.6vw,16.5px);line-height:1.9;
-    color:var(--body);font-weight:400}
   @media (max-width:600px){
     .bk-backdrop.on{background:rgba(35,31,28,.4)}
     .bk-pop{position:fixed;top:auto;bottom:0;left:0;right:0;border-radius:20px 20px 0 0;
@@ -601,7 +603,7 @@
     <section class="card about rev" aria-label="על נטע">
       <p class="philosophy">אנחנו מוגדרים על ידי החלל שבו אנחנו חיים — והוא משפיע עלינו הרבה יותר משנוטים לייחס לו.</p>
       <hr>
-      <p>בוגרת תואר באדריכלות (B.ARC), מלווה אתכם מהרגע הראשון ועד הבית שתמיד רציתם. הגישה שלי אישית: הקשבה אמיתית להרגלים, לאורח החיים ולחלומות שלכם — ומתוכם נולד חלל שמשקף בדיוק אתכם, לא נוסחה מוכנה. בכל בית שאני מתכננת אני קודם כל רואה אתכם — ודואגת שהבית יהפוך למקום שמרחיב לכם את הלב, כל יום מחדש.</p>
+      <p>בוגרת תואר באדריכלות (B.ARC), מלווה אתכם מהרגע הראשון ועד הבית שתמיד רציתם. הגישה שלי אישית: הקשבה אמיתית להרגלים, לאורח החיים ולחלומות שלכם — ומתוכם נולד חלל שמשקף בדיוק אתכם, לא נוסחה מוכנה.</p>
     </section>
 
   </div>
@@ -776,14 +778,9 @@
       <div class="tst-lb-body" id="tstLbBody"></div>
     </div>
 
-    <div class="eyebrow rev"><span class="lab">התהליך</span><span class="rule"></span></div>
-    <section class="card rev" aria-label="מה קורה בשיחה">
-      <h2>מה קורה בשיחה</h2>
-      <ul class="steps">
-        <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-        <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
-        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
-      </ul>
+    <div class="eyebrow rev"><span class="lab">הגישה שלי</span><span class="rule"></span></div>
+    <section class="card quote-card rev" aria-label="הגישה של נטע">
+      <p>בכל בית אותו אני מתכננת אני קודם כל רואה אתכם, את האנשים שיחיו בו, את מי שאתם, את מה שחשוב לכם, ואת מה שעושה לכם הכי טוב. יחד נבנה חלום שמותאם בדיוק אליכם. אני כאן כדי לוודא שהבית יהפוך למקום שמרחיב לכם את הלב כל יום מחדש</p>
     </section>
   </div>
 
@@ -928,6 +925,19 @@
       </section>
     </div>
   </section>
+
+  <!-- "מה קורה בשיחה" סוגר את זרימת ההזמנה. מחוץ ל-#book-screen בכוונה — גלוי לכל מבקר,
+       לא רק למי שסיים את השאלון -->
+  <div class="wrap">
+    <section class="card steps-outro rev" aria-label="מה קורה בשיחה">
+      <h2>מה קורה בשיחה</h2>
+      <ul class="steps">
+        <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
+        <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
+        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
+      </ul>
+    </section>
+  </div>
 </main>
 
 <footer class="wrap rev">
