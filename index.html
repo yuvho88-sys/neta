@@ -781,8 +781,8 @@
       <h2>מה קורה בשיחה</h2>
       <ul class="steps">
         <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-        <li><span class="dot">2</span><div><b>בלי התחייבות</b><span>מכירים, מבינים מה חשוב לכם, ובודקים יחד אם מתאים</span></div></li>
-        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, סדר הפעולות הנכון — במה מתחילים, והצעה מסודרת אם נמצא שיש התאמה</span></div></li>
+        <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
+        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
       </ul>
     </section>
   </div>
@@ -804,8 +804,8 @@
       <div id="q-screen">
         <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
         <div class="qcount" id="qCount" dir="rtl">שלב 1 מתוך 3</div>
-        <h2>כמה שאלות קצרות ונקבע</h2>
-        <p class="qlead">שלוש שאלות שיעזרו לנטע להבין מה מתאים לכם — ואז נבחר יחד זמן לשיחה.</p>
+        <h2>כמה שאלות קצרות — ונקבע</h2>
+        <p class="qlead">פחות מדקה — כדי שנטע תגיע לשיחה כשהיא כבר מבינה את הפרויקט שלכם.</p>
 
         <div class="qw open" data-step="0">
           <div class="qw-in">
@@ -818,7 +818,7 @@
                 <div class="opts stack" data-q="area">
                   <label class="opt"><input type="radio" name="area" value="בית ותיק שרוצים לשפץ"><span>בית ותיק שרוצים לשפץ</span></label>
                   <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — כבר גרים בה"><span>דירה חדשה מקבלן — כבר גרים בה</span></label>
-                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — עוד לא נכנסנו"><span>דירה חדשה מקבלן — עוד לא נכנסנו</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — לקראת כניסה"><span>דירה חדשה מקבלן — לקראת כניסה</span></label>
                 </div>
               </div></div>
             </div>
@@ -827,13 +827,13 @@
 
         <div class="qw" data-step="1">
           <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="מה גודל הנכס בערך">
+            <div class="q" role="radiogroup" aria-label="מה הגודל של הנכס, בערך">
               <button type="button" class="q-head">
-                <span class="qt">2. מה גודל הנכס בערך?</span>
+                <span class="qt">2. מה הגודל של הנכס, בערך?</span>
                 <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
               </button>
               <div class="q-body"><div class="q-body-in">
-                <p class="qhint">כדי שנטע תגיע לשיחה עם הבנה של היקף הפרויקט</p>
+                <p class="qhint">ככה נטע מגיעה לשיחה כשהיא כבר מכירה את היקף הפרויקט</p>
                 <div class="opts stack" data-q="budget">
                   <!-- bdi ולא span: הסלקטור ‎.opt span‎ הוא צאצא, ו-span פנימי היה מקבל עיצוב של אופציה שלמה -->
                   <label class="opt"><input type="radio" name="budget" value="50-100 מ״ר"><span><bdi dir="ltr">50–100</bdi> מ״ר</span></label>
@@ -854,9 +854,9 @@
               </button>
               <div class="q-body"><div class="q-body-in">
                 <div class="opts stack" data-q="service">
+                  <label class="opt"><input type="radio" name="service" value="מיידי — רוצים לצאת לדרך"><span>מיידי — רוצים לצאת לדרך</span></label>
                   <label class="opt"><input type="radio" name="service" value="בחודשים הקרובים"><span>בחודשים הקרובים</span></label>
-                  <label class="opt"><input type="radio" name="service" value="בעוד כחצי שנה בערך"><span>בעוד כחצי שנה בערך</span></label>
-                  <label class="opt"><input type="radio" name="service" value="עדיין בשלב הבדיקה"><span>עדיין בשלב הבדיקה</span></label>
+                  <label class="opt"><input type="radio" name="service" value="עדיין בודקים את הכיוון"><span>עדיין בודקים את הכיוון</span></label>
                 </div>
               </div></div>
             </div>
@@ -866,7 +866,7 @@
       </div>
 
       <div id="book-screen">
-        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה! בואו נבחר זמן</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
+        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, נשאר רק לבחור זמן</h2><p style="color:var(--muted)">בחרו מהיומן של נטע את הזמן שנוח לכם</p></div>
         <div class="booking" id="booking">
           <div class="bk-microlabel"><span class="bk-dia" aria-hidden="true"></span>היומן של נטע</div>
           <button class="bk-field" id="bkField" type="button" aria-haspopup="dialog" aria-expanded="false">
@@ -1225,7 +1225,7 @@
 
   /* 6) questionnaire — progressive wizard. שמות השדות ב-payload לא משתנים (ממופים בסנריו Make) */
   (function(){
-    /* אין תשובה פוסלת: כל שילוב תקין ממשיך ליומן, כולל "עדיין בשלב הבדיקה".
+    /* אין תשובה פוסלת: כל שילוב תקין ממשיך ליומן, כולל "עדיין בודקים את הכיוון".
        הניתוב לטיפוח נעשה בסנריו של Make לפי הערכים שנשלחים, לא בדף.
        הערכים שנשלחים הם ה-value של כל אופציה במארקאפ, בעברית מלאה. */
     var MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/e3g7n1hiombafaovxifaafp0oriflzyl';
