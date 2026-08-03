@@ -1,0 +1,6 @@
+# מקורות מדיה כבדים — לא נכנסים לריפו. רק הגרסה הדחוסה ב-assets/ עולה.
+NETA CLAIENT.MP4
+*.MP4
+*.mov
+*.MOV
+!assets/testimonials/testimonial-video.mp4
