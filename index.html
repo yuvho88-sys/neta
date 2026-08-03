@@ -308,14 +308,17 @@
     display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
     font-family:var(--serif);border:1px solid #e6d8ca}
   .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
-  /* "מה קורה בשיחה" — הבלוק הסוגר בתוך כרטיס השאלון. בלי מסגרת משלו,
-     מופרד בקו באותו גוון של המחיצות בין השלבים */
-  .call-steps{margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
+  /* "מה קורה בשיחה" — יושב בטור המכירה, בלי מסגרת משלו,
+     מופרד בקו באותו גוון של המחיצות בין השלבים. במובייל צפוף יותר */
+  .call-steps{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
   .call-steps h3{font-family:var(--serif);font-size:clamp(1.02rem,3.9vw,1.16rem);
-    font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+    font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  .call-steps .steps li{padding:13px 0}
 
   /* כרטיס הציטוט של נטע — אותו מראה של הפסקה שהייתה מתחת ליומן, ברוחב כרטיס מלא */
-  .quote-card{text-align:center}
+  /* גשר בין סקשנים, לא אי: הריפוד האנכי והשוליים קוצצו בכ-40% */
+  .quote-card{text-align:center;padding-block:clamp(15px,3.6vw,20px);margin-block:12px}
+  .eyebrow-tight{margin-top:34px}
   .quote-card::before{content:"◆";display:block;color:var(--brass);font-size:10px;margin-bottom:14px}
   .quote-card p{margin:0;font-size:clamp(15px,3.6vw,16.5px);line-height:1.9;color:var(--body);font-weight:400}
 
@@ -413,18 +416,37 @@
   .social svg{width:20px;height:20px}
 
   /* qualify — two-column intro + questionnaire */
-  .qualify-section{max-width:980px;margin:44px auto 0;padding:0 22px}
+  /* מרווח הפתיחה של הסקשן יושב על הסקשן עצמו ולא על הפתיח, כדי ששני הטורים
+     יתחילו מאותו קו בדסקטופ. אחרת ‎margin-top‎ של הפתיח דוחף רק את טור ימין */
+  .qualify-section{max-width:980px;margin:clamp(56px,9vw,78px) auto 0;padding:0 22px}
+  .qualify-intro .eyebrow{margin-top:0}
   .qualify{display:grid;gap:20px}
   .qualify-intro h2{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
   .qualify-intro > p{color:var(--body);font-size:16px}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-  .chip{display:inline-flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--line);
-    color:var(--ink);font-weight:600;font-size:13.5px;padding:8px 14px;border-radius:30px;box-shadow:var(--shadow-sm)}
-  .chip::before{content:"✓";color:var(--brass);font-weight:800}
+  /* גריד 2 על 2 במקום flex-wrap — רוחב אחיד, גובה אחיד, בלי צ'יפ יתום */
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+  .chip{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;
+    background:var(--card-bg);border:1px solid var(--line);text-align:center;line-height:1.3;
+    color:var(--ink);font-weight:600;font-size:13.5px;padding:8px 12px;border-radius:30px;box-shadow:var(--shadow-sm)}
+  .chip::before{content:"✓";color:var(--brass);font-weight:800;flex:0 0 auto}
+  /* במסכים צרים "ליווי אישי מהרגע הראשון" חורג ב-1px וקופץ לשתי שורות.
+     צמצום ריפוד ומרווח מחזיר את כל הארבעה לשורה אחת ושומר על הגריד 2 על 2 */
+  @media (max-width:400px){
+    .chips{gap:8px}
+    .chip{padding-inline:9px}
+  }
+  /* מתחת ל-370px גם הריפוד המצומצם לא מספיק — טור אחד עדיף על שבירה */
+  @media (max-width:370px){ .chips{grid-template-columns:1fr} }
   @media(min-width:900px){
-    .qualify{grid-template-columns:1fr 1.1fr;gap:36px;align-items:start}
-    .qualify-intro{position:sticky;top:26px}
+    .qualify{grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
     #book{margin:0}
+    .call-steps{margin-top:30px;padding-top:26px}
+    .call-steps .steps li{padding:16px 0}
+  }
+  /* sticky רק כשיש גובה חלון אמיתי. טור המכירה כולל שלושת השלבים הוא ~620px,
+     ובחלון נמוך ההצמדה הייתה נועלת את השלב השלישי מתחת לקצה המסך */
+  @media (min-width:900px) and (min-height:780px){
+    .qualify-intro{position:sticky;top:26px}
   }
 
   @media (min-width:760px){
@@ -781,7 +803,7 @@
       <div class="tst-lb-body" id="tstLbBody"></div>
     </div>
 
-    <div class="eyebrow rev"><span class="lab">הגישה שלי</span><span class="rule"></span></div>
+    <div class="eyebrow eyebrow-tight rev"><span class="lab">הגישה שלי</span><span class="rule"></span></div>
     <section class="card quote-card rev" aria-label="הגישה של נטע">
       <p>בכל בית אותו אני מתכננת אני קודם כל רואה אתכם, את האנשים שיחיו בו, את מי שאתם, את מה שחשוב לכם, ואת מה שעושה לכם הכי טוב. יחד נבנה חלום שמותאם בדיוק אליכם. אני כאן כדי לוודא שהבית יהפוך למקום שמרחיב לכם את הלב כל יום מחדש</p>
     </section>
@@ -798,6 +820,17 @@
           <span class="chip">ליווי אישי מהרגע הראשון</span>
           <span class="chip">בוגרת אדריכלות B.ARC</span>
           <span class="chip">ללא התחייבות</span>
+        </div>
+
+        <!-- "מה קורה בשיחה" חי בטור המכירה. סדר ה-DOM נותן גם את הדסקטופ (טור ימין)
+             וגם את המובייל (המסר נקרא לפני הטופס) בלי order ובלי שכפול -->
+        <div class="call-steps">
+          <h3>מה קורה בשיחה</h3>
+          <ul class="steps">
+            <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
+            <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
+            <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
+          </ul>
         </div>
       </div>
       <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
@@ -924,17 +957,6 @@
 
       <div id="nofit-screen">
         <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
-      </div>
-
-      <!-- הבלוק הסוגר של הכרטיס. מחוץ ל-#book-screen ול-#nofit-screen בכוונה —
-           גלוי תמיד, גם למי שעוד לא ענה על השאלות. בלי rev כדי שלא ייעלם בשום מצב -->
-      <div class="call-steps">
-        <h3>מה קורה בשיחה</h3>
-        <ul class="steps">
-          <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-          <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
-          <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
-        </ul>
       </div>
       </section>
     </div>
