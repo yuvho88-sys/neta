@@ -343,7 +343,12 @@
   .q.answered .q-body{grid-template-rows:0fr;opacity:0}
   .q-body-in{overflow:hidden;min-height:0}
 
+  /* מיקרו-קופי מתחת לכותרת השאלה — מתקפל יחד עם האופציות כשעונים */
+  .qhint{color:var(--muted);font-size:13px;line-height:1.45;margin:9px 0 -3px}
   .opts{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px;padding-top:13px}
+  /* אופציות מנוסחות במילים — טור אחד בכל רוחב. גובר גם על כלל 3 העמודות
+     שב-min-width:760px, שם כרטיס השאלון צר ושלוש עמודות שוברות את הטקסט */
+  .opts.stack{grid-template-columns:1fr}
   .opt{position:relative;display:flex}
   .opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
   .opt span{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:12px 15px;
@@ -777,7 +782,7 @@
       <ul class="steps">
         <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
         <li><span class="dot">2</span><div><b>בלי התחייבות</b><span>מכירים, מבינים מה חשוב לכם, ובודקים יחד אם מתאים</span></div></li>
-        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>[[מה הליד מקבל — המלצה ראשונית והצעת המשך]]</span></div></li>
+        <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, סדר הפעולות הנכון — במה מתחילים, והצעה מסודרת אם נמצא שיש התאמה</span></div></li>
       </ul>
     </section>
   </div>
@@ -787,7 +792,7 @@
       <div class="qualify-intro">
         <div class="eyebrow"><span class="lab">קביעת שיחה</span><span class="rule"></span></div>
         <h2>בואו נבדוק שמתאים</h2>
-        <p>שלוש שאלות קצרות — ואם יש התאמה, נבחר יחד זמן לשיחת היכרות של 20 דקות, ללא עלות וללא התחייבות.</p>
+        <p>שלוש שאלות קצרות — ונבחר יחד זמן לשיחת היכרות של 20 דקות, ללא עלות וללא התחייבות.</p>
         <div class="chips">
           <span class="chip">ייעוץ ראשוני חינם</span>
           <span class="chip">ליווי אישי מהרגע הראשון</span>
@@ -804,18 +809,16 @@
 
         <div class="qw open" data-step="0">
           <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="באיזה אזור נמצא הבית">
+            <div class="q" role="radiogroup" aria-label="מה מתאר הכי טוב את הבית שלכם">
               <button type="button" class="q-head">
-                <span class="qt">1. באיזה אזור נמצא הבית?</span>
+                <span class="qt">1. מה מתאר הכי טוב את הבית שלכם?</span>
                 <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
               </button>
               <div class="q-body"><div class="q-body-in">
-                <div class="opts" data-q="area">
-                  <label class="opt"><input type="radio" name="area" value="צפון"><span>צפון</span></label>
-                  <label class="opt"><input type="radio" name="area" value="שרון"><span>שרון</span></label>
-                  <label class="opt"><input type="radio" name="area" value="מרכז"><span>מרכז</span></label>
-                  <label class="opt"><input type="radio" name="area" value="ירושלים והסביבה"><span>ירושלים והסביבה</span></label>
-                  <label class="opt"><input type="radio" name="area" value="דרום"><span>דרום</span></label>
+                <div class="opts stack" data-q="area">
+                  <label class="opt"><input type="radio" name="area" value="בית ותיק שרוצים לשפץ"><span>בית ותיק שרוצים לשפץ</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — כבר גרים בה"><span>דירה חדשה מקבלן — כבר גרים בה</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — עוד לא נכנסנו"><span>דירה חדשה מקבלן — עוד לא נכנסנו</span></label>
                 </div>
               </div></div>
             </div>
@@ -824,17 +827,18 @@
 
         <div class="qw" data-step="1">
           <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="מה התקציב המשוער">
+            <div class="q" role="radiogroup" aria-label="מה גודל הנכס בערך">
               <button type="button" class="q-head">
-                <span class="qt">2. מה התקציב המשוער לפרויקט?</span>
+                <span class="qt">2. מה גודל הנכס בערך?</span>
                 <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
               </button>
               <div class="q-body"><div class="q-body-in">
-                <div class="opts" data-q="budget">
-                  <label class="opt"><input type="radio" name="budget" value="עד 5,000 ₪"><span>עד ₪5,000</span></label>
-                  <label class="opt"><input type="radio" name="budget" value="5,000-10,000 ₪"><span>₪5,000–10,000</span></label>
-                  <label class="opt"><input type="radio" name="budget" value="10,000-20,000 ₪"><span>₪10,000–20,000</span></label>
-                  <label class="opt"><input type="radio" name="budget" value="מעל 20,000 ₪"><span>מעל ₪20,000</span></label>
+                <p class="qhint">כדי שנטע תגיע לשיחה עם הבנה של היקף הפרויקט</p>
+                <div class="opts stack" data-q="budget">
+                  <!-- bdi ולא span: הסלקטור ‎.opt span‎ הוא צאצא, ו-span פנימי היה מקבל עיצוב של אופציה שלמה -->
+                  <label class="opt"><input type="radio" name="budget" value="50-100 מ״ר"><span><bdi dir="ltr">50–100</bdi> מ״ר</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="100-150 מ״ר"><span><bdi dir="ltr">100–150</bdi> מ״ר</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="מעל 150 מ״ר"><span>מעל 150 מ״ר</span></label>
                 </div>
               </div></div>
             </div>
@@ -843,17 +847,16 @@
 
         <div class="qw" data-step="2">
           <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="איזה שירות מעניין אתכם">
+            <div class="q" role="radiogroup" aria-label="מתי הייתם רוצים להתחיל">
               <button type="button" class="q-head">
-                <span class="qt">3. איזה שירות מעניין אתכם?</span>
+                <span class="qt">3. מתי הייתם רוצים להתחיל?</span>
                 <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
               </button>
               <div class="q-body"><div class="q-body-in">
-                <div class="opts" data-q="service">
-                  <label class="opt"><input type="radio" name="service" value="ליווי מלא"><span>ליווי עיצובי מלא</span></label>
-                  <label class="opt"><input type="radio" name="service" value="פרויקט חד פעמי"><span>פרויקט חד-פעמי</span></label>
-                  <label class="opt"><input type="radio" name="service" value="ייעוץ"><span>ייעוץ עיצובי</span></label>
-                  <label class="opt"><input type="radio" name="service" value="אחר"><span>אחר</span></label>
+                <div class="opts stack" data-q="service">
+                  <label class="opt"><input type="radio" name="service" value="בחודשים הקרובים"><span>בחודשים הקרובים</span></label>
+                  <label class="opt"><input type="radio" name="service" value="בעוד כחצי שנה בערך"><span>בעוד כחצי שנה בערך</span></label>
+                  <label class="opt"><input type="radio" name="service" value="עדיין בשלב הבדיקה"><span>עדיין בשלב הבדיקה</span></label>
                 </div>
               </div></div>
             </div>
@@ -863,7 +866,7 @@
       </div>
 
       <div id="book-screen">
-        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, יש התאמה!</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
+        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה! בואו נבחר זמן</h2><p style="color:var(--muted)">בחרו זמן שנוח לכם מהיומן של נטע:</p></div>
         <div class="booking" id="booking">
           <div class="bk-microlabel"><span class="bk-dia" aria-hidden="true"></span>היומן של נטע</div>
           <button class="bk-field" id="bkField" type="button" aria-haspopup="dialog" aria-expanded="false">
@@ -1220,15 +1223,11 @@
     });
   })();
 
-  /* 6) questionnaire — progressive wizard (CRITERIA + payload unchanged) */
+  /* 6) questionnaire — progressive wizard. שמות השדות ב-payload לא משתנים (ממופים בסנריו Make) */
   (function(){
-    /* CRITERIA — must match Airtable Single-Select options EXACTLY (base appLFerl8R1SOWBC0).
-       Budget gate: ₪10,000+ qualifies; below that → nofit. Adjustable, pending Neta's OK. */
-    var CRITERIA = {
-      areas:   ['צפון','שרון','מרכז','ירושלים והסביבה','דרום'],
-      budgets: ['10,000-20,000 ₪','מעל 20,000 ₪'],
-      services:['ליווי מלא','פרויקט חד פעמי','ייעוץ','אחר']
-    };
+    /* אין תשובה פוסלת: כל שילוב תקין ממשיך ליומן, כולל "עדיין בשלב הבדיקה".
+       הניתוב לטיפוח נעשה בסנריו של Make לפי הערכים שנשלחים, לא בדף.
+       הערכים שנשלחים הם ה-value של כל אופציה במארקאפ, בעברית מלאה. */
     var MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/e3g7n1hiombafaovxifaafp0oriflzyl';
 
     var order=['area','budget','service'];
@@ -1265,7 +1264,9 @@
     function choose(i,input){
       var key=order[i], changed = ans[key] && ans[key]!==input.value;
       ans[key]=input.value;
-      qws[i].querySelector('.q-chosen .v').textContent=input.nextElementSibling.textContent.trim();
+      /* innerHTML ולא textContent — משמר את <span dir="ltr"> של הטווחים, אחרת השבב מציג 100–50 הפוך.
+         המקור הוא המארקאפ הסטטי שלנו בלבד, לא קלט משתמש */
+      qws[i].querySelector('.q-chosen .v').innerHTML=input.nextElementSibling.innerHTML.trim();
       qws[i].querySelector('.q').classList.add('answered');
       if(changed) resetAfter(i);
       progress();
@@ -1289,7 +1290,8 @@
     });
     progress();
 
-    function pass(){return CRITERIA.areas.indexOf(ans.area)>-1 && CRITERIA.budgets.indexOf(ans.budget)>-1 && CRITERIA.services.indexOf(ans.service)>-1;}
+    /* מסך nofit נשאר במארקאפ כקוד רדום, למקרה שנחזיר סינון בעתיד */
+    function pass(){return true;}
     function send(q){
       if(MAKE_WEBHOOK_URL.indexOf('PASTE')===0) return;
       fetch(MAKE_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
