@@ -403,6 +403,9 @@
   .cal-embed{background:var(--ivory);border:1px dashed #d8ccbd;border-radius:16px;
     padding:52px 20px;color:var(--muted);font-size:15px;margin-top:10px;text-align:center}
 
+  /* הדף נסגר עכשיו בכרטיס הציטוט ולא בסקשן קביעת השיחה. הריפוד העליון של הפוטר
+     מבוטל ע"י ‎.wrap‎ (סלקטור מחלקה גובר על סלקטור תגית), ולכן מרווח הסגירה יושב על main */
+  main{padding-bottom:clamp(30px,5vw,44px)}
   footer{text-align:center;color:var(--muted);font-size:13.5px;padding:40px 0 56px;line-height:2.1}
   footer .fbrand{font-family:var(--serif);font-weight:600;letter-spacing:.2em;padding-left:.2em;
     color:var(--accent-deep);font-size:14px;margin-bottom:6px}
@@ -419,6 +422,9 @@
   /* מרווח הפתיחה של הסקשן יושב על הסקשן עצמו ולא על הפתיח, כדי ששני הטורים
      יתחילו מאותו קו בדסקטופ. אחרת ‎margin-top‎ של הפתיח דוחף רק את טור ימין */
   .qualify-section{max-width:980px;margin:clamp(56px,9vw,78px) auto 0;padding:0 22px}
+  /* הסקשן פותח עכשיו את הדף מיד אחרי הגיבור, שכבר יש לו ריפוד תחתון.
+     מרווח הפתיחה המלא נועד להפריד מהציטוט שקדם לו במיקום הישן ולכן מצומצם כאן */
+  main > .qualify-section:first-child{margin-top:clamp(24px,4vw,34px)}
   .qualify-intro .eyebrow{margin-top:0}
   .qualify{display:grid;gap:20px}
   .qualify-intro h2{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
@@ -615,23 +621,163 @@
   <div class="brand">נטע גוטמן אדריכלים</div>
   <h1>אני כאן כדי ליצור יחד איתכם<br>את המרחב המדויק עבורכם</h1>
   <div class="role">נטע גוטמן · <b>אדריכלית ומעצבת פנים</b></div>
-  <div><a href="#book" class="hero-cta">
-    <span class="hc-main">לבחירת מועד ביומן <span class="hc-chev" aria-hidden="true">‹</span></span>
-    <span class="hc-sub">שיחת היכרות חינם · מקומות אחרונים לחודש הקרוב</span>
-  </a></div>
 </header>
 
 <div class="wrap"><div class="greet" id="greet" role="status"></div></div>
 
 <main>
-  <div class="wrap">
-    <section class="card about rev" aria-label="על נטע">
-      <p class="philosophy">אנחנו מוגדרים על ידי החלל שבו אנחנו חיים — והוא משפיע עלינו הרבה יותר משנוטים לייחס לו.</p>
-      <hr>
-      <p>בוגרת תואר באדריכלות (B.ARC), מלווה אתכם מהרגע הראשון ועד הבית שתמיד רציתם. הגישה שלי אישית: הקשבה אמיתית להרגלים, לאורח החיים ולחלומות שלכם — ומתוכם נולד חלל שמשקף בדיוק אתכם, לא נוסחה מוכנה.</p>
-    </section>
+  <section class="qualify-section rev" aria-label="קביעת שיחה">
+    <div class="qualify">
+      <div class="qualify-intro">
+        <div class="eyebrow"><span class="lab">קביעת שיחה</span><span class="rule"></span></div>
+        <h2>בואו נבדוק שמתאים</h2>
+        <p>שלוש שאלות קצרות — ונבחר יחד זמן לשיחת היכרות של 20 דקות, ללא עלות וללא התחייבות.</p>
+        <div class="chips">
+          <span class="chip">ייעוץ ראשוני חינם</span>
+          <span class="chip">ליווי אישי מהרגע הראשון</span>
+          <span class="chip">בוגרת אדריכלות B.ARC</span>
+          <span class="chip">ללא התחייבות</span>
+        </div>
 
-  </div>
+        <!-- "מה קורה בשיחה" חי בטור המכירה. סדר ה-DOM נותן גם את הדסקטופ (טור ימין)
+             וגם את המובייל (המסר נקרא לפני הטופס) בלי order ובלי שכפול -->
+        <div class="call-steps">
+          <h3>מה קורה בשיחה</h3>
+          <ul class="steps">
+            <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
+            <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
+            <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
+          </ul>
+        </div>
+      </div>
+      <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
+      <div id="q-screen">
+        <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
+        <div class="qcount" id="qCount" dir="rtl">שלב 1 מתוך 3</div>
+        <h2>כמה שאלות קצרות — ונקבע</h2>
+        <p class="qlead">פחות מדקה — כדי שנטע תגיע לשיחה כשהיא כבר מבינה את הפרויקט שלכם.</p>
+
+        <div class="qw open" data-step="0">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="מה מתאר הכי טוב את הבית שלכם">
+              <button type="button" class="q-head">
+                <span class="qt">1. מה מתאר הכי טוב את הבית שלכם?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <div class="opts stack" data-q="area">
+                  <label class="opt"><input type="radio" name="area" value="בית ותיק שרוצים לשפץ"><span>בית ותיק שרוצים לשפץ</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — כבר גרים בה"><span>דירה חדשה מקבלן — כבר גרים בה</span></label>
+                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — לקראת כניסה"><span>דירה חדשה מקבלן — לקראת כניסה</span></label>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qw" data-step="1">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="מה הגודל של הנכס, בערך">
+              <button type="button" class="q-head">
+                <span class="qt">2. מה הגודל של הנכס, בערך?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <p class="qhint">ככה נטע מגיעה לשיחה כשהיא כבר מכירה את היקף הפרויקט</p>
+                <div class="opts stack" data-q="budget">
+                  <!-- bdi ולא span: הסלקטור ‎.opt span‎ הוא צאצא, ו-span פנימי היה מקבל עיצוב של אופציה שלמה -->
+                  <label class="opt"><input type="radio" name="budget" value="50-100 מ״ר"><span><bdi dir="ltr">50–100</bdi> מ״ר</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="100-150 מ״ר"><span><bdi dir="ltr">100–150</bdi> מ״ר</span></label>
+                  <label class="opt"><input type="radio" name="budget" value="מעל 150 מ״ר"><span>מעל 150 מ״ר</span></label>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qw" data-step="2">
+          <div class="qw-in">
+            <div class="q" role="radiogroup" aria-label="מתי הייתם רוצים להתחיל">
+              <button type="button" class="q-head">
+                <span class="qt">3. מתי הייתם רוצים להתחיל?</span>
+                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
+              </button>
+              <div class="q-body"><div class="q-body-in">
+                <div class="opts stack" data-q="service">
+                  <label class="opt"><input type="radio" name="service" value="מיידי — רוצים לצאת לדרך"><span>מיידי — רוצים לצאת לדרך</span></label>
+                  <label class="opt"><input type="radio" name="service" value="בחודשים הקרובים"><span>בחודשים הקרובים</span></label>
+                  <label class="opt"><input type="radio" name="service" value="עדיין בודקים את הכיוון"><span>עדיין בודקים את הכיוון</span></label>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="book-screen">
+        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, נשאר רק לבחור זמן</h2><p style="color:var(--muted)">בחרו מהיומן של נטע את הזמן שנוח לכם</p></div>
+        <div class="booking" id="booking">
+          <div class="bk-microlabel"><span class="bk-dia" aria-hidden="true"></span>היומן של נטע</div>
+          <button class="bk-field" id="bkField" type="button" aria-haspopup="dialog" aria-expanded="false">
+            <span class="bk-badge">מצב הדגמה</span>
+            <svg class="bk-cal-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span class="bk-field-text placeholder" id="bkFieldText">בחרו תאריך לשיחה</span>
+            <span class="bk-chev" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+            <span class="bk-fchk" aria-hidden="true">✓</span>
+          </button>
+          <div class="bk-backdrop" id="bkBackdrop"></div>
+          <div class="bk-pop" id="bkPop" role="dialog" aria-label="בחירת תאריך" hidden>
+            <div class="bk-pop-head">
+              <button class="bk-nav" id="bkPrev" type="button" aria-label="חודש קודם">›</button>
+              <div class="bk-month" id="bkMonth"></div>
+              <button class="bk-nav" id="bkNext" type="button" aria-label="חודש הבא">‹</button>
+            </div>
+            <div class="bk-dow" aria-hidden="true"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
+            <div class="bk-grid" id="bkGrid" role="grid" aria-label="בחירת יום"></div>
+            <div class="bk-legend"><span class="dot"></span> ימים פנויים לשיחה</div>
+          </div>
+          <div class="bk-times-wrap" id="bkTimesWrap" hidden>
+            <div class="bk-times-label" id="bkTimesLabel"></div>
+            <div class="bk-times" id="bkTimes" role="listbox" aria-label="בחירת שעה"></div>
+          </div>
+          <div class="bk-confirm" id="bkConfirm" hidden>
+            <div class="bk-summary" id="bkSummary"></div>
+            <div class="bk-details">
+              <div class="bk-identity" id="bkIdentity" hidden>
+                <span class="bk-id-text">הפגישה תירשם על שם <b id="bkIdName"></b> · <span id="bkIdPhone" dir="ltr"></span></span>
+                <button type="button" class="bk-id-edit" id="bkIdEdit">לא אתם? עריכה</button>
+              </div>
+              <div class="bk-form-sleeve" id="bkFormSleeve">
+                <div class="bk-form-in">
+                  <div class="bk-form-title">עוד רגע — למי לרשום את הפגישה?</div>
+                  <label class="bkf"><span>שם מלא</span><input type="text" id="bkName" autocomplete="name" placeholder="השם שלכם"></label>
+                  <label class="bkf"><span>טלפון נייד</span><input type="tel" id="bkPhone" autocomplete="tel" inputmode="tel" placeholder="050-0000000"><span class="bkf-err" id="bkPhoneErr" role="alert"></span></label>
+                  <label class="bkf"><span>אימייל <em>(לא חובה)</em></span><input type="email" id="bkEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
+                </div>
+              </div>
+            </div>
+            <button class="bk-go" id="bkGo" type="button" disabled>אישור וקביעת שיחה</button>
+            <div class="bk-err" id="bkErr"></div>
+          </div>
+          <div class="bk-done" id="bkDone" role="dialog" aria-modal="true" hidden>
+            <div class="bk-done-card">
+              <div class="bk-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12"/></svg></div>
+              <h3>הפגישה נקבעה!</h3>
+              <p class="bk-done-line" id="bkDoneLine"></p>
+              <p class="bk-done-note">נשלח לך אישור בוואטסאפ 🤍</p>
+              <button class="bk-done-close" id="bkDoneClose" type="button">סגירה</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="nofit-screen">
+        <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
+      </div>
+      </section>
+    </div>
+  </section>
 
   <section class="ba-block" aria-label="לפני ואחרי">
     <div class="ba-head">
@@ -808,159 +954,6 @@
       <p>בכל בית אותו אני מתכננת אני קודם כל רואה אתכם, את האנשים שיחיו בו, את מי שאתם, את מה שחשוב לכם, ואת מה שעושה לכם הכי טוב. יחד נבנה חלום שמותאם בדיוק אליכם. אני כאן כדי לוודא שהבית יהפוך למקום שמרחיב לכם את הלב כל יום מחדש</p>
     </section>
   </div>
-
-  <section class="qualify-section rev" aria-label="קביעת שיחה">
-    <div class="qualify">
-      <div class="qualify-intro">
-        <div class="eyebrow"><span class="lab">קביעת שיחה</span><span class="rule"></span></div>
-        <h2>בואו נבדוק שמתאים</h2>
-        <p>שלוש שאלות קצרות — ונבחר יחד זמן לשיחת היכרות של 20 דקות, ללא עלות וללא התחייבות.</p>
-        <div class="chips">
-          <span class="chip">ייעוץ ראשוני חינם</span>
-          <span class="chip">ליווי אישי מהרגע הראשון</span>
-          <span class="chip">בוגרת אדריכלות B.ARC</span>
-          <span class="chip">ללא התחייבות</span>
-        </div>
-
-        <!-- "מה קורה בשיחה" חי בטור המכירה. סדר ה-DOM נותן גם את הדסקטופ (טור ימין)
-             וגם את המובייל (המסר נקרא לפני הטופס) בלי order ובלי שכפול -->
-        <div class="call-steps">
-          <h3>מה קורה בשיחה</h3>
-          <ul class="steps">
-            <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-            <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
-            <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
-          </ul>
-        </div>
-      </div>
-      <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
-      <div id="q-screen">
-        <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
-        <div class="qcount" id="qCount" dir="rtl">שלב 1 מתוך 3</div>
-        <h2>כמה שאלות קצרות — ונקבע</h2>
-        <p class="qlead">פחות מדקה — כדי שנטע תגיע לשיחה כשהיא כבר מבינה את הפרויקט שלכם.</p>
-
-        <div class="qw open" data-step="0">
-          <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="מה מתאר הכי טוב את הבית שלכם">
-              <button type="button" class="q-head">
-                <span class="qt">1. מה מתאר הכי טוב את הבית שלכם?</span>
-                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
-              </button>
-              <div class="q-body"><div class="q-body-in">
-                <div class="opts stack" data-q="area">
-                  <label class="opt"><input type="radio" name="area" value="בית ותיק שרוצים לשפץ"><span>בית ותיק שרוצים לשפץ</span></label>
-                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — כבר גרים בה"><span>דירה חדשה מקבלן — כבר גרים בה</span></label>
-                  <label class="opt"><input type="radio" name="area" value="דירה חדשה מקבלן — לקראת כניסה"><span>דירה חדשה מקבלן — לקראת כניסה</span></label>
-                </div>
-              </div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="qw" data-step="1">
-          <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="מה הגודל של הנכס, בערך">
-              <button type="button" class="q-head">
-                <span class="qt">2. מה הגודל של הנכס, בערך?</span>
-                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
-              </button>
-              <div class="q-body"><div class="q-body-in">
-                <p class="qhint">ככה נטע מגיעה לשיחה כשהיא כבר מכירה את היקף הפרויקט</p>
-                <div class="opts stack" data-q="budget">
-                  <!-- bdi ולא span: הסלקטור ‎.opt span‎ הוא צאצא, ו-span פנימי היה מקבל עיצוב של אופציה שלמה -->
-                  <label class="opt"><input type="radio" name="budget" value="50-100 מ״ר"><span><bdi dir="ltr">50–100</bdi> מ״ר</span></label>
-                  <label class="opt"><input type="radio" name="budget" value="100-150 מ״ר"><span><bdi dir="ltr">100–150</bdi> מ״ר</span></label>
-                  <label class="opt"><input type="radio" name="budget" value="מעל 150 מ״ר"><span>מעל 150 מ״ר</span></label>
-                </div>
-              </div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="qw" data-step="2">
-          <div class="qw-in">
-            <div class="q" role="radiogroup" aria-label="מתי הייתם רוצים להתחיל">
-              <button type="button" class="q-head">
-                <span class="qt">3. מתי הייתם רוצים להתחיל?</span>
-                <span class="q-chosen"><span class="v"></span><span class="ck" aria-hidden="true">✓</span></span>
-              </button>
-              <div class="q-body"><div class="q-body-in">
-                <div class="opts stack" data-q="service">
-                  <label class="opt"><input type="radio" name="service" value="מיידי — רוצים לצאת לדרך"><span>מיידי — רוצים לצאת לדרך</span></label>
-                  <label class="opt"><input type="radio" name="service" value="בחודשים הקרובים"><span>בחודשים הקרובים</span></label>
-                  <label class="opt"><input type="radio" name="service" value="עדיין בודקים את הכיוון"><span>עדיין בודקים את הכיוון</span></label>
-                </div>
-              </div></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="book-screen">
-        <div class="qres"><div class="qbadge">✓</div><h2 style="margin-bottom:8px">מעולה, נשאר רק לבחור זמן</h2><p style="color:var(--muted)">בחרו מהיומן של נטע את הזמן שנוח לכם</p></div>
-        <div class="booking" id="booking">
-          <div class="bk-microlabel"><span class="bk-dia" aria-hidden="true"></span>היומן של נטע</div>
-          <button class="bk-field" id="bkField" type="button" aria-haspopup="dialog" aria-expanded="false">
-            <span class="bk-badge">מצב הדגמה</span>
-            <svg class="bk-cal-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            <span class="bk-field-text placeholder" id="bkFieldText">בחרו תאריך לשיחה</span>
-            <span class="bk-chev" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
-            <span class="bk-fchk" aria-hidden="true">✓</span>
-          </button>
-          <div class="bk-backdrop" id="bkBackdrop"></div>
-          <div class="bk-pop" id="bkPop" role="dialog" aria-label="בחירת תאריך" hidden>
-            <div class="bk-pop-head">
-              <button class="bk-nav" id="bkPrev" type="button" aria-label="חודש קודם">›</button>
-              <div class="bk-month" id="bkMonth"></div>
-              <button class="bk-nav" id="bkNext" type="button" aria-label="חודש הבא">‹</button>
-            </div>
-            <div class="bk-dow" aria-hidden="true"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
-            <div class="bk-grid" id="bkGrid" role="grid" aria-label="בחירת יום"></div>
-            <div class="bk-legend"><span class="dot"></span> ימים פנויים לשיחה</div>
-          </div>
-          <div class="bk-times-wrap" id="bkTimesWrap" hidden>
-            <div class="bk-times-label" id="bkTimesLabel"></div>
-            <div class="bk-times" id="bkTimes" role="listbox" aria-label="בחירת שעה"></div>
-          </div>
-          <div class="bk-confirm" id="bkConfirm" hidden>
-            <div class="bk-summary" id="bkSummary"></div>
-            <div class="bk-details">
-              <div class="bk-identity" id="bkIdentity" hidden>
-                <span class="bk-id-text">הפגישה תירשם על שם <b id="bkIdName"></b> · <span id="bkIdPhone" dir="ltr"></span></span>
-                <button type="button" class="bk-id-edit" id="bkIdEdit">לא אתם? עריכה</button>
-              </div>
-              <div class="bk-form-sleeve" id="bkFormSleeve">
-                <div class="bk-form-in">
-                  <div class="bk-form-title">עוד רגע — למי לרשום את הפגישה?</div>
-                  <label class="bkf"><span>שם מלא</span><input type="text" id="bkName" autocomplete="name" placeholder="השם שלכם"></label>
-                  <label class="bkf"><span>טלפון נייד</span><input type="tel" id="bkPhone" autocomplete="tel" inputmode="tel" placeholder="050-0000000"><span class="bkf-err" id="bkPhoneErr" role="alert"></span></label>
-                  <label class="bkf"><span>אימייל <em>(לא חובה)</em></span><input type="email" id="bkEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
-                </div>
-              </div>
-            </div>
-            <button class="bk-go" id="bkGo" type="button" disabled>אישור וקביעת שיחה</button>
-            <div class="bk-err" id="bkErr"></div>
-          </div>
-          <div class="bk-done" id="bkDone" role="dialog" aria-modal="true" hidden>
-            <div class="bk-done-card">
-              <div class="bk-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5 11-12"/></svg></div>
-              <h3>הפגישה נקבעה!</h3>
-              <p class="bk-done-line" id="bkDoneLine"></p>
-              <p class="bk-done-note">נשלח לך אישור בוואטסאפ 🤍</p>
-              <button class="bk-done-close" id="bkDoneClose" type="button">סגירה</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="nofit-screen">
-        <div class="qres"><div class="qbadge warm">🤍</div><h2 style="margin-bottom:8px">תודה שמילאתם!</h2><p style="color:var(--muted)">קיבלנו את הפרטים. נטע תעבור עליהם ותחזור אליכם אישית אם יש התאמה. בינתיים — מוזמנים להתרשם מהפרויקטים.</p></div>
-      </div>
-      </section>
-    </div>
-  </section>
 </main>
 
 <footer class="wrap rev">
