@@ -1318,15 +1318,15 @@
     var WA_URL = 'https://wa.me/972504322412';
     var FAIL_MSG = 'משהו השתבש, נסו שוב או כתבו לנטע בוואטסאפ';
 
-    /* שתי הקריאות שקוראות תשובה (זמינות ובוקינג) נשלחות כ-text/plain בכוונה.
-       ‎application/json‎ הופך את הבקשה ל"לא פשוטה" ומפעיל preflight מסוג OPTIONS,
-       ו-Make לא עונה עליו — הדפדפן היה חוסם את התשובה עוד לפני שהיא נקראת.
-       text/plain נשאר simple request, ו-Make מפרסר את הגוף כ-JSON בכל מקרה.
-       ⚠️ מודול Webhook Response בשני הסנריו חייב להחזיר גם
-       ‎Access-Control-Allow-Origin: https://yuvho88-sys.github.io‎ */
+    /* ‎application/json‎ — חובה. נבדק מול Make ב-6/8: הוובוק עונה על preflight מסוג
+       OPTIONS עם ‎allow-origin: *‎ ו-‎allow-headers: content-type‎, ולכן אין בעיית CORS
+       ואין צורך בעקיפה.
+       🔴 אל תחליף ל-text/plain. Make מפרסר את גוף הבקשה לפי ה-Content-Type, ועם
+       text/plain כל ההפניות ‎{{1.field}}‎ בסנריו יוצאות ריקות — הבוקינג יצר רשומה
+       חדשה וריקה במקום לעדכן את הקיימת. אומת חי בשני הכיוונים. */
     function ask(url,body,ms){
       var c=new AbortController(), t=setTimeout(function(){c.abort();},ms||10000);
-      return fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
+      return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
                         body:JSON.stringify(body),signal:c.signal})
         .then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json();},
               function(e){clearTimeout(t);throw e;});
@@ -1334,9 +1334,8 @@
 
     /* שולח מנה אחת ל-webhook של הבוקינג, ומצרף את השדות המשותפים לכל סטטוס.
        fire-and-forget — לא קוראים תשובה, ולכן אין צורך בכותרת CORS בחזרה.
-       אבל ה-Content-Type הוא text/plain בדיוק כמו ב-ask למעלה: application/json
-       היה הופך גם את השליחה הזו ל"לא פשוטה" ומפעיל preflight ש-Make לא עונה עליו,
-       והדפדפן היה חוסם את הבקשה כולה — כלומר התשובות פשוט לא היו מגיעות.
+       ה-Content-Type חייב להישאר application/json מאותה סיבה שב-ask למעלה: זה מה
+       שגורם ל-Make לפרסר את הגוף ולמפות את השדות.
        מוגדר לפני בדיקת root כדי שיהיה זמין גם לסקשן השאלון. */
     window.__bookingPost = function(extra){
       if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0) return;
@@ -1344,7 +1343,7 @@
       var body={ leadId:window.__leadId, record_id:window.__recordId||null,
                  source:pf.source||'', campaign:pf.campaign||'' };
       for(var k in extra){ if(Object.prototype.hasOwnProperty.call(extra,k)) body[k]=extra[k]; }
-      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
+      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
              body:JSON.stringify(body),keepalive:true}).catch(function(){}); }catch(e){}
     };
 
