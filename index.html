@@ -21,6 +21,8 @@
     --accent:#a67f79; --accent-deep:#8a625c; --brass:#c2a16a;
     --btn:#2b2825; --btn-hover:#1d1b19; --btn-ink:#faf8f5;
     --dark:#211a18; --dark-2:#3a2c29; --dark-section:#241d1b;
+    /* אייקון וואטסאפ כמסכה, כדי שיירש את צבע הכפתור ולא יידרש נכס חיצוני */
+    --wa-ico:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>');
     /* פונט אחיד לכל הדף — לפי שורת החתימה בפוטר "נטע גוטמן · אדריכלית ומעצבת פנים" */
     --serif:"Assistant","Segoe UI",Arial,sans-serif;
     --sans:"Assistant","Segoe UI",Arial,sans-serif;
@@ -511,7 +513,20 @@
   .bk-go:disabled{background:#d8ccc0;color:var(--btn-ink);cursor:default;box-shadow:none}
   .bk-go.loading{animation:bkPulse 1s infinite}
   @keyframes bkPulse{50%{box-shadow:0 8px 30px rgba(35,31,28,.4)}}
-  .bk-err{color:#b0524b;font-size:14px;margin-top:10px;text-align:center;min-height:16px}
+  .bk-err{color:#b0524b;font-size:14px;margin-top:10px;text-align:center;min-height:16px;
+    display:flex;flex-direction:column;align-items:center;gap:9px}
+  /* מצב "היומן לא זמין" — תופס את כל רוחב רשת הימים במקום ליפול לתא בודד */
+  .bk-offline{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:7px;
+    text-align:center;padding:26px 12px}
+  .bk-offline b{font-size:15.5px;color:var(--ink)}
+  .bk-offline span{font-size:13.5px;color:var(--muted);line-height:1.65;max-width:32ch}
+  .bk-wa{margin-top:5px;display:inline-flex;align-items:center;gap:8px;background:var(--btn);color:var(--btn-ink);
+    font-weight:700;font-size:14px;padding:10px 20px;border-radius:30px;text-decoration:none;
+    box-shadow:var(--shadow-sm);transition:background .2s var(--ease)}
+  .bk-wa:hover{background:var(--btn-hover)}
+  .bk-wa::before{content:"";width:15px;height:15px;flex:0 0 auto;background:currentColor;
+    -webkit-mask:var(--wa-ico) center/contain no-repeat;mask:var(--wa-ico) center/contain no-repeat}
+  @media (prefers-reduced-motion:reduce){.bk-wa{transition:none}}
 
   /* booking contact-details — links every booked slot to a person */
   .bk-details{margin-bottom:16px}
@@ -1278,11 +1293,17 @@
           source:window.__prefill.source,campaign:window.__prefill.campaign})}).catch(function(){});
     }
     function finish(){
-      var ok=pass(); send(ok);
-      /* ליד מזוהה שסיים את השאלון אך עדיין לא בחר מועד — מדווחים כבר עכשיו, כדי שהתשובות
-         לא ילכו לאיבוד אם ינטוש לפני הבוקינג. הקריאה השנייה תגיע עם status "booked". */
-      if(window.__recordId && window.__bookingPost){
-        window.__bookingPost({ status:'questionnaire_completed', answers:window.__answers() });
+      var ok=pass();
+      /* שורה אחת לכל ליד:
+         ליד שהגיע עם rid כבר קיים באיירטייבל מהקמפיין, על שורה שנוצרה עם פרטיו מטופס הלידים.
+         שליחה לסנריו השאלון הייתה יוצרת לו שורה שנייה, ולכן במקרה הזה התשובות נשלחות רק
+         לווב-הוק של הבוקינג — שמעדכן את השורה הקיימת. מדווחים כבר עכשיו ולא רק בקביעה,
+         כדי שהתשובות לא ילכו לאיבוד אם ינטוש לפני בחירת מועד.
+         מבקר אורגני אין לו שורה עדיין, ולכן אצלו סנריו השאלון הוא זה שפותח אותה. */
+      if(window.__recordId){
+        if(window.__bookingPost) window.__bookingPost({ status:'questionnaire_completed', answers:window.__answers() });
+      } else {
+        send(ok);
       }
       hideBooking();
       (ok?bookScreen:nofitScreen).classList.add('show');
@@ -1294,9 +1315,28 @@
   (function(){
     var AVAILABILITY_WEBHOOK_URL = 'PASTE_AVAILABILITY_WEBHOOK_HERE';
     var BOOKING_WEBHOOK_URL = 'https://hook.eu1.make.com/bkgyxq1ha58non6lf9wb5t5d5bu7rzth';
+    var WA_URL = 'https://wa.me/972504322412';
+    var FAIL_MSG = 'משהו השתבש, נסו שוב או כתבו לנטע בוואטסאפ';
+
+    /* שתי הקריאות שקוראות תשובה (זמינות ובוקינג) נשלחות כ-text/plain בכוונה.
+       ‎application/json‎ הופך את הבקשה ל"לא פשוטה" ומפעיל preflight מסוג OPTIONS,
+       ו-Make לא עונה עליו — הדפדפן היה חוסם את התשובה עוד לפני שהיא נקראת.
+       text/plain נשאר simple request, ו-Make מפרסר את הגוף כ-JSON בכל מקרה.
+       ⚠️ מודול Webhook Response בשני הסנריו חייב להחזיר גם
+       ‎Access-Control-Allow-Origin: https://yuvho88-sys.github.io‎ */
+    function ask(url,body,ms){
+      var c=new AbortController(), t=setTimeout(function(){c.abort();},ms||10000);
+      return fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
+                        body:JSON.stringify(body),signal:c.signal})
+        .then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json();},
+              function(e){clearTimeout(t);throw e;});
+    }
 
     /* שולח מנה אחת ל-webhook של הבוקינג, ומצרף את השדות המשותפים לכל סטטוס.
-       fire-and-forget: תשובת Make מגיעה בלי כותרת CORS מ-github.io ולכן לא קוראים אותה.
+       fire-and-forget — לא קוראים תשובה, ולכן אין צורך בכותרת CORS בחזרה.
+       אבל ה-Content-Type הוא text/plain בדיוק כמו ב-ask למעלה: application/json
+       היה הופך גם את השליחה הזו ל"לא פשוטה" ומפעיל preflight ש-Make לא עונה עליו,
+       והדפדפן היה חוסם את הבקשה כולה — כלומר התשובות פשוט לא היו מגיעות.
        מוגדר לפני בדיקת root כדי שיהיה זמין גם לסקשן השאלון. */
     window.__bookingPost = function(extra){
       if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0) return;
@@ -1304,14 +1344,13 @@
       var body={ leadId:window.__leadId, record_id:window.__recordId||null,
                  source:pf.source||'', campaign:pf.campaign||'' };
       for(var k in extra){ if(Object.prototype.hasOwnProperty.call(extra,k)) body[k]=extra[k]; }
-      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},
              body:JSON.stringify(body),keepalive:true}).catch(function(){}); }catch(e){}
     };
 
     var root=document.getElementById('booking'); if(!root) return;
     var DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
     var MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
-    var LADDER=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
 
     function pad(n){return String(n).padStart(2,'0');}
     function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
@@ -1326,7 +1365,7 @@
     var today=new Date();today.setHours(0,0,0,0);var todayY=ymd(today);
     var minMonth=new Date(today.getFullYear(),today.getMonth(),1);
     var maxMonth=new Date(today.getFullYear(),today.getMonth()+2,1);
-    var S={view:new Date(minMonth),slots:{},demo:false,selDate:null,selTime:null,sending:false,open:false};
+    var S={view:new Date(minMonth),slots:{},selDate:null,selTime:null,sending:false,open:false,loadToken:0};
 
     var $=function(id){return document.getElementById(id);};
     var field=$('bkField'),fieldText=$('bkFieldText'),pop=$('bkPop'),monthLbl=$('bkMonth'),grid=$('bkGrid'),
@@ -1372,28 +1411,67 @@
     fPhone.addEventListener('blur',function(){ if(fPhone.value.trim() && !validPhone(fPhone.value)){fPhoneErr.textContent='מספר לא תקין, בדקו שהקלדתם נייד ישראלי';fPhone.classList.add('bad');} else clearPhoneErr(); });
     idEdit.addEventListener('click',function(){showForm(window.__prefill||{});setTimeout(function(){fName.focus();},reduce?0:120);});
 
-    function post(url,body,ms){var c=new AbortController(),t=setTimeout(function(){c.abort();},ms||10000);
-      return fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:c.signal})
-        .then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json();},function(e){clearTimeout(t);throw e;});}
-
-    function demo(){var out={};for(var i=0;i<14;i++){var d=addDays(today,i),dw=d.getDay();
-      if(dw===5||dw===6)continue;if(d.getMonth()!==S.view.getMonth())continue;
-      var arr=LADDER.filter(function(){return Math.random()>.5;});if(arr.length)out[ymd(d)]=arr;}return out;}
-
+    /* מבקש זמינות אמיתית לחודש אחד ומחזיר מפה { 'YYYY-MM-DD': ['HH:MM', ...] }.
+       נכללים רק ימים שחזרו עם סלוט אחד לפחות — יום ריק בתשובה שקול ליום שלא הוחזר. */
+    function fetchAvailability(viewDate){
+      var first=new Date(viewDate.getFullYear(),viewDate.getMonth(),1);
+      return ask(AVAILABILITY_WEBHOOK_URL,{month_start:ymd(first)}).then(function(res){
+        var m={};
+        ((res&&res.days)||[]).forEach(function(d){
+          if(d && d.date && d.slots && d.slots.length) m[d.date]=d.slots.slice();
+        });
+        return m;
+      });
+    }
+    /* מחליף את הימים של חודש אחד בלבד, כדי שחודש שכבר נטען לא יימחק בניווט.
+       מפתחות ישנים של אותו חודש נמחקים תחילה — אחרת יום שנתפס היה נשאר פנוי במיזוג. */
+    function applyMonth(map,mk){
+      Object.keys(S.slots).forEach(function(k){ if(k.slice(0,7)===mk) delete S.slots[k]; });
+      for(var k in map){ if(Object.prototype.hasOwnProperty.call(map,k)) S.slots[k]=map[k]; }
+    }
     function loadMonth(){
       renderSkeleton();
       monthLbl.textContent=MONTHS[S.view.getMonth()]+' '+S.view.getFullYear();
       prev.disabled=S.view<=minMonth; next.disabled=S.view>=maxMonth;
-      var apply=function(map,dm){for(var k in map)S.slots[k]=map[k];S.demo=dm;renderGrid();};
-      if(AVAILABILITY_WEBHOOK_URL.indexOf('PASTE')===0){setTimeout(function(){apply(demo(),true);},400);return;}
-      post(AVAILABILITY_WEBHOOK_URL,{monthStart:ymd(S.view).slice(0,8)+'01'}).then(function(res){
-        var m={};(res&&res.slots||[]).forEach(function(s){m[s.date]=s.times||[];});apply(m,false);
-      },function(){apply(demo(),true);});
+      var mk=ymd(S.view).slice(0,7), token=++S.loadToken;
+      return fetchAvailability(S.view).then(function(map){
+        if(token!==S.loadToken) return;            /* ניווט מהיר בין חודשים — תשובה ישנה לא דורסת חדשה */
+        applyMonth(map,mk); renderGrid();
+      },function(){
+        if(token!==S.loadToken) return;
+        renderUnavailable();
+      });
     }
     function renderSkeleton(){grid.classList.add('bk-skl');grid.innerHTML='';
       for(var i=0;i<35;i++){var b=document.createElement('div');b.className='bk-cell';b.textContent='0';grid.appendChild(b);}}
+    /* כשל בקבלת הזמינות. אין נפילה לנתוני הדגמה — עדיף לומר את האמת ולתת ערוץ חלופי,
+       מאשר להציג שעות שנטע לא באמת פנויה בהן */
+    function waLink(text){
+      var a=document.createElement('a');
+      a.className='bk-wa'; a.href=WA_URL; a.target='_blank'; a.rel='noopener'; a.textContent=text;
+      return a;
+    }
+    var legend=pop.querySelector('.bk-legend');
+    function renderUnavailable(){
+      grid.classList.remove('bk-skl'); grid.innerHTML='';
+      timesWrap.hidden=true; confirm.hidden=true;
+      if(legend) legend.hidden=true;      /* מקרא "ימים פנויים" מטעה כשאין רשת ימים בכלל */
+      var box=document.createElement('div'); box.className='bk-offline';
+      var t=document.createElement('b'); t.textContent='היומן לא זמין כרגע';
+      var s=document.createElement('span'); s.textContent='אפשר לתאם איתי ישירות בוואטסאפ ואחזור אליכם עם מועד';
+      box.appendChild(t); box.appendChild(s); box.appendChild(waLink('לתיאום בוואטסאפ'));
+      grid.appendChild(box);
+    }
+    /* הודעת שגיאה מתחת לכפתור האישור, עם ערוץ חלופי כשצריך */
+    function setErr(msg,withWa){
+      err.textContent='';
+      if(!msg) return;
+      var s=document.createElement('span'); s.textContent=msg; err.appendChild(s);
+      if(withWa) err.appendChild(waLink('פתיחת וואטסאפ'));
+    }
     function renderGrid(){
       grid.classList.remove('bk-skl');grid.innerHTML='';
+      if(legend) legend.hidden=false;
       var lead=new Date(S.view.getFullYear(),S.view.getMonth(),1).getDay();
       var dim=new Date(S.view.getFullYear(),S.view.getMonth()+1,0).getDate();
       for(var i=0;i<lead;i++){var e=document.createElement('div');e.className='bk-cell empty';grid.appendChild(e);}
@@ -1418,13 +1496,16 @@
     }
     function renderTimes(){
       timesLbl.textContent='בחרו שעה · '+human(S.selDate,'');
-      var av=S.slots[S.selDate]||[];times.innerHTML='';
-      LADDER.forEach(function(t){ if(av.indexOf(t)<0)return;
+      /* מרנדרים בדיוק את מה שהשרת החזיר, ממוין. סינון מול רשימת שעות קבועה בקוד
+         היה מפיל בשקט כל סלוט שנטע תגדיר מחוץ לרשימה (למשל 09:30) */
+      var av=(S.slots[S.selDate]||[]).slice().sort();
+      times.innerHTML='';
+      av.forEach(function(t){
         var b=document.createElement('button');b.type='button';b.className='bk-chip'+(t===S.selTime?' sel':'');
         b.textContent=t;b.setAttribute('role','option');b.setAttribute('aria-label','שעה '+t);
         b.addEventListener('click',function(){pickTime(t);});times.appendChild(b);
       });
-      timesWrap.hidden=false;
+      timesWrap.hidden=!av.length;
     }
     function pickTime(t){
       S.selTime=t;
@@ -1448,19 +1529,45 @@
           updateGo(); return;
         }
       }
-      if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
+      if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');setErr('');
       var answers = window.__answers ? window.__answers()
         : {question_1:ansVal('area'),question_2:ansVal('budget'),question_3:ansVal('service')};
-      var fin=function(){S.sending=false;go.classList.remove('loading');};
-      var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
-      window.__bookingPost({
-        status:'booked', name:name, phone:phone, email:email, answers:answers,
-        selected_slot:{ date:S.selDate, time:S.selTime, datetime:ilISO(S.selDate,S.selTime) },
+      var pf2=window.__prefill||{};
+      var payload={
+        record_id: window.__recordId||null, status:'booked',
+        selected_date:S.selDate, selected_time:S.selTime, answers:answers,
+        leadId:window.__leadId, source:pf2.source||'', campaign:pf2.campaign||'',
         /* השדות הישנים נשארים כדי שסנריו B הקיים ימשיך לעבוד עד שהראוטר החדש ייכנס */
         date:S.selDate, time:S.selTime, datetime:ilISO(S.selDate,S.selTime),
         area:answers.question_1, budget:answers.question_2, service:answers.question_3
-      });
-      setTimeout(ok,700);
+      };
+      /* name/phone/email נשלחים רק אם שלב הפרטים הוצג. ליד שהגיע עם rid כבר מזוהה
+         באיירטייבל, ושליחת מפתחות ריקים הייתה מוחקת לו את השם הקיים */
+      if(!knownLead()){ payload.name=name; payload.phone=phone; payload.email=email; }
+
+      var fin=function(){S.sending=false;go.classList.remove('loading');updateGo();};
+      var fail=function(){ fin(); setErr(FAIL_MSG,true); };
+      var taken=function(map){
+        fin();
+        applyMonth(map,S.selDate.slice(0,7));
+        S.selTime=null; confirm.hidden=true;
+        field.classList.remove('chosen'); fieldText.textContent=compact(S.selDate,'');
+        renderTimes(); renderGrid();
+        setErr('המועד הזה נתפס בינתיים. בחרו מועד אחר מהיומן.');
+        if(!reduce) timesWrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+      };
+      var send=function(){
+        return ask(BOOKING_WEBHOOK_URL,payload,10000).then(function(res){
+          if(!res || res.status!=='ok') throw 0;
+          fin(); doneLine.textContent=human(S.selDate,S.selTime); done.hidden=false;
+        });
+      };
+      /* רענון זמינות רגע לפני השליחה. כשל ברענון עצמו לא חוסם — הסנריו הוא הסמכות,
+         ועדיף לא להפיל המרה בגלל בדיקה מקדימה שלא נענתה */
+      fetchAvailability(parse(S.selDate)).then(function(map){
+        if((map[S.selDate]||[]).indexOf(S.selTime)<0){ taken(map); return null; }
+        return send();
+      },function(){ return send(); }).catch(fail);
     }
     function openPop(){S.open=true;field.classList.add('open','touched');field.setAttribute('aria-expanded','true');
       pop.hidden=false;backdrop.classList.add('on');loadMonth();
