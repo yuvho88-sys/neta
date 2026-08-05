@@ -1313,8 +1313,29 @@
 
   /* 7) booking date-picker — Google Calendar sync via Make */
   (function(){
-    var AVAILABILITY_WEBHOOK_URL = 'https://hook.eu1.make.com/011l7fa1j83vc1n0o4v71qll7fjfgtsc';
     var BOOKING_WEBHOOK_URL = 'https://hook.eu1.make.com/bkgyxq1ha58non6lf9wb5t5d5bu7rzth';
+
+    /* הזמינות נקראת ישירות מ-Google Calendar, בלי Make ובלי OAuth.
+       היומן ציבורי, ו-googleapis.com מחזירה ‎Access-Control-Allow-Origin‎ עם הדומיין שלנו,
+       ולכן הדפדפן רשאי לקרוא ממנה. המפתח גלוי בקוד — זה תקין כי הוא מוגבל בשני צירים
+       בקונסולת גוגל: רק ‎yuvho88-sys.github.io/*‎ ורק Google Calendar API.
+       בקשה בלי Referer מהדומיין מקבלת 403. */
+    var GCAL_ID  = '4aaafa1f563786191aa8ff19284da9f63fa22b4305f9a578387945f02f989f00@group.calendar.google.com';
+    var GCAL_KEY = 'AIzaSyBqPYx0sy8E4VH0qAKCKYn1khI1F3biqBQ';
+
+    /* חוקי הזמינות של נטע */
+    var WORK_DAYS   = [0,1,2,3,4];   /* ראשון עד חמישי */
+    var SLOT_FIRST  = 10*60;         /* 10:00 */
+    var SLOT_LAST   = 16*60;         /* הפגישה האחרונה מתחילה ב-16:00 ונגמרת ב-17:00 */
+    var SLOT_LEN    = 60;
+    var MIN_NOTICE  = 3*60;          /* אי אפשר לתפוס מועד שמתחיל בעוד פחות משלוש שעות */
+    var MAX_AHEAD   = 60;            /* ימים קדימה */
+    /* ימי יום טוב וערביהם בלבד. חנוכה, פורים, חול המועד ותשעה באב הם ימי עבודה
+       רגילים בישראל ולכן נשארים פתוחים. מקור: Hebcal, לוח ישראל. לרענן פעם בשנה. */
+    var HOLIDAYS = ["2026-09-11","2026-09-12","2026-09-13","2026-09-20","2026-09-21",
+      "2026-09-25","2026-09-26","2026-10-02","2026-10-03","2027-04-21","2027-04-22",
+      "2027-04-27","2027-04-28","2027-06-10","2027-06-11","2027-10-01","2027-10-02",
+      "2027-10-03","2027-10-10","2027-10-11","2027-10-15","2027-10-16","2027-10-22","2027-10-23"];
     var WA_URL = 'https://wa.me/972504322412';
     var FAIL_MSG = 'משהו השתבש, נסו שוב או כתבו לנטע בוואטסאפ';
 
@@ -1412,15 +1433,79 @@
 
     /* מבקש זמינות אמיתית לחודש אחד ומחזיר מפה { 'YYYY-MM-DD': ['HH:MM', ...] }.
        נכללים רק ימים שחזרו עם סלוט אחד לפחות — יום ריק בתשובה שקול ליום שלא הוחזר. */
+    /* כל חישוב הזמן נעשה בשעון-קיר ישראלי, לא בשעון של המבקר.
+       מבקר מחו"ל היה רואה אחרת לגמרי אם היינו מסתמכים על ‎getHours()‎ המקומי. */
+    function ilParts(d){
+      var f=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jerusalem',hour12:false,
+        year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      var p={}; f.formatToParts(d).forEach(function(x){ p[x.type]=x.value; });
+      var h=+p.hour; if(h===24) h=0;                 /* חלק מהמנועים מחזירים 24 לחצות */
+      return { date:p.year+'-'+p.month+'-'+p.day, min:h*60 + (+p.minute) };
+    }
+    function hhmm(m){ return pad(Math.floor(m/60))+':'+pad(m%60); }
+
+    /* הופך את אירועי היומן למפה של חלונות תפוסים לכל תאריך, בדקות משעון-קיר ישראלי.
+       אירוע שחוצה חצות או נמשך כמה ימים מפוצל ליום-יום. אירוע "כל היום" חוסם יום שלם. */
+    function busyMap(items){
+      var busy={};
+      function push(date,s,e){ (busy[date]=busy[date]||[]).push([s,e]); }
+      (items||[]).forEach(function(ev){
+        if(!ev || ev.status==='cancelled') return;
+        if(ev.transparency==='transparent') return;   /* אירוע שסומן "פנוי" ביומן */
+        if(ev.start && ev.start.date){                /* אירוע כל-היום: end.date הוא בלעדי */
+          var d=parse(ev.start.date), stop=parse(ev.end&&ev.end.date?ev.end.date:ev.start.date);
+          for(var x=new Date(d); x<stop; x=addDays(x,1)) push(ymd(x),0,1440);
+          return;
+        }
+        if(!ev.start || !ev.start.dateTime) return;
+        var a=ilParts(new Date(ev.start.dateTime)), b=ilParts(new Date(ev.end.dateTime));
+        if(a.date===b.date){ push(a.date,a.min,b.min); return; }
+        push(a.date,a.min,1440);
+        for(var c=addDays(parse(a.date),1); ymd(c)<b.date; c=addDays(c,1)) push(ymd(c),0,1440);
+        push(b.date,0,b.min);
+      });
+      return busy;
+    }
+    /* חפיפה, לא הכלה: פגישה 10:30–11:30 חייבת לפסול גם את 10:00 וגם את 11:00 */
+    function isBlocked(busy,date,s,e){
+      var arr=busy[date]; if(!arr) return false;
+      for(var i=0;i<arr.length;i++){ if(s<arr[i][1] && e>arr[i][0]) return true; }
+      return false;
+    }
+    function buildMonth(viewDate,busy){
+      var out={}, y=viewDate.getFullYear(), m=viewDate.getMonth();
+      var dim=new Date(y,m+1,0).getDate();
+      var now=ilParts(new Date()), horizon=ymd(addDays(parse(now.date),MAX_AHEAD));
+      for(var day=1;day<=dim;day++){
+        var d=new Date(y,m,day); d.setHours(0,0,0,0);
+        var key=ymd(d);
+        if(WORK_DAYS.indexOf(d.getDay())<0) continue;
+        if(HOLIDAYS.indexOf(key)>=0) continue;
+        if(key<now.date || key>horizon) continue;
+        var slots=[];
+        for(var t=SLOT_FIRST;t<=SLOT_LAST;t+=SLOT_LEN){
+          if(key===now.date && t < now.min+MIN_NOTICE) continue;
+          if(isBlocked(busy,key,t,t+SLOT_LEN)) continue;
+          slots.push(hhmm(t));
+        }
+        if(slots.length) out[key]=slots;
+      }
+      return out;
+    }
     function fetchAvailability(viewDate){
       var first=new Date(viewDate.getFullYear(),viewDate.getMonth(),1);
-      return ask(AVAILABILITY_WEBHOOK_URL,{month_start:ymd(first)}).then(function(res){
-        var m={};
-        ((res&&res.days)||[]).forEach(function(d){
-          if(d && d.date && d.slots && d.slots.length) m[d.date]=d.slots.slice();
-        });
-        return m;
-      });
+      var last=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);
+      /* יום ריפוד בכל צד כדי לתפוס אירועים שחוצים את גבול החודש */
+      var url='https://www.googleapis.com/calendar/v3/calendars/'+encodeURIComponent(GCAL_ID)+'/events'
+        +'?key='+GCAL_KEY
+        +'&timeMin='+encodeURIComponent(ymd(addDays(first,-1))+'T00:00:00Z')
+        +'&timeMax='+encodeURIComponent(ymd(addDays(last,1))+'T00:00:00Z')
+        +'&singleEvents=true&orderBy=startTime&maxResults=2500';
+      var c=new AbortController(), t=setTimeout(function(){c.abort();},10000);
+      return fetch(url,{signal:c.signal})
+        .then(function(r){ clearTimeout(t); if(!r.ok) throw 0; return r.json(); },
+              function(e){ clearTimeout(t); throw e; })
+        .then(function(res){ return buildMonth(viewDate, busyMap(res&&res.items)); });
     }
     /* מחליף את הימים של חודש אחד בלבד, כדי שחודש שכבר נטען לא יימחק בניווט.
        מפתחות ישנים של אותו חודש נמחקים תחילה — אחרת יום שנתפס היה נשאר פנוי במיזוג. */
