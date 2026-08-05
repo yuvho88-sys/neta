@@ -418,32 +418,14 @@
   /* הסקשן פותח עכשיו את הדף מיד אחרי הגיבור, שכבר יש לו ריפוד תחתון.
      מרווח הפתיחה המלא נועד להפריד מהציטוט שקדם לו במיקום הישן ולכן מצומצם כאן */
   main > .qualify-section:first-child{margin-top:clamp(24px,4vw,34px)}
-  .qualify-intro .eyebrow{margin-top:0}
+  /* אחרי הסרת בלוק הפתיחה נשאר בסקשן רק כרטיס השאלון. הגריד הדו-טורי הוסר —
+     טור אחד, והכרטיס ממורכז ברוחב טופס נוח כדי ששורות התשובות ורשת היומן
+     לא יימתחו לרוחב הסקשן המלא. ‎margin-block‎ ולא ‎margin‎ בדסקטופ, אחרת
+     ‎margin-inline:auto‎ נדרס והכרטיס נצמד לצד */
   .qualify{display:grid;gap:20px}
-  .qualify-intro h2{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
-  .qualify-intro > p{color:var(--body);font-size:16px}
-  /* גריד 2 על 2 במקום flex-wrap — רוחב אחיד, גובה אחיד, בלי צ'יפ יתום */
-  .chips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-  .chip{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;
-    background:var(--card-bg);border:1px solid var(--line);text-align:center;line-height:1.3;
-    color:var(--ink);font-weight:600;font-size:13.5px;padding:8px 12px;border-radius:30px;box-shadow:var(--shadow-sm)}
-  .chip::before{content:"✓";color:var(--brass);font-weight:800;flex:0 0 auto}
-  /* במסכים צרים "ליווי אישי מהרגע הראשון" חורג ב-1px וקופץ לשתי שורות.
-     צמצום ריפוד ומרווח מחזיר את כל הארבעה לשורה אחת ושומר על הגריד 2 על 2 */
-  @media (max-width:400px){
-    .chips{gap:8px}
-    .chip{padding-inline:9px}
-  }
-  /* מתחת ל-370px גם הריפוד המצומצם לא מספיק — טור אחד עדיף על שבירה */
-  @media (max-width:370px){ .chips{grid-template-columns:1fr} }
+  #book{width:100%;max-width:560px;margin-inline:auto}
   @media(min-width:900px){
-    .qualify{grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
-    #book{margin:0}
-  }
-  /* sticky רק כשיש גובה חלון אמיתי. תנאי הגובה נקבע כשטור המכירה כלל את שלושת
-     השלבים והיה ~620px. הטור נמוך היום, אבל התנאי נשאר כפי שהיה */
-  @media (min-width:900px) and (min-height:780px){
-    .qualify-intro{position:sticky;top:26px}
+    #book{margin-block:0}
   }
 
   @media (min-width:760px){
@@ -619,17 +601,6 @@
 <main>
   <section class="qualify-section rev" aria-label="קביעת שיחה">
     <div class="qualify">
-      <div class="qualify-intro">
-        <div class="eyebrow"><span class="lab">קביעת שיחה</span><span class="rule"></span></div>
-        <h2>בואו נבדוק שמתאים</h2>
-        <p>שלוש שאלות קצרות — ונבחר יחד זמן לשיחת היכרות, ללא עלות וללא התחייבות.</p>
-        <div class="chips">
-          <span class="chip">ייעוץ ראשוני חינם</span>
-          <span class="chip">ליווי אישי מהרגע הראשון</span>
-          <span class="chip">בוגרת אדריכלות B.ARC</span>
-          <span class="chip">ללא התחייבות</span>
-        </div>
-      </div>
       <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
       <div id="q-screen">
         <div class="qbar" aria-hidden="true"><i id="qFill"></i></div>
