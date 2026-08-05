@@ -301,19 +301,12 @@
   .tst-lb-x:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
   @media (prefers-reduced-motion:reduce){.tst-lb{transition:none}}
 
-  .steps{list-style:none}
-  .steps li{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line)}
-  .steps li:first-child{border-top:0;padding-top:2px}
+  /* ‎.dot‎ נשאר אף שרשימת השלבים הוסרה — הנקודה בתוית "ימים פנויים לשיחה" של היומן
+     צורכת אותו. ‎.bk-legend .dot‎ דורס רק גודל וצבע, וה-‎flex:0 0 34px‎ כאן הוא זה
+     שקובע בפועל את רוחב הנקודה בתוך הפלקס של התווית. מחיקה כאן מקטינה אותה */
   .dot{flex:0 0 34px;height:34px;border-radius:50%;background:var(--soft);color:var(--accent-deep);
     display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
     font-family:var(--serif);border:1px solid #e6d8ca}
-  .steps b{font-size:17px;display:block;margin-bottom:2px}.steps span{color:var(--muted);font-size:15px}
-  /* "מה קורה בשיחה" — יושב בטור המכירה, בלי מסגרת משלו,
-     מופרד בקו באותו גוון של המחיצות בין השלבים. במובייל צפוף יותר */
-  .call-steps{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-  .call-steps h3{font-family:var(--serif);font-size:clamp(1.02rem,3.9vw,1.16rem);
-    font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
-  .call-steps .steps li{padding:13px 0}
 
   /* כרטיס הציטוט של נטע — אותו מראה של הפסקה שהייתה מתחת ליומן, ברוחב כרטיס מלא */
   /* גשר בין סקשנים, לא אי: הריפוד האנכי והשוליים קוצצו בכ-40% */
@@ -446,11 +439,9 @@
   @media(min-width:900px){
     .qualify{grid-template-columns:1fr 1.1fr;gap:56px;align-items:start}
     #book{margin:0}
-    .call-steps{margin-top:30px;padding-top:26px}
-    .call-steps .steps li{padding:16px 0}
   }
-  /* sticky רק כשיש גובה חלון אמיתי. טור המכירה כולל שלושת השלבים הוא ~620px,
-     ובחלון נמוך ההצמדה הייתה נועלת את השלב השלישי מתחת לקצה המסך */
+  /* sticky רק כשיש גובה חלון אמיתי. תנאי הגובה נקבע כשטור המכירה כלל את שלושת
+     השלבים והיה ~620px. הטור נמוך היום, אבל התנאי נשאר כפי שהיה */
   @media (min-width:900px) and (min-height:780px){
     .qualify-intro{position:sticky;top:26px}
   }
@@ -637,17 +628,6 @@
           <span class="chip">ליווי אישי מהרגע הראשון</span>
           <span class="chip">בוגרת אדריכלות B.ARC</span>
           <span class="chip">ללא התחייבות</span>
-        </div>
-
-        <!-- "מה קורה בשיחה" חי בטור המכירה. סדר ה-DOM נותן גם את הדסקטופ (טור ימין)
-             וגם את המובייל (המסר נקרא לפני הטופס) בלי order ובלי שכפול -->
-        <div class="call-steps">
-          <h3>מה קורה בשיחה</h3>
-          <ul class="steps">
-            <li><span class="dot">1</span><div><b>שיחת היכרות של 20 דקות</b><span>בטלפון או וידאו, בזמן שנוח לכם</span></div></li>
-            <li><span class="dot">2</span><div><b>נטע מקשיבה</b><span>איך אתם חיים בבית, מה עובד ומה פחות — ומה חשוב לכם שיקרה בו</span></div></li>
-            <li><span class="dot">3</span><div><b>יוצאים עם כיוון ברור</b><span>תמונת מצב של מה הפרויקט שלכם דורש, במה נכון להתחיל — ואם יש התאמה, הצעה מסודרת להמשך</span></div></li>
-          </ul>
         </div>
       </div>
       <section class="card book" id="book" aria-label="שאלון וקביעת שיחה">
