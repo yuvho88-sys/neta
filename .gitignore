@@ -3,3 +3,11 @@
 *.mp4
 *.mov
 *.MOV
+
+# כלי עבודה מקומיים של קלוד — לא חלק מהאתר
+.claude/
+skills-lock.json
+
+# סודות — טוקנים של Airtable ו-Make. לעולם לא בגיט.
+neta-access.json
+*access*.json
