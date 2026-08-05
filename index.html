@@ -936,6 +936,10 @@
   window.__prefill = { name:name||"", phone:phone||"", email:p.get('email')||"", source:p.get('source')||"", campaign:p.get('campaign')||"" };
   /* one lead id per page session — links the questionnaire record to the booking update (scenario A ↔ B) */
   window.__leadId = 'L' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+  /* rid = Airtable Record ID של ליד שכבר קיים, מגיע מהקישור שנשלח בוואטסאפ אחרי ליד מקמפיין.
+     כשהוא קיים אנחנו כבר יודעים מי המבקר, ולכן מדלגים על שלב השארת הפרטים. */
+  var rid = p.get('rid');
+  window.__recordId = (rid && /^rec[A-Za-z0-9]+$/.test(rid)) ? rid : null;
 
   /* 2) reveal on scroll */
   if(reduce){ document.querySelectorAll('.rev').forEach(function(el){el.classList.add('in');}); }
@@ -1201,6 +1205,10 @@
 
     var order=['area','budget','service'];
     var ans={area:'',budget:'',service:''};
+    /* מקור אמת אחד לשלוש התשובות, לשימוש גם בסקשן הבוקינג. הטקסט המלא בעברית כפי שמופיע בדף. */
+    window.__answers = function(){
+      return { question_1:ans.area||'', question_2:ans.budget||'', question_3:ans.service||'' };
+    };
     var qws=[].slice.call(document.querySelectorAll('#q-screen .qw'));
     var bookScreen=document.getElementById('book-screen'), nofitScreen=document.getElementById('nofit-screen');
     var fill=document.getElementById('qFill'), count=document.getElementById('qCount');
@@ -1271,6 +1279,11 @@
     }
     function finish(){
       var ok=pass(); send(ok);
+      /* ליד מזוהה שסיים את השאלון אך עדיין לא בחר מועד — מדווחים כבר עכשיו, כדי שהתשובות
+         לא ילכו לאיבוד אם ינטוש לפני הבוקינג. הקריאה השנייה תגיע עם status "booked". */
+      if(window.__recordId && window.__bookingPost){
+        window.__bookingPost({ status:'questionnaire_completed', answers:window.__answers() });
+      }
       hideBooking();
       (ok?bookScreen:nofitScreen).classList.add('show');
       setTimeout(function(){(ok?bookScreen:nofitScreen).scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});},reduce?0:80);
@@ -1281,6 +1294,19 @@
   (function(){
     var AVAILABILITY_WEBHOOK_URL = 'PASTE_AVAILABILITY_WEBHOOK_HERE';
     var BOOKING_WEBHOOK_URL = 'https://hook.eu1.make.com/bkgyxq1ha58non6lf9wb5t5d5bu7rzth';
+
+    /* שולח מנה אחת ל-webhook של הבוקינג, ומצרף את השדות המשותפים לכל סטטוס.
+       fire-and-forget: תשובת Make מגיעה בלי כותרת CORS מ-github.io ולכן לא קוראים אותה.
+       מוגדר לפני בדיקת root כדי שיהיה זמין גם לסקשן השאלון. */
+    window.__bookingPost = function(extra){
+      if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0) return;
+      var pf=window.__prefill||{};
+      var body={ leadId:window.__leadId, record_id:window.__recordId||null,
+                 source:pf.source||'', campaign:pf.campaign||'' };
+      for(var k in extra){ if(Object.prototype.hasOwnProperty.call(extra,k)) body[k]=extra[k]; }
+      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},
+             body:JSON.stringify(body),keepalive:true}).catch(function(){}); }catch(e){}
+    };
 
     var root=document.getElementById('booking'); if(!root) return;
     var DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
@@ -1319,8 +1345,11 @@
     }
     function validPhone(raw){return IL_MOBILE.test(normPhone(raw));}
     function hasPrefillIdentity(){var pf=window.__prefill||{};return !!(pf.name && pf.name.trim() && validPhone(pf.phone));}
+    /* ליד שהגיע עם rid כבר מזוהה באיירטייבל — אין מה לבקש ממנו שוב */
+    function knownLead(){ return !!window.__recordId; }
     function updateGo(){
-      var okDetails = formMode ? (fName.value.trim().length>=2 && validPhone(fPhone.value)) : hasPrefillIdentity();
+      var okDetails = knownLead() ? true
+        : (formMode ? (fName.value.trim().length>=2 && validPhone(fPhone.value)) : hasPrefillIdentity());
       go.disabled = !(S.selTime && okDetails);
     }
     function showForm(prefill){
@@ -1333,7 +1362,10 @@
       idName.textContent=pf.name; idPhone.textContent=normPhone(pf.phone);
       idnBox.hidden=false; sleeve.classList.remove('open'); updateGo();
     }
-    function showDetails(){ if(hasPrefillIdentity() && !formMode) showIdentity(); else showForm(window.__prefill||{}); }
+    function showDetails(){
+      if(knownLead()){ formMode=false; idnBox.hidden=true; sleeve.classList.remove('open'); updateGo(); return; }
+      if(hasPrefillIdentity() && !formMode) showIdentity(); else showForm(window.__prefill||{});
+    }
     function clearPhoneErr(){ fPhoneErr.textContent=''; fPhone.classList.remove('bad'); }
     fName.addEventListener('input',updateGo);
     fPhone.addEventListener('input',function(){clearPhoneErr();updateGo();});
@@ -1406,25 +1438,28 @@
     function ansVal(k){var el=document.querySelector('#book .opts[data-q="'+k+'"] input:checked');return el?el.value:'';}
     function submit(){
       var pf=window.__prefill||{};
-      var name,phone,email;
-      if(formMode){ name=fName.value.trim(); phone=normPhone(fPhone.value); email=fEmail.value.trim(); }
-      else { name=(pf.name||'').trim(); phone=normPhone(pf.phone); email=(pf.email||'').trim(); }
-      if(name.length<2 || !IL_MOBILE.test(phone)){          /* safety gate — should already be blocked by disabled button */
-        if(!formMode) showForm(pf);
-        if(!IL_MOBILE.test(phone)){ fPhoneErr.textContent='מספר לא תקין, בדקו שהקלדתם נייד ישראלי'; fPhone.classList.add('bad'); }
-        updateGo(); return;
+      var name=null,phone=null,email=null;
+      if(!knownLead()){                                     /* מבקר לא מזוהה — שלב הפרטים חובה, כמו קודם */
+        if(formMode){ name=fName.value.trim(); phone=normPhone(fPhone.value); email=fEmail.value.trim(); }
+        else { name=(pf.name||'').trim(); phone=normPhone(pf.phone); email=(pf.email||'').trim(); }
+        if(name.length<2 || !IL_MOBILE.test(phone)){        /* safety gate — should already be blocked by disabled button */
+          if(!formMode) showForm(pf);
+          if(!IL_MOBILE.test(phone)){ fPhoneErr.textContent='מספר לא תקין, בדקו שהקלדתם נייד ישראלי'; fPhone.classList.add('bad'); }
+          updateGo(); return;
+        }
       }
       if(S.sending)return;S.sending=true;go.disabled=true;go.classList.add('loading');err.textContent='';
-      var body={leadId:window.__leadId,name:name,phone:phone,email:email,date:S.selDate,time:S.selTime,
-        datetime:ilISO(S.selDate,S.selTime),
-        area:ansVal('area'),budget:ansVal('budget'),service:ansVal('service'),source:pf.source||'',campaign:pf.campaign||''};
+      var answers = window.__answers ? window.__answers()
+        : {question_1:ansVal('area'),question_2:ansVal('budget'),question_3:ansVal('service')};
       var fin=function(){S.sending=false;go.classList.remove('loading');};
       var ok=function(){fin();doneLine.textContent=human(S.selDate,S.selTime);done.hidden=false;};
-      var bad=function(){fin();go.disabled=false;err.textContent='משהו השתבש. נסו שוב, או פנו לנטע בוואטסאפ.';};
-      if(BOOKING_WEBHOOK_URL.indexOf('PASTE')===0){setTimeout(ok,700);return;}
-      /* fire-and-forget: Make's webhook response has no CORS header, so we can't read it from
-         github.io — the POST is still delivered. Show success optimistically (like the questionnaire). */
-      try{ fetch(BOOKING_WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(function(){}); }catch(e){}
+      window.__bookingPost({
+        status:'booked', name:name, phone:phone, email:email, answers:answers,
+        selected_slot:{ date:S.selDate, time:S.selTime, datetime:ilISO(S.selDate,S.selTime) },
+        /* השדות הישנים נשארים כדי שסנריו B הקיים ימשיך לעבוד עד שהראוטר החדש ייכנס */
+        date:S.selDate, time:S.selTime, datetime:ilISO(S.selDate,S.selTime),
+        area:answers.question_1, budget:answers.question_2, service:answers.question_3
+      });
       setTimeout(ok,700);
     }
     function openPop(){S.open=true;field.classList.add('open','touched');field.setAttribute('aria-expanded','true');
