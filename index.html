@@ -441,7 +441,9 @@
   .bk-microlabel{display:flex;align-items:center;justify-content:center;gap:8px;
     font-size:13px;font-weight:600;letter-spacing:.8px;color:var(--accent-deep);margin-bottom:12px}
   .bk-dia{width:7px;height:7px;background:var(--brass);transform:rotate(45deg);flex:0 0 auto}
-  .bk-field{position:relative;width:100%;display:flex;align-items:center;gap:13px;min-height:62px;padding:0 20px;cursor:pointer;
+  /* z-index גבוה מהרקע (50): בלי זה הרקע מכסה את השדה כשהיומן פתוח,
+     הלחיצה נבלעת בו ולא מגיעה לשדה — והמשתמש חווה שדה שלא מגיב */
+  .bk-field{position:relative;z-index:52;width:100%;display:flex;align-items:center;gap:13px;min-height:62px;padding:0 20px;cursor:pointer;
     background:var(--card-bg);border:1.5px solid var(--accent);border-radius:16px;color:var(--ink);font:inherit;text-align:right;
     box-shadow:0 6px 18px rgba(166,127,121,.12);
     transition:border-color .18s var(--ease),background .18s var(--ease),box-shadow .2s var(--ease),transform .18s var(--ease)}
@@ -1670,6 +1672,15 @@
     }
     function openPop(){S.open=true;field.classList.add('open','touched');field.setAttribute('aria-expanded','true');
       pop.hidden=false;backdrop.classList.add('on');loadMonth();
+      /* הפופאובר נפתח מתחת לשדה ותופס ~540px. אחרי בחירת שעה הדף כבר גלל לאזור
+         האישור, ולכן הוא עלול להיפתח מתחת לקצה המסך — והמשתמש חושב שכלום לא קרה.
+         מגוללים אליו רק כשהוא באמת חורג, כדי לא לזעזע את הדף כשהוא כבר נראה. */
+      setTimeout(function(){
+        var r=pop.getBoundingClientRect();
+        if(r.bottom>innerHeight-8 || r.top<0){
+          pop.scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'});
+        }
+      },reduce?0:60);
       setTimeout(function(){var f=grid.querySelector('.avail')||grid.querySelector('.today');if(f)f.focus();},reduce?0:210);}
     function closePop(){S.open=false;field.classList.remove('open');field.setAttribute('aria-expanded','false');
       pop.hidden=true;backdrop.classList.remove('on');}
