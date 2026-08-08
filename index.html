@@ -1319,7 +1319,15 @@
        ולכן הדפדפן רשאי לקרוא ממנה. המפתח גלוי בקוד — זה תקין כי הוא מוגבל בשני צירים
        בקונסולת גוגל: רק ‎yuvho88-sys.github.io/*‎ ורק Google Calendar API.
        בקשה בלי Referer מהדומיין מקבלת 403. */
-    var GCAL_ID  = '4aaafa1f563786191aa8ff19284da9f63fa22b4305f9a578387945f02f989f00@group.calendar.google.com';
+    /* כל היומנים שחוסמים שעות. הדף שואל את כולם בבקשה אחת ומחסר את האיחוד.
+       להוסיף יומן = שורה אחת כאן. תנאי: היומן משותף "באופן גלוי לכולם" עם
+       "לראות רק פנוי/עסוק" — כך הפרטים נשארים מוסתרים ורק החלונות התפוסים נקראים.
+       יומן שלא שותף פשוט מדולג, בלי להפיל את שאר הבקשה. */
+    var GCAL_IDS = [
+      'innhome.g@gmail.com',                                                                        /* הראשי */
+      '4aaafa1f563786191aa8ff19284da9f63fa22b4305f9a578387945f02f989f00@group.calendar.google.com'   /* דף נחיתה פגישות */
+      /* TODO להוסיף כשיגיעו המזהים: צילומים · עבודה · רופאים · תזכורות עבודה */
+    ];
     var GCAL_KEY = 'AIzaSyBqPYx0sy8E4VH0qAKCKYn1khI1F3biqBQ';
 
     /* חוקי הזמינות של נטע */
@@ -1443,21 +1451,15 @@
     }
     function hhmm(m){ return pad(Math.floor(m/60))+':'+pad(m%60); }
 
-    /* הופך את אירועי היומן למפה של חלונות תפוסים לכל תאריך, בדקות משעון-קיר ישראלי.
-       אירוע שחוצה חצות או נמשך כמה ימים מפוצל ליום-יום. אירוע "כל היום" חוסם יום שלם. */
-    function busyMap(items){
+    /* הופך חלונות תפוסים מכל היומנים למפה לכל תאריך, בדקות משעון-קיר ישראלי.
+       חלון שחוצה חצות או נמשך כמה ימים מפוצל ליום-יום.
+       אירוע שנטע סימנה "פנוי" לא מוחזר בכלל בנקודת הקצה הזו — בדיוק ההתנהגות הרצויה. */
+    function busyMap(intervals){
       var busy={};
-      function push(date,s,e){ (busy[date]=busy[date]||[]).push([s,e]); }
-      (items||[]).forEach(function(ev){
-        if(!ev || ev.status==='cancelled') return;
-        if(ev.transparency==='transparent') return;   /* אירוע שסומן "פנוי" ביומן */
-        if(ev.start && ev.start.date){                /* אירוע כל-היום: end.date הוא בלעדי */
-          var d=parse(ev.start.date), stop=parse(ev.end&&ev.end.date?ev.end.date:ev.start.date);
-          for(var x=new Date(d); x<stop; x=addDays(x,1)) push(ymd(x),0,1440);
-          return;
-        }
-        if(!ev.start || !ev.start.dateTime) return;
-        var a=ilParts(new Date(ev.start.dateTime)), b=ilParts(new Date(ev.end.dateTime));
+      function push(date,s,e){ if(e>s) (busy[date]=busy[date]||[]).push([s,e]); }
+      (intervals||[]).forEach(function(iv){
+        if(!iv || !iv.start || !iv.end) return;
+        var a=ilParts(new Date(iv.start)), b=ilParts(new Date(iv.end));
         if(a.date===b.date){ push(a.date,a.min,b.min); return; }
         push(a.date,a.min,1440);
         for(var c=addDays(parse(a.date),1); ymd(c)<b.date; c=addDays(c,1)) push(ymd(c),0,1440);
@@ -1495,16 +1497,26 @@
       var first=new Date(viewDate.getFullYear(),viewDate.getMonth(),1);
       var last=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);
       /* יום ריפוד בכל צד כדי לתפוס אירועים שחוצים את גבול החודש */
-      var url='https://www.googleapis.com/calendar/v3/calendars/'+encodeURIComponent(GCAL_ID)+'/events'
-        +'?key='+GCAL_KEY
-        +'&timeMin='+encodeURIComponent(ymd(addDays(first,-1))+'T00:00:00Z')
-        +'&timeMax='+encodeURIComponent(ymd(addDays(last,1))+'T00:00:00Z')
-        +'&singleEvents=true&orderBy=startTime&maxResults=2500';
+      var body={
+        timeMin: ymd(addDays(first,-1))+'T00:00:00Z',
+        timeMax: ymd(addDays(last,1))+'T00:00:00Z',
+        timeZone: 'Asia/Jerusalem',
+        items: GCAL_IDS.map(function(id){ return { id:id }; })
+      };
       var c=new AbortController(), t=setTimeout(function(){c.abort();},10000);
-      return fetch(url,{signal:c.signal})
+      return fetch('https://www.googleapis.com/calendar/v3/freeBusy?key='+GCAL_KEY,
+                   {method:'POST',headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify(body),signal:c.signal})
         .then(function(r){ clearTimeout(t); if(!r.ok) throw 0; return r.json(); },
               function(e){ clearTimeout(t); throw e; })
-        .then(function(res){ return buildMonth(viewDate, busyMap(res&&res.items)); });
+        .then(function(res){
+          var all=[], cals=(res&&res.calendars)||{};
+          Object.keys(cals).forEach(function(id){
+            /* יומן שלא שותף מחזיר errors — מדלגים עליו ולא מפילים את השאר */
+            if(cals[id] && cals[id].busy) all=all.concat(cals[id].busy);
+          });
+          return buildMonth(viewDate, busyMap(all));
+        });
     }
     /* מחליף את הימים של חודש אחד בלבד, כדי שחודש שכבר נטען לא יימחק בניווט.
        מפתחות ישנים של אותו חודש נמחקים תחילה — אחרת יום שנתפס היה נשאר פנוי במיזוג. */
