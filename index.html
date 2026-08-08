@@ -715,7 +715,6 @@
                   <div class="bk-form-title">עוד רגע, למי לרשום את הפגישה?</div>
                   <label class="bkf"><span>שם מלא</span><input type="text" id="bkName" autocomplete="name" placeholder="השם שלכם"></label>
                   <label class="bkf"><span>טלפון נייד</span><input type="tel" id="bkPhone" autocomplete="tel" inputmode="tel" placeholder="050-0000000"><span class="bkf-err" id="bkPhoneErr" role="alert"></span></label>
-                  <label class="bkf"><span>אימייל <em>(לא חובה)</em></span><input type="email" id="bkEmail" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
                 </div>
               </div>
             </div>
@@ -1392,7 +1391,7 @@
         prev=$('bkPrev'),next=$('bkNext'),backdrop=$('bkBackdrop'),timesWrap=$('bkTimesWrap'),timesLbl=$('bkTimesLabel'),
         times=$('bkTimes'),confirm=$('bkConfirm'),summary=$('bkSummary'),go=$('bkGo'),err=$('bkErr'),done=$('bkDone'),doneLine=$('bkDoneLine');
     var idnBox=$('bkIdentity'),idName=$('bkIdName'),idPhone=$('bkIdPhone'),idEdit=$('bkIdEdit'),
-        sleeve=$('bkFormSleeve'),fName=$('bkName'),fPhone=$('bkPhone'),fPhoneErr=$('bkPhoneErr'),fEmail=$('bkEmail');
+        sleeve=$('bkFormSleeve'),fName=$('bkName'),fPhone=$('bkPhone'),fPhoneErr=$('bkPhoneErr');
     var formMode=false;                         /* details state persists across slot changes (no localStorage) */
 
     var IL_MOBILE=/^05\d{8}$/;
@@ -1605,7 +1604,9 @@
       var pf=window.__prefill||{};
       var name=null,phone=null,email=null;
       if(!knownLead()){                                     /* מבקר לא מזוהה — שלב הפרטים חובה, כמו קודם */
-        if(formMode){ name=fName.value.trim(); phone=normPhone(fPhone.value); email=fEmail.value.trim(); }
+        /* שדה המייל הוסר מהטופס — שם וטלפון בלבד. המייל עדיין מגיע מהקמפיין
+           דרך ‎?email=‎ בקישור, ומופיע כאן כשהוא קיים. */
+        if(formMode){ name=fName.value.trim(); phone=normPhone(fPhone.value); email=(pf.email||'').trim(); }
         else { name=(pf.name||'').trim(); phone=normPhone(pf.phone); email=(pf.email||'').trim(); }
         if(name.length<2 || !IL_MOBILE.test(phone)){        /* safety gate — should already be blocked by disabled button */
           if(!formMode) showForm(pf);
